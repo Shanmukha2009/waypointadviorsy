@@ -12,6 +12,7 @@
 
 <style>
   :root {
+    /* Original Color Scheme Preserved */
     --ink: #070a12;
     --paper: #0e1526;
     --glass: rgba(22, 32, 54, 0.75);
@@ -274,6 +275,28 @@
     box-shadow: 0 6px 18px rgba(6, 182, 212, 0.6);
   }
 
+  .btn-secondary {
+    background: linear-gradient(135deg, var(--violet), #6d28d9);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  }
+
+  .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(139, 92, 246, 0.6);
+  }
+
+  .btn-success {
+    background: linear-gradient(135deg, var(--forest), #059669);
+    color: #fff;
+    box-shadow: 0 4px 12px var(--forest-glow);
+  }
+
+  .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.6);
+  }
+
   .layout-two-col {
     display: grid;
     grid-template-columns: 320px 1fr;
@@ -322,6 +345,14 @@
     align-items: center;
   }
 
+  .nav-footer-action {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: flex-end;
+  }
+
   @media(max-width: 768px) {
     .layout-two-col { grid-template-columns: 1fr; }
     header { flex-direction: column; gap: 16px; }
@@ -367,7 +398,7 @@
 
       <div class="grid" id="destinations-grid"></div>
 
-      <!-- Action Dock (appears when a destination is clicked) -->
+      <!-- Action Dock (1. Selection -> Plan) -->
       <div class="selection-dock" id="dock">
         <div>
           <span style="font-size: 12px; color: var(--text-soft); display: block;">Selected Destination:</span>
@@ -403,7 +434,15 @@
           <button class="btn btn-primary" style="width:100%;" onclick="addStop()"><i data-lucide="plus"></i> Add Stop</button>
         </div>
 
-        <div class="panel" id="itinerary-display"></div>
+        <div class="panel">
+          <div id="itinerary-display"></div>
+          <!-- 2. Plan -> Budget Navigation Button -->
+          <div class="nav-footer-action">
+            <button class="btn btn-secondary" onclick="showPage('budget')">
+              Continue to Budget <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -425,6 +464,13 @@
             <div id="budget-progress" style="height: 100%; width: 0%; background: var(--forest); transition: width 0.3s ease;"></div>
           </div>
         </div>
+
+        <!-- 3. Budget -> Home Navigation Button -->
+        <div class="nav-footer-action" style="justify-content: center; margin-top: 24px;">
+          <button class="btn btn-success" style="width: 100%;" onclick="showPage('home')">
+            <i data-lucide="rotate-ccw"></i> Back to Explore
+          </button>
+        </div>
       </div>
     </section>
 
@@ -432,7 +478,6 @@
 </div>
 
 <script>
-  // Built-in offline destination catalog (No APIs needed)
   let places = [
     { id: 1, name: "Tokyo, Japan", desc: "Futuristic skyscrapers, historic shrines, and world-renowned street food.", img: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80" },
     { id: 2, name: "Rome, Italy", desc: "Ancient ruins, Colosseum, vibrant street life, and authentic gelato.", img: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=600&q=80" },
@@ -444,7 +489,6 @@
   let itinerary = { "Day 1": [], "Day 2": [], "Day 3": [] };
   let budgetCategories = { Transport: 250, Lodging: 400, Food: 150, Activities: 100 };
 
-  // Canvas particle background setup
   const canvas = document.getElementById('fx-canvas');
   const ctx = canvas.getContext('2d');
   function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -515,22 +559,18 @@
     lucide.createIcons();
   }
 
-  // 1. First step: Click a place card to highlight it
   function selectCard(id) {
     selectedPlace = places.find(p => p.id === id);
     renderCards();
 
-    // Show action dock at the bottom
     const dock = document.getElementById('dock');
     document.getElementById('dock-title').textContent = selectedPlace.name;
     dock.classList.add('active');
   }
 
-  // 2. Second step: Click button in action dock to navigate to Plan screen
   function proceedToPlan() {
     if (!selectedPlace) return;
     
-    // Add default arrival item for selected place
     itinerary["Day 1"].unshift({ time: "09:00", name: `Arrive in ${selectedPlace.name}` });
     
     showPage('plan');
