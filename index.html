@@ -5,27 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Waypoint — Travel Engine</title>
 
-<!-- Front-End CDN Libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
 <style>
   :root {
-    /* Strict Green, Blue, and Red Core Palette */
+    /* Bold Green, Blue, and Red Core Palette */
     --bg-dark: #050811;
-    --card-bg: rgba(12, 19, 36, 0.85);
-    --border-soft: rgba(255, 255, 255, 0.12);
+    --card-bg: #0c1324;
+    --border-soft: rgba(255, 255, 255, 0.15);
     
-    /* Main Accent Colors */
+    /* Vibrant Accent Colors */
     --vivid-green: #10b981;
-    --green-glow: rgba(16, 185, 129, 0.4);
+    --green-glow: rgba(16, 185, 129, 0.5);
     
     --electric-blue: #0284c7;
-    --blue-glow: rgba(2, 132, 199, 0.4);
+    --blue-glow: rgba(2, 132, 199, 0.5);
     
     --vivid-red: #ef4444;
-    --red-glow: rgba(239, 68, 68, 0.4);
+    --red-glow: rgba(239, 68, 68, 0.5);
     
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
@@ -44,13 +39,6 @@
     overflow-x: hidden;
   }
 
-  #fx-canvas {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    z-index: 0;
-    pointer-events: none;
-  }
-
   .app {
     position: relative;
     z-index: 1;
@@ -64,7 +52,6 @@
 
   header {
     background: var(--card-bg);
-    backdrop-filter: blur(16px);
     border: 1px solid var(--border-soft);
     border-radius: var(--radius);
     padding: 16px 24px;
@@ -74,7 +61,7 @@
     position: sticky;
     top: 16px;
     z-index: 100;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
   }
 
   .brand {
@@ -97,14 +84,13 @@
   .brand h1 {
     font-size: 22px;
     font-weight: 800;
-    letter-spacing: -0.5px;
     color: #fff;
   }
 
   nav {
     display: flex;
     gap: 6px;
-    background: rgba(5, 8, 17, 0.8);
+    background: #050811;
     padding: 4px;
     border-radius: 12px;
     border: 1px solid var(--border-soft);
@@ -122,12 +108,12 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
 
   nav button.active {
     color: #fff;
-    background: linear-gradient(135deg, var(--electric-blue), #0369a1);
+    background: var(--electric-blue);
     box-shadow: 0 0 15px var(--blue-glow);
   }
 
@@ -138,12 +124,16 @@
 
   .page {
     display: none;
-    opacity: 0;
+    animation: fadeIn 0.3s forwards ease-out;
   }
 
   .page.active {
     display: block;
-    opacity: 1;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .search-bar {
@@ -177,7 +167,7 @@
     border-radius: var(--radius);
     padding: 24px;
     position: relative;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -191,7 +181,7 @@
 
   .card.selected {
     border-color: var(--vivid-green);
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(16, 185, 129, 0.12);
     box-shadow: 0 0 25px var(--green-glow);
   }
 
@@ -232,22 +222,19 @@
     position: sticky;
     bottom: 20px;
     margin-top: 24px;
-    background: rgba(12, 19, 36, 0.95);
-    backdrop-filter: blur(16px);
+    background: #0c1324;
     border: 2px solid var(--vivid-green);
     box-shadow: 0 10px 30px var(--green-glow);
     border-radius: var(--radius);
     padding: 16px 24px;
-    display: flex;
+    display: none;
     justify-content: space-between;
     align-items: center;
-    transform: translateY(120%);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 90;
   }
 
   .selection-dock.active {
-    transform: translateY(0);
+    display: flex;
   }
 
   .btn {
@@ -265,36 +252,36 @@
   }
 
   .btn-green {
-    background: linear-gradient(135deg, var(--vivid-green), #059669);
+    background: var(--vivid-green);
     color: #fff;
     box-shadow: 0 4px 14px var(--green-glow);
   }
 
   .btn-green:hover {
+    background: #059669;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--green-glow);
   }
 
   .btn-blue {
-    background: linear-gradient(135deg, var(--electric-blue), #0369a1);
+    background: var(--electric-blue);
     color: #fff;
     box-shadow: 0 4px 14px var(--blue-glow);
   }
 
   .btn-blue:hover {
+    background: #0369a1;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--blue-glow);
   }
 
   .btn-red {
-    background: linear-gradient(135deg, var(--vivid-red), #dc2626);
+    background: var(--vivid-red);
     color: #fff;
     box-shadow: 0 4px 14px var(--red-glow);
   }
 
   .btn-red:hover {
+    background: #dc2626;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--red-glow);
   }
 
   .layout-two-col {
@@ -311,8 +298,8 @@
   }
 
   .place-summary-card {
-    background: linear-gradient(135deg, rgba(2, 132, 199, 0.2), rgba(16, 185, 129, 0.2));
-    border: 1px solid var(--electric-blue);
+    background: rgba(2, 132, 199, 0.15);
+    border: 2px solid var(--electric-blue);
     border-radius: 12px;
     padding: 18px 22px;
     margin-bottom: 24px;
@@ -322,9 +309,6 @@
     color: var(--electric-blue);
     font-size: 20px;
     margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 
   .place-summary-card p {
@@ -348,7 +332,7 @@
 
   .field input, .field select {
     width: 100%;
-    background: rgba(5, 8, 17, 0.9);
+    background: #050811;
     border: 1px solid var(--line);
     color: var(--text-main);
     padding: 12px;
@@ -358,7 +342,7 @@
   }
 
   .stop-item {
-    background: rgba(5, 8, 17, 0.8);
+    background: #050811;
     border: 1px solid var(--border-soft);
     border-left: 4px solid var(--electric-blue);
     border-radius: 10px;
@@ -385,13 +369,13 @@
 </head>
 <body>
 
-<canvas id="fx-canvas"></canvas>
-
 <div class="app">
   
   <header>
     <div class="brand">
-      <div class="brand-icon"><i data-lucide="compass" style="color: #fff;"></i></div>
+      <div class="brand-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+      </div>
       <div>
         <h1>Waypoint</h1>
         <p style="font-size: 11px; color: var(--text-muted);">Offline Travel Engine</p>
@@ -399,15 +383,9 @@
     </div>
 
     <nav>
-      <button id="nav-home" class="active" onclick="showPage('home')">
-        <i data-lucide="map-pin"></i> Explore
-      </button>
-      <button id="nav-plan" onclick="showPage('plan')">
-        <i data-lucide="calendar"></i> Plan
-      </button>
-      <button id="nav-budget" onclick="showPage('budget')">
-        <i data-lucide="wallet"></i> Budget
-      </button>
+      <button id="nav-home" class="active" onclick="showPage('home')">Explore</button>
+      <button id="nav-plan" onclick="showPage('plan')">Plan</button>
+      <button id="nav-budget" onclick="showPage('budget')">Budget</button>
     </nav>
   </header>
 
@@ -427,22 +405,20 @@
           <span style="font-size: 12px; color: var(--text-muted); display: block;">Selected Destination:</span>
           <strong id="dock-title" style="font-size: 18px; color: #fff;">None</strong>
         </div>
-        <button class="btn btn-green" onclick="proceedToPlan()">
-          Proceed to Plan <i data-lucide="arrow-right"></i>
-        </button>
+        <button class="btn btn-green" onclick="proceedToPlan()">Proceed to Plan &rarr;</button>
       </div>
     </section>
 
     <!-- PLAN PAGE -->
     <section id="page-plan" class="page">
       <div class="place-summary-card" id="place-summary-banner">
-        <h2><i data-lucide="map-pin"></i> <span id="banner-title">No Destination Selected</span></h2>
+        <h2>📍 <span id="banner-title">No Destination Selected</span></h2>
         <p id="banner-desc">Select a location from the Explore screen to view details and construct your schedule.</p>
       </div>
 
       <div class="layout-two-col">
         <div class="panel">
-          <h2 style="margin-bottom: 20px; font-size: 18px; color: var(--vivid-green);"><i data-lucide="plus-circle"></i> Add Activity</h2>
+          <h2 style="margin-bottom: 20px; font-size: 18px; color: var(--vivid-green);">+ Add Activity</h2>
           <div class="field">
             <label>Day</label>
             <select id="stop-day">
@@ -459,16 +435,14 @@
             <label>Location / Activity</label>
             <input type="text" id="stop-name" placeholder="e.g. Visit Museum">
           </div>
-          <button class="btn btn-green" style="width:100%;" onclick="addStop()"><i data-lucide="plus"></i> Add Stop</button>
+          <button class="btn btn-green" style="width:100%;" onclick="addStop()">+ Add Stop</button>
         </div>
 
         <div class="panel">
           <div id="itinerary-display"></div>
           
           <div class="nav-footer-action">
-            <button class="btn btn-blue" onclick="showPage('budget')">
-              Continue to Budget <i data-lucide="arrow-right"></i>
-            </button>
+            <button class="btn btn-blue" onclick="showPage('budget')">Continue to Budget &rarr;</button>
           </div>
         </div>
       </div>
@@ -477,7 +451,7 @@
     <!-- BUDGET PAGE -->
     <section id="page-budget" class="page">
       <div class="panel" style="max-width: 550px; margin: 0 auto;">
-        <h2 style="margin-bottom: 20px; color: var(--electric-blue);"><i data-lucide="wallet"></i> Expense Calculator</h2>
+        <h2 style="margin-bottom: 20px; color: var(--electric-blue);">💳 Expense Calculator</h2>
         <div class="field">
           <label>Total Allocated Budget ($)</label>
           <input type="number" id="total-budget" value="1000" oninput="recalcBudget()">
@@ -494,9 +468,7 @@
         </div>
 
         <div class="nav-footer-action" style="justify-content: center; margin-top: 24px;">
-          <button class="btn btn-red" style="width: 100%;" onclick="showPage('home')">
-            <i data-lucide="rotate-ccw"></i> Back to Explore
-          </button>
+          <button class="btn btn-red" style="width: 100%;" onclick="showPage('home')">Back to Explore</button>
         </div>
       </div>
     </section>
@@ -516,48 +488,9 @@
   let itinerary = { "Day 1": [], "Day 2": [], "Day 3": [] };
   let budgetCategories = { Transport: 250, Lodging: 400, Food: 150, Activities: 100 };
 
-  const canvas = document.getElementById('fx-canvas');
-  const ctx = canvas.getContext('2d');
-  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  const particleColors = ['rgba(16, 185, 129, 0.35)', 'rgba(2, 132, 199, 0.35)', 'rgba(239, 68, 68, 0.35)'];
-  let particles = Array.from({length: 35}, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 2.5 + 1,
-    color: particleColors[Math.floor(Math.random() * particleColors.length)],
-    dx: (Math.random() - 0.5) * 0.4,
-    dy: (Math.random() - 0.5) * 0.4
-  }));
-
-  function drawParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-      p.x += p.dx; p.y += p.dy;
-      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-    });
-    requestAnimationFrame(drawParticles);
-  }
-  drawParticles();
-
   function showPage(pageId) {
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(p => {
-      p.classList.remove('active');
-      p.style.opacity = 0;
-    });
-
-    const target = document.getElementById(`page-${pageId}`);
-    target.classList.add('active');
-    
-    gsap.fromTo(target, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.35 });
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${pageId}`).classList.add('active');
 
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(`nav-${pageId}`).classList.add('active');
@@ -574,22 +507,20 @@
           <div>
             <div class="card-header">
               <h3>${item.name}</h3>
-              <i data-lucide="map-pin" style="color:${isSelected ? 'var(--vivid-green)' : 'var(--electric-blue)'}"></i>
+              <span style="color:${isSelected ? 'var(--vivid-green)' : 'var(--electric-blue)'}">📍</span>
             </div>
             <div class="card-body">
               <p>${item.desc}</p>
             </div>
           </div>
           <div class="selection-indicator">
-            <i data-lucide="${isSelected ? 'check-circle-2' : 'circle'}"></i>
-            <span>${isSelected ? 'Selected' : 'Click to select'}</span>
+            <span>${isSelected ? '✓ Selected' : '○ Click to select'}</span>
           </div>
         </div>
       `;
     });
 
     grid.innerHTML = cards;
-    lucide.createIcons();
   }
 
   function selectCard(id) {
@@ -606,14 +537,11 @@
 
   function proceedToPlan() {
     if (!selectedPlace) return;
-    
     if (itinerary["Day 1"].length === 0) {
       itinerary["Day 1"].unshift({ time: "09:00", name: `Arrive in ${selectedPlace.name}` });
     }
-    
     showPage('plan');
     renderItinerary();
-    confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
   }
 
   function doSearch() {
@@ -640,7 +568,6 @@
     itinerary[day].push({ time, name });
     document.getElementById('stop-name').value = '';
     renderItinerary();
-    confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 } });
   }
 
   function renderItinerary() {
@@ -659,14 +586,13 @@
                 <strong style="color:var(--electric-blue); margin-right:8px;">${s.time}</strong>
                 <span>${s.name}</span>
               </div>
-              <i data-lucide="trash-2" style="cursor:pointer; color:var(--vivid-red); width:18px;" onclick="removeStop('${day}', ${idx})"></i>
+              <button style="background:none; border:none; color:var(--vivid-red); cursor:pointer; font-weight:bold;" onclick="removeStop('${day}', ${idx})">✕</button>
             </div>
           `;
         });
       }
     }
     container.innerHTML = html;
-    lucide.createIcons();
   }
 
   function removeStop(day, idx) {
@@ -702,7 +628,6 @@
   }
 
   window.addEventListener('DOMContentLoaded', () => {
-    lucide.createIcons();
     renderCards();
     renderItinerary();
     initBudget();
