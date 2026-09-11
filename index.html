@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Waypoint — Offline Travel Engine</title>
+<title>Waypoint — Travel Engine</title>
 
 <!-- Front-End CDN Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -12,23 +12,23 @@
 
 <style>
   :root {
-    /* Bold Green, Blue & Red Theme */
-    --ink: #060913;
-    --paper: #0b1120;
-    --glass: rgba(15, 23, 42, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.15);
+    /* Strict Green, Blue, and Red Core Palette */
+    --bg-dark: #050811;
+    --card-bg: rgba(12, 19, 36, 0.85);
+    --border-soft: rgba(255, 255, 255, 0.12);
     
-    --forest: #10b981;        /* Vibrant Green */
-    --forest-glow: rgba(16, 185, 129, 0.5);
+    /* Main Accent Colors */
+    --vivid-green: #10b981;
+    --green-glow: rgba(16, 185, 129, 0.4);
     
-    --cyan: #0284c7;          /* Electric Blue */
-    --cyan-glow: rgba(2, 132, 199, 0.5);
+    --electric-blue: #0284c7;
+    --blue-glow: rgba(2, 132, 199, 0.4);
     
-    --rust: #ef4444;          /* Vivid Red */
-    --rust-glow: rgba(239, 68, 68, 0.5);
+    --vivid-red: #ef4444;
+    --red-glow: rgba(239, 68, 68, 0.4);
     
-    --text: #f8fafc;
-    --text-soft: #94a3b8;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
     --line: #1e293b;
     --radius: 16px;
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -37,8 +37,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
   body {
-    background: var(--ink);
-    color: var(--text);
+    background: var(--bg-dark);
+    color: var(--text-main);
     font-family: var(--font);
     min-height: 100vh;
     overflow-x: hidden;
@@ -63,10 +63,9 @@
   }
 
   header {
-    background: var(--glass);
+    background: var(--card-bg);
     backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--border-soft);
     border-radius: var(--radius);
     padding: 16px 24px;
     display: flex;
@@ -87,35 +86,33 @@
   .brand-icon {
     width: 42px;
     height: 42px;
-    background: linear-gradient(135deg, var(--forest), var(--cyan));
+    background: linear-gradient(135deg, var(--vivid-green), var(--electric-blue));
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 20px var(--forest-glow);
+    box-shadow: 0 0 20px var(--green-glow);
   }
 
   .brand h1 {
     font-size: 22px;
     font-weight: 800;
     letter-spacing: -0.5px;
-    background: linear-gradient(to right, #fff, var(--text-soft));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #fff;
   }
 
   nav {
     display: flex;
     gap: 6px;
-    background: rgba(11, 17, 32, 0.9);
+    background: rgba(5, 8, 17, 0.8);
     padding: 4px;
     border-radius: 12px;
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--border-soft);
   }
 
   nav button {
     background: transparent;
-    color: var(--text-soft);
+    color: var(--text-muted);
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
@@ -130,8 +127,8 @@
 
   nav button.active {
     color: #fff;
-    background: linear-gradient(135deg, var(--cyan), #0369a1);
-    box-shadow: 0 0 15px var(--cyan-glow);
+    background: linear-gradient(135deg, var(--electric-blue), #0369a1);
+    box-shadow: 0 0 15px var(--blue-glow);
   }
 
   main {
@@ -153,17 +150,17 @@
     display: flex;
     gap: 12px;
     margin-bottom: 24px;
-    background: var(--glass);
+    background: var(--card-bg);
     padding: 8px 8px 8px 18px;
     border-radius: 14px;
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--border-soft);
   }
 
   .search-bar input {
     flex: 1;
     background: transparent;
     border: none;
-    color: var(--text);
+    color: var(--text-main);
     font-size: 16px;
     outline: none;
   }
@@ -175,8 +172,8 @@
   }
 
   .card {
-    background: var(--glass);
-    border: 2px solid var(--glass-border);
+    background: var(--card-bg);
+    border: 2px solid var(--border-soft);
     border-radius: var(--radius);
     padding: 24px;
     position: relative;
@@ -188,14 +185,14 @@
   }
 
   .card:hover {
-    border-color: var(--cyan);
+    border-color: var(--electric-blue);
     transform: translateY(-3px);
   }
 
   .card.selected {
-    border-color: var(--forest);
-    background: rgba(16, 185, 129, 0.08);
-    box-shadow: 0 0 25px var(--forest-glow);
+    border-color: var(--vivid-green);
+    background: rgba(16, 185, 129, 0.1);
+    box-shadow: 0 0 25px var(--green-glow);
   }
 
   .card-header {
@@ -213,7 +210,7 @@
 
   .card-body p {
     font-size: 14px;
-    color: var(--text-soft);
+    color: var(--text-muted);
     line-height: 1.6;
     margin-bottom: 16px;
   }
@@ -224,22 +221,21 @@
     gap: 6px;
     font-size: 13px;
     font-weight: 700;
-    color: var(--text-soft);
+    color: var(--text-muted);
   }
 
   .card.selected .selection-indicator {
-    color: var(--forest);
+    color: var(--vivid-green);
   }
 
-  /* Action Dock at the bottom */
   .selection-dock {
     position: sticky;
     bottom: 20px;
     margin-top: 24px;
-    background: rgba(15, 23, 42, 0.95);
+    background: rgba(12, 19, 36, 0.95);
     backdrop-filter: blur(16px);
-    border: 2px solid var(--forest);
-    box-shadow: 0 10px 30px var(--forest-glow);
+    border: 2px solid var(--vivid-green);
+    box-shadow: 0 10px 30px var(--green-glow);
     border-radius: var(--radius);
     padding: 16px 24px;
     display: flex;
@@ -269,36 +265,36 @@
   }
 
   .btn-green {
-    background: linear-gradient(135deg, var(--forest), #059669);
+    background: linear-gradient(135deg, var(--vivid-green), #059669);
     color: #fff;
-    box-shadow: 0 4px 14px var(--forest-glow);
+    box-shadow: 0 4px 14px var(--green-glow);
   }
 
   .btn-green:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.7);
+    box-shadow: 0 6px 20px var(--green-glow);
   }
 
   .btn-blue {
-    background: linear-gradient(135deg, var(--cyan), #0369a1);
+    background: linear-gradient(135deg, var(--electric-blue), #0369a1);
     color: #fff;
-    box-shadow: 0 4px 14px var(--cyan-glow);
+    box-shadow: 0 4px 14px var(--blue-glow);
   }
 
   .btn-blue:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.7);
+    box-shadow: 0 6px 20px var(--blue-glow);
   }
 
   .btn-red {
-    background: linear-gradient(135deg, var(--rust), #dc2626);
+    background: linear-gradient(135deg, var(--vivid-red), #dc2626);
     color: #fff;
-    box-shadow: 0 4px 14px var(--rust-glow);
+    box-shadow: 0 4px 14px var(--red-glow);
   }
 
   .btn-red:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.7);
+    box-shadow: 0 6px 20px var(--red-glow);
   }
 
   .layout-two-col {
@@ -308,23 +304,22 @@
   }
 
   .panel {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
+    background: var(--card-bg);
+    border: 1px solid var(--border-soft);
     border-radius: var(--radius);
     padding: 24px;
   }
 
-  /* Target Place Summary Banner on Plan Screen */
   .place-summary-card {
     background: linear-gradient(135deg, rgba(2, 132, 199, 0.2), rgba(16, 185, 129, 0.2));
-    border: 1px solid var(--cyan);
+    border: 1px solid var(--electric-blue);
     border-radius: 12px;
-    padding: 16px 20px;
+    padding: 18px 22px;
     margin-bottom: 24px;
   }
 
   .place-summary-card h2 {
-    color: var(--cyan);
+    color: var(--electric-blue);
     font-size: 20px;
     margin-bottom: 6px;
     display: flex;
@@ -334,7 +329,7 @@
 
   .place-summary-card p {
     font-size: 14px;
-    color: var(--text);
+    color: var(--text-main);
     line-height: 1.5;
   }
 
@@ -346,16 +341,16 @@
     display: block;
     font-size: 12px;
     font-weight: 700;
-    color: var(--text-soft);
+    color: var(--text-muted);
     margin-bottom: 6px;
     text-transform: uppercase;
   }
 
   .field input, .field select {
     width: 100%;
-    background: rgba(11, 17, 32, 0.9);
+    background: rgba(5, 8, 17, 0.9);
     border: 1px solid var(--line);
-    color: var(--text);
+    color: var(--text-main);
     padding: 12px;
     border-radius: 8px;
     outline: none;
@@ -363,9 +358,9 @@
   }
 
   .stop-item {
-    background: rgba(11, 17, 32, 0.8);
-    border: 1px solid var(--glass-border);
-    border-left: 4px solid var(--cyan);
+    background: rgba(5, 8, 17, 0.8);
+    border: 1px solid var(--border-soft);
+    border-left: 4px solid var(--electric-blue);
     border-radius: 10px;
     padding: 12px 16px;
     margin-bottom: 8px;
@@ -377,7 +372,7 @@
   .nav-footer-action {
     margin-top: 24px;
     padding-top: 16px;
-    border-top: 1px solid var(--glass-border);
+    border-top: 1px solid var(--border-soft);
     display: flex;
     justify-content: flex-end;
   }
@@ -399,7 +394,7 @@
       <div class="brand-icon"><i data-lucide="compass" style="color: #fff;"></i></div>
       <div>
         <h1>Waypoint</h1>
-        <p style="font-size: 11px; color: var(--text-soft);">Offline Travel Engine</p>
+        <p style="font-size: 11px; color: var(--text-muted);">Offline Travel Engine</p>
       </div>
     </div>
 
@@ -421,16 +416,15 @@
     <!-- EXPLORE PAGE -->
     <section id="page-home" class="page active">
       <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search or add any place..." onkeypress="if(event.key==='Enter') doSearch()">
+        <input type="text" id="search-input" placeholder="Search or add any location..." onkeypress="if(event.key==='Enter') doSearch()">
         <button class="btn btn-blue" style="width:auto; padding: 0 24px;" onclick="doSearch()">Search</button>
       </div>
 
       <div class="grid" id="destinations-grid"></div>
 
-      <!-- Action Dock (Selection -> Plan) -->
       <div class="selection-dock" id="dock">
         <div>
-          <span style="font-size: 12px; color: var(--text-soft); display: block;">Selected Destination:</span>
+          <span style="font-size: 12px; color: var(--text-muted); display: block;">Selected Destination:</span>
           <strong id="dock-title" style="font-size: 18px; color: #fff;">None</strong>
         </div>
         <button class="btn btn-green" onclick="proceedToPlan()">
@@ -441,15 +435,14 @@
 
     <!-- PLAN PAGE -->
     <section id="page-plan" class="page">
-      <!-- Destination Summary Description Banner -->
       <div class="place-summary-card" id="place-summary-banner">
-        <h2><i data-lucide="map-pin"></i> <span id="banner-title">No Place Selected</span></h2>
-        <p id="banner-desc">Select a location from the Explore screen to begin generating your custom itinerary.</p>
+        <h2><i data-lucide="map-pin"></i> <span id="banner-title">No Destination Selected</span></h2>
+        <p id="banner-desc">Select a location from the Explore screen to view details and construct your schedule.</p>
       </div>
 
       <div class="layout-two-col">
         <div class="panel">
-          <h2 style="margin-bottom: 20px; font-size: 18px; color: var(--forest);"><i data-lucide="plus-circle"></i> Add Activity</h2>
+          <h2 style="margin-bottom: 20px; font-size: 18px; color: var(--vivid-green);"><i data-lucide="plus-circle"></i> Add Activity</h2>
           <div class="field">
             <label>Day</label>
             <select id="stop-day">
@@ -472,7 +465,6 @@
         <div class="panel">
           <div id="itinerary-display"></div>
           
-          <!-- Plan -> Budget Navigation Button -->
           <div class="nav-footer-action">
             <button class="btn btn-blue" onclick="showPage('budget')">
               Continue to Budget <i data-lucide="arrow-right"></i>
@@ -485,7 +477,7 @@
     <!-- BUDGET PAGE -->
     <section id="page-budget" class="page">
       <div class="panel" style="max-width: 550px; margin: 0 auto;">
-        <h2 style="margin-bottom: 20px; color: var(--cyan);"><i data-lucide="wallet"></i> Expense Calculator</h2>
+        <h2 style="margin-bottom: 20px; color: var(--electric-blue);"><i data-lucide="wallet"></i> Expense Calculator</h2>
         <div class="field">
           <label>Total Allocated Budget ($)</label>
           <input type="number" id="total-budget" value="1000" oninput="recalcBudget()">
@@ -494,14 +486,13 @@
         <div style="margin-top: 24px; padding: 20px; background: rgba(0,0,0,0.5); border-radius: 12px; border: 1px solid var(--line);">
           <div style="display: flex; justify-content: space-between; font-weight: 700;">
             <span>Estimated Total:</span>
-            <span id="spend-total" style="color: var(--forest);">$0</span>
+            <span id="spend-total" style="color: var(--vivid-green);">$0</span>
           </div>
           <div style="height: 10px; background: var(--line); border-radius: 5px; margin-top: 12px; overflow: hidden;">
-            <div id="budget-progress" style="height: 100%; width: 0%; background: var(--forest); transition: width 0.3s ease;"></div>
+            <div id="budget-progress" style="height: 100%; width: 0%; background: var(--vivid-green); transition: width 0.3s ease;"></div>
           </div>
         </div>
 
-        <!-- Budget -> Home Navigation Button -->
         <div class="nav-footer-action" style="justify-content: center; margin-top: 24px;">
           <button class="btn btn-red" style="width: 100%;" onclick="showPage('home')">
             <i data-lucide="rotate-ccw"></i> Back to Explore
@@ -515,29 +506,28 @@
 
 <script>
   let places = [
-    { id: 1, name: "Tokyo, Japan", desc: "A bustling metropolis combining ultra-modern skyscrapers with ancient historic shrines and world-class culinary experiences." },
-    { id: 2, name: "Rome, Italy", desc: "The Eternal City, home to iconic ancient ruins like the Colosseum, vibrant street life, and unmatched historic architecture." },
-    { id: 3, name: "Maui, Hawaii", desc: "Tropical paradise known for volcanic beaches, crystal ocean waters, scenic coastal highways, and lush valleys." },
-    { id: 4, name: "Swiss Alps, Switzerland", desc: "Majestic alpine mountain peaks offering world-class skiing, scenic mountain railways, and breathtaking hiking trails." }
+    { id: 1, name: "Tokyo, Japan", desc: "A sprawling metropolis blending futuristic tech with traditional shrines, world-class street food, and vibrant district culture." },
+    { id: 2, name: "Rome, Italy", desc: "An open-air museum filled with ancient ruins, iconic architecture, rich history, and authentic culinary traditions." },
+    { id: 3, name: "Maui, Hawaii", desc: "A tropical destination featuring volcanic coastlines, crystal waters, scenic mountain highways, and lush valleys." },
+    { id: 4, name: "Swiss Alps, Switzerland", desc: "Dramatic alpine mountain ranges offering premier skiing, historic mountain railways, and panoramic hiking routes." }
   ];
 
   let selectedPlace = null;
   let itinerary = { "Day 1": [], "Day 2": [], "Day 3": [] };
   let budgetCategories = { Transport: 250, Lodging: 400, Food: 150, Activities: 100 };
 
-  // Canvas particle background with Red, Green, and Blue particles
   const canvas = document.getElementById('fx-canvas');
   const ctx = canvas.getContext('2d');
   function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
-  const colors = ['rgba(16, 185, 129, 0.35)', 'rgba(2, 132, 199, 0.35)', 'rgba(239, 68, 68, 0.35)'];
+  const particleColors = ['rgba(16, 185, 129, 0.35)', 'rgba(2, 132, 199, 0.35)', 'rgba(239, 68, 68, 0.35)'];
   let particles = Array.from({length: 35}, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
     r: Math.random() * 2.5 + 1,
-    color: colors[Math.floor(Math.random() * colors.length)],
+    color: particleColors[Math.floor(Math.random() * particleColors.length)],
     dx: (Math.random() - 0.5) * 0.4,
     dy: (Math.random() - 0.5) * 0.4
   }));
@@ -584,7 +574,7 @@
           <div>
             <div class="card-header">
               <h3>${item.name}</h3>
-              <i data-lucide="map-pin" style="color:${isSelected ? 'var(--forest)' : 'var(--cyan)'}"></i>
+              <i data-lucide="map-pin" style="color:${isSelected ? 'var(--vivid-green)' : 'var(--electric-blue)'}"></i>
             </div>
             <div class="card-body">
               <p>${item.desc}</p>
@@ -592,7 +582,7 @@
           </div>
           <div class="selection-indicator">
             <i data-lucide="${isSelected ? 'check-circle-2' : 'circle'}"></i>
-            <span>${isSelected ? 'Selected Destination' : 'Click to select'}</span>
+            <span>${isSelected ? 'Selected' : 'Click to select'}</span>
           </div>
         </div>
       `;
@@ -610,7 +600,6 @@
     document.getElementById('dock-title').textContent = selectedPlace.name;
     dock.classList.add('active');
 
-    // Update banner on plan screen
     document.getElementById('banner-title').textContent = selectedPlace.name;
     document.getElementById('banner-desc').textContent = selectedPlace.desc;
   }
@@ -618,7 +607,6 @@
   function proceedToPlan() {
     if (!selectedPlace) return;
     
-    // Add default arrival stop if empty
     if (itinerary["Day 1"].length === 0) {
       itinerary["Day 1"].unshift({ time: "09:00", name: `Arrive in ${selectedPlace.name}` });
     }
@@ -635,7 +623,7 @@
     const newPlace = {
       id: Date.now(),
       name: val,
-      desc: `Explore the sights, rich culture, and top attractions of ${val}.`
+      desc: `Explore the culture, historical landmarks, and top local spots in ${val}.`
     };
 
     places.unshift(newPlace);
@@ -657,21 +645,21 @@
 
   function renderItinerary() {
     const container = document.getElementById('itinerary-display');
-    let html = '<h2 style="margin-bottom:20px; color: var(--cyan);">Itinerary Schedule</h2>';
+    let html = '<h2 style="margin-bottom:20px; color: var(--electric-blue);">Itinerary Schedule</h2>';
 
     for (const [day, stops] of Object.entries(itinerary)) {
-      html += `<h3 style="color:var(--forest); margin: 16px 0 8px 0;">${day}</h3>`;
+      html += `<h3 style="color:var(--vivid-green); margin: 16px 0 8px 0;">${day}</h3>`;
       if (stops.length === 0) {
-        html += `<p style="font-size:13px; color:var(--text-soft);">No activities planned.</p>`;
+        html += `<p style="font-size:13px; color:var(--text-muted);">No activities planned.</p>`;
       } else {
         stops.forEach((s, idx) => {
           html += `
             <div class="stop-item">
               <div>
-                <strong style="color:var(--cyan); margin-right:8px;">${s.time}</strong>
+                <strong style="color:var(--electric-blue); margin-right:8px;">${s.time}</strong>
                 <span>${s.name}</span>
               </div>
-              <i data-lucide="trash-2" style="cursor:pointer; color:var(--rust); width:18px;" onclick="removeStop('${day}', ${idx})"></i>
+              <i data-lucide="trash-2" style="cursor:pointer; color:var(--vivid-red); width:18px;" onclick="removeStop('${day}', ${idx})"></i>
             </div>
           `;
         });
@@ -710,7 +698,7 @@
     const pct = Math.min((total / limit) * 100, 100);
     const bar = document.getElementById('budget-progress');
     bar.style.width = `${pct}%`;
-    bar.style.background = total > limit ? 'var(--rust)' : 'var(--forest)';
+    bar.style.background = total > limit ? 'var(--vivid-red)' : 'var(--vivid-green)';
   }
 
   window.addEventListener('DOMContentLoaded', () => {
