@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Waypoint — Pure Front-End Travel Engine</title>
+<title>Waypoint — Offline Travel Engine</title>
 
 <!-- Front-End CDN Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -129,26 +129,6 @@
     box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
   }
 
-  .api-btn {
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid var(--brass);
-    color: var(--brass);
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.3s ease;
-  }
-
-  .api-btn:hover {
-    background: var(--brass);
-    color: var(--ink);
-  }
-
   main {
     flex: 1;
     margin-top: 28px;
@@ -191,16 +171,22 @@
 
   .card {
     background: var(--glass);
-    border: 1px solid var(--glass-border);
+    border: 2px solid var(--glass-border);
     border-radius: var(--radius);
     overflow: hidden;
     position: relative;
-    transition: border-color 0.3s ease, transform 0.2s ease;
-    transform-style: preserve-3d;
+    transition: all 0.3s ease;
+    cursor: pointer;
   }
 
   .card:hover {
+    border-color: rgba(6, 182, 212, 0.5);
+  }
+
+  .card.selected {
     border-color: var(--cyan);
+    box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);
+    transform: scale(1.02);
   }
 
   .card-img {
@@ -223,37 +209,69 @@
     font-size: 13px;
     color: var(--text-soft);
     line-height: 1.5;
-    margin-bottom: 16px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .selection-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-soft);
+    margin-top: 8px;
+  }
+
+  .card.selected .selection-indicator {
+    color: var(--cyan);
+  }
+
+  /* Action Dock at the bottom for proceeding after selection */
+  .selection-dock {
+    position: sticky;
+    bottom: 20px;
+    margin-top: 24px;
+    background: rgba(14, 21, 38, 0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--cyan);
+    box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3);
+    border-radius: var(--radius);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transform: translateY(120%);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 90;
+  }
+
+  .selection-dock.active {
+    transform: translateY(0);
   }
 
   .btn {
-    padding: 10px 16px;
+    padding: 10px 20px;
     border-radius: 8px;
     border: none;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     transition: all 0.2s ease;
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, var(--forest), #059669);
+    background: linear-gradient(135deg, var(--cyan), #0891b2);
     color: #fff;
-    box-shadow: 0 4px 12px var(--forest-glow);
-    width: 100%;
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
   }
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px var(--forest-glow);
+    box-shadow: 0 6px 18px rgba(6, 182, 212, 0.6);
   }
 
   .layout-two-col {
@@ -304,34 +322,6 @@
     align-items: center;
   }
 
-  .modal {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(12px);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-
-  .modal.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .modal-card {
-    background: var(--paper);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    width: 90%;
-    max-width: 480px;
-    padding: 28px;
-  }
-
   @media(max-width: 768px) {
     .layout-two-col { grid-template-columns: 1fr; }
     header { flex-direction: column; gap: 16px; }
@@ -349,7 +339,7 @@
       <div class="brand-icon"><i data-lucide="compass" style="color: #fff;"></i></div>
       <div>
         <h1>Waypoint</h1>
-        <p style="font-size: 11px; color: var(--text-soft);">Pure Front-End Engine</p>
+        <p style="font-size: 11px; color: var(--text-soft);">Offline Travel Engine</p>
       </div>
     </div>
 
@@ -364,10 +354,6 @@
         <i data-lucide="wallet"></i> Budget
       </button>
     </nav>
-
-    <div class="api-btn" onclick="openApiModal()">
-      <i data-lucide="key"></i> <span id="api-status">API Keys</span>
-    </div>
   </header>
 
   <main>
@@ -375,11 +361,22 @@
     <!-- EXPLORE PAGE -->
     <section id="page-home" class="page active">
       <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search any place on Earth (OpenAI / Wiki Fetch)..." onkeypress="if(event.key==='Enter') doSearch()">
+        <input type="text" id="search-input" placeholder="Search or add any place..." onkeypress="if(event.key==='Enter') doSearch()">
         <button class="btn btn-primary" style="width:auto; padding: 0 24px;" onclick="doSearch()">Search</button>
       </div>
 
       <div class="grid" id="destinations-grid"></div>
+
+      <!-- Action Dock (appears when a destination is clicked) -->
+      <div class="selection-dock" id="dock">
+        <div>
+          <span style="font-size: 12px; color: var(--text-soft); display: block;">Selected Destination:</span>
+          <strong id="dock-title" style="font-size: 16px; color: #fff;">None</strong>
+        </div>
+        <button class="btn btn-primary" onclick="proceedToPlan()">
+          Proceed to Plan <i data-lucide="arrow-right"></i>
+        </button>
+      </div>
     </section>
 
     <!-- PLAN PAGE -->
@@ -401,9 +398,9 @@
           </div>
           <div class="field">
             <label>Location / Activity</label>
-            <input type="text" id="stop-name" placeholder="e.g. Visit Louvre Museum">
+            <input type="text" id="stop-name" placeholder="e.g. Visit Museum">
           </div>
-          <button class="btn btn-primary" onclick="addStop()"><i data-lucide="plus"></i> Add Stop</button>
+          <button class="btn btn-primary" style="width:100%;" onclick="addStop()"><i data-lucide="plus"></i> Add Stop</button>
         </div>
 
         <div class="panel" id="itinerary-display"></div>
@@ -434,51 +431,16 @@
   </main>
 </div>
 
-<!-- API KEY MODAL -->
-<div class="modal" id="api-modal">
-  <div class="modal-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <h3 style="display: flex; align-items: center; gap: 8px;"><i data-lucide="key" style="color: var(--brass);"></i> API Configuration</h3>
-      <i data-lucide="x" style="cursor: pointer;" onclick="closeApiModal()"></i>
-    </div>
-    <p style="font-size: 13px; color: var(--text-soft); margin-bottom: 16px; line-height: 1.5;">
-      You can enter your API keys dynamically below, or paste them directly into the code comments.
-    </p>
-    <div class="field">
-      <label>OpenAI API Key</label>
-      <input type="password" id="openai-key-field" placeholder="sk-proj-...">
-    </div>
-    <div class="field">
-      <label>Unsplash Access Key</label>
-      <input type="text" id="unsplash-key-field" placeholder="Paste Unsplash Client-ID...">
-    </div>
-    <button class="btn btn-primary" onclick="saveKey()">Save Keys</button>
-  </div>
-</div>
-
 <script>
-  /* =========================================================================
-     API KEYS CONFIGURATION
-     =========================================================================
-     Option 1: Paste your secret keys directly inside the quotes below.
-     Option 2: Leave them blank and enter them via the UI popup button in top right.
-     ========================================================================= */
-
-  // 🔑 PASTE YOUR OPENAI API KEY HERE:
-  let OPENAI_API_KEY = localStorage.getItem('waypoint_openai_key') || 'YOUR_OPENAI_API_KEY_HERE';
-
-  // 🔑 PASTE YOUR UNSPLASH API KEY HERE (OPTIONAL):
-  let unsplashKey = localStorage.getItem('waypoint_unsplash_key') || 'YOUR_UNSPLASH_API_KEY_HERE';
-
-  /* ========================================================================= */
-
+  // Built-in offline destination catalog (No APIs needed)
   let places = [
-    { name: "Tokyo, Japan", type: "City", desc: "Futuristic skyscrapers, historic shrines, and world-renowned food." },
-    { name: "Rome, Italy", type: "Culture", desc: "Ancient ruins, Colosseum, vibrant street life, and gelato." },
-    { name: "Maui, Hawaii", type: "Beach", desc: "Volcanic beaches, whale watching, and scenic coastal drives." },
-    { name: "Swiss Alps, Switzerland", type: "Nature", desc: "Breathtaking mountain peaks, skiing, and scenic railways." }
+    { id: 1, name: "Tokyo, Japan", desc: "Futuristic skyscrapers, historic shrines, and world-renowned street food.", img: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80" },
+    { id: 2, name: "Rome, Italy", desc: "Ancient ruins, Colosseum, vibrant street life, and authentic gelato.", img: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=600&q=80" },
+    { id: 3, name: "Maui, Hawaii", desc: "Volcanic beaches, ocean whale watching, and scenic coastal highways.", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" },
+    { id: 4, name: "Swiss Alps, Switzerland", desc: "Breathtaking alpine mountain peaks, world-class skiing, and railways.", img: "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=600&q=80" }
   ];
 
+  let selectedPlace = null;
   let itinerary = { "Day 1": [], "Day 2": [], "Day 3": [] };
   let budgetCategories = { Transport: 250, Lodging: 400, Food: 150, Activities: 100 };
 
@@ -528,106 +490,68 @@
     document.getElementById(`nav-${pageId}`).classList.add('active');
   }
 
-  /* =========================================================================
-     API FETCHING ENGINE (OpenAI + Wikipedia + Unsplash)
-     ========================================================================= */
-  async function fetchPlaceData(placeName) {
-    let img = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80';
-    let text = "An amazing destination ready to be explored.";
-
-    // 1. OpenAI GPT Request for custom travel description
-    if (OPENAI_API_KEY && OPENAI_API_KEY !== 'YOUR_OPENAI_API_KEY_HERE') {
-      try {
-        const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${OPENAI_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{
-              role: "user", 
-              content: `Provide a captivating, 2-sentence travel description for ${placeName}.`
-            }],
-            max_tokens: 60
-          })
-        });
-        const aiData = await aiResponse.json();
-        if (aiData.choices?.[0]?.message?.content) {
-          text = aiData.choices[0].message.content.trim();
-        }
-      } catch(e) {
-        console.warn("OpenAI API call failed, falling back to Wikipedia/Default", e);
-      }
-    }
-
-    // 2. Unsplash API Request for photos
-    if (unsplashKey && unsplashKey !== 'YOUR_UNSPLASH_API_KEY_HERE') {
-      try {
-        const res = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(placeName)}&client_id=${unsplashKey}&per_page=1`);
-        const data = await res.json();
-        if (data.results?.[0]) img = data.results[0].urls.regular;
-      } catch(e) {}
-    }
-
-    // 3. Wikipedia API fallback if OpenAI key is not provided
-    if (text === "An amazing destination ready to be explored.") {
-      try {
-        const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`);
-        const wikiData = await wikiRes.json();
-        if (wikiData.extract) text = wikiData.extract;
-        if ((!unsplashKey || unsplashKey === 'YOUR_UNSPLASH_API_KEY_HERE') && wikiData.thumbnail) {
-          img = wikiData.thumbnail.source;
-        }
-      } catch(e) {}
-    }
-
-    return { img, text };
-  }
-
-  async function renderCards() {
+  function renderCards() {
     const grid = document.getElementById('destinations-grid');
-    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">Fetching Place Details...</div>';
-
     let cards = '';
-    for (const item of places) {
-      const data = await fetchPlaceData(item.name);
+
+    places.forEach(item => {
+      const isSelected = selectedPlace && selectedPlace.id === item.id;
       cards += `
-        <div class="card" onmousemove="tilt(event, this)" onmouseleave="untilt(this)">
-          <img class="card-img" src="${data.img}" alt="${item.name}">
+        <div class="card ${isSelected ? 'selected' : ''}" onclick="selectCard(${item.id})">
+          <img class="card-img" src="${item.img}" alt="${item.name}">
           <div class="card-body">
             <h3>${item.name}</h3>
-            <p>${data.text || item.desc}</p>
-            <button class="btn btn-primary" onclick="quickAdd('${item.name}')">
-              <i data-lucide="plus"></i> Add To Itinerary
-            </button>
+            <p>${item.desc}</p>
+            <div class="selection-indicator">
+              <i data-lucide="${isSelected ? 'check-circle-2' : 'circle'}"></i>
+              <span>${isSelected ? 'Selected' : 'Click to select'}</span>
+            </div>
           </div>
         </div>
       `;
-    }
+    });
+
     grid.innerHTML = cards;
     lucide.createIcons();
-
-    gsap.from('.card', { opacity: 0, y: 30, duration: 0.5, stagger: 0.1 });
   }
 
-  function tilt(e, el) {
-    const r = el.getBoundingClientRect();
-    const x = e.clientX - r.left - r.width/2;
-    const y = e.clientY - r.top - r.height/2;
-    el.style.transform = `perspective(1000px) rotateX(${-y/25}deg) rotateY(${x/25}deg) translateY(-4px)`;
-  }
-  function untilt(el) {
-    el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
+  // 1. First step: Click a place card to highlight it
+  function selectCard(id) {
+    selectedPlace = places.find(p => p.id === id);
+    renderCards();
+
+    // Show action dock at the bottom
+    const dock = document.getElementById('dock');
+    document.getElementById('dock-title').textContent = selectedPlace.name;
+    dock.classList.add('active');
   }
 
-  async function doSearch() {
+  // 2. Second step: Click button in action dock to navigate to Plan screen
+  function proceedToPlan() {
+    if (!selectedPlace) return;
+    
+    // Add default arrival item for selected place
+    itinerary["Day 1"].unshift({ time: "09:00", name: `Arrive in ${selectedPlace.name}` });
+    
+    showPage('plan');
+    renderItinerary();
+    confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+  }
+
+  function doSearch() {
     const val = document.getElementById('search-input').value.trim();
     if (!val) return;
-    places.unshift({ name: val, type: "Search", desc: "Generating overview..." });
-    await renderCards();
-    confetti({ particleCount: 40, spread: 50, origin: { y: 0.8 } });
+    
+    const newPlace = {
+      id: Date.now(),
+      name: val,
+      desc: "Custom added destination ready to be explored.",
+      img: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80"
+    };
+
+    places.unshift(newPlace);
+    document.getElementById('search-input').value = '';
+    selectCard(newPlace.id);
   }
 
   function addStop() {
@@ -640,12 +564,6 @@
     document.getElementById('stop-name').value = '';
     renderItinerary();
     confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 } });
-  }
-
-  function quickAdd(placeName) {
-    itinerary["Day 1"].push({ time: "10:00", name: `Visit ${placeName}` });
-    showPage('plan');
-    renderItinerary();
   }
 
   function renderItinerary() {
@@ -706,36 +624,8 @@
     bar.style.background = total > limit ? 'var(--rust)' : 'var(--forest)';
   }
 
-  function openApiModal() { document.getElementById('api-modal').classList.add('active'); }
-  function closeApiModal() { document.getElementById('api-modal').classList.remove('active'); }
-  
-  function saveKey() {
-    const openAiVal = document.getElementById('openai-key-field').value.trim();
-    const unsplashVal = document.getElementById('unsplash-key-field').value.trim();
-    
-    if (openAiVal) {
-      OPENAI_API_KEY = openAiVal;
-      localStorage.setItem('waypoint_openai_key', openAiVal);
-    }
-    if (unsplashVal) {
-      unsplashKey = unsplashVal;
-      localStorage.setItem('waypoint_unsplash_key', unsplashVal);
-    }
-
-    document.getElementById('api-status').textContent = "Keys Active";
-    closeApiModal();
-    renderCards();
-  }
-
   window.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
-    if (OPENAI_API_KEY && OPENAI_API_KEY !== 'YOUR_OPENAI_API_KEY_HERE') {
-      document.getElementById('openai-key-field').value = OPENAI_API_KEY;
-      document.getElementById('api-status').textContent = "Keys Active";
-    }
-    if (unsplashKey && unsplashKey !== 'YOUR_UNSPLASH_API_KEY_HERE') {
-      document.getElementById('unsplash-key-field').value = unsplashKey;
-    }
     renderCards();
     renderItinerary();
     initBudget();
