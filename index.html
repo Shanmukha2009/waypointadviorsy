@@ -5,23 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Waypoint — Travel Engine</title>
 
+<!-- =========================================================================
+     CSS STYLES & ARCHITECTURE
+     ========================================================================= -->
 <style>
+  /* -------------------------------------------------------------------------
+     1. CSS CUSTOM PROPERTIES (VARIABLES)
+     Centralized design tokens for easy theme updates and visual consistency.
+     ------------------------------------------------------------------------- */
   :root {
-    /* Bold Green, Blue, and Red Core Palette */
-    --bg-dark: #050811;
-    --card-bg: #0c1324;
-    --border-soft: rgba(255, 255, 255, 0.15);
+    /* Dark Theme Surface Colors */
+    --bg-dark: #050811;      /* Deep obsidian main background */
+    --card-bg: #0c1324;      /* Elevated container/card background */
+    --border-soft: rgba(255, 255, 255, 0.15); /* Soft translucent white borders */
     
-    /* Vibrant Accent Colors */
+    /* Primary Accent Color: Vivid Green (Actions & Success States) */
     --vivid-green: #10b981;
     --green-glow: rgba(16, 185, 129, 0.5);
     
+    /* Secondary Accent Color: Electric Blue (Navigation & Headers) */
     --electric-blue: #0284c7;
     --blue-glow: rgba(2, 132, 199, 0.5);
     
+    /* Tertiary Accent Color: Vivid Red (Destructive Actions & Alerts) */
     --vivid-red: #ef4444;
     --red-glow: rgba(239, 68, 68, 0.5);
     
+    /* Typography & Structural Tokens */
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
     --line: #1e293b;
@@ -29,7 +39,15 @@
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* -------------------------------------------------------------------------
+     2. BASE & RESET STYLES
+     Standard box-sizing reset and baseline body setup.
+     ------------------------------------------------------------------------- */
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+  }
   
   body {
     background: var(--bg-dark);
@@ -39,6 +57,7 @@
     overflow-x: hidden;
   }
 
+  /* Main wrapper ensuring content stays centered and readable */
   .app {
     position: relative;
     z-index: 1;
@@ -50,6 +69,10 @@
     flex-direction: column;
   }
 
+  /* -------------------------------------------------------------------------
+     3. HEADER & NAVIGATION STYLES
+     Sticky glassmorphism header containing branding and tab navigation.
+     ------------------------------------------------------------------------- */
   header {
     background: var(--card-bg);
     border: 1px solid var(--border-soft);
@@ -64,6 +87,7 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.8);
   }
 
+  /* Logo badge and title container */
   .brand {
     display: flex;
     align-items: center;
@@ -87,6 +111,7 @@
     color: #fff;
   }
 
+  /* Tab Navigation Switcher */
   nav {
     display: flex;
     gap: 6px;
@@ -111,24 +136,29 @@
     transition: all 0.2s ease;
   }
 
+  /* Active Nav State with Blue Glow Highlight */
   nav button.active {
     color: #fff;
     background: var(--electric-blue);
     box-shadow: 0 0 15px var(--blue-glow);
   }
 
+  /* -------------------------------------------------------------------------
+     4. PAGE WRAPPERS & FADE-IN ANIMATIONS
+     Controls page visibility and tab transition animations.
+     ------------------------------------------------------------------------- */
   main {
     flex: 1;
     margin-top: 28px;
   }
 
   .page {
-    display: none;
+    display: none; /* Hidden by default until activated by JavaScript */
     animation: fadeIn 0.3s forwards ease-out;
   }
 
   .page.active {
-    display: block;
+    display: block; /* Shown when active class is applied */
   }
 
   @keyframes fadeIn {
@@ -136,6 +166,9 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* -------------------------------------------------------------------------
+     5. EXPLORE VIEW STYLES (Search, Cards, Grid, Dock)
+     ------------------------------------------------------------------------- */
   .search-bar {
     display: flex;
     gap: 12px;
@@ -161,6 +194,7 @@
     gap: 20px;
   }
 
+  /* Destination Cards */
   .card {
     background: var(--card-bg);
     border: 2px solid var(--border-soft);
@@ -179,6 +213,7 @@
     transform: translateY(-3px);
   }
 
+  /* Selected Card State Highlighted in Vivid Green */
   .card.selected {
     border-color: var(--vivid-green);
     background: rgba(16, 185, 129, 0.12);
@@ -218,6 +253,7 @@
     color: var(--vivid-green);
   }
 
+  /* Floating Bottom Dock for Selection Confirmation */
   .selection-dock {
     position: sticky;
     bottom: 20px;
@@ -227,7 +263,7 @@
     box-shadow: 0 10px 30px var(--green-glow);
     border-radius: var(--radius);
     padding: 16px 24px;
-    display: none;
+    display: none; /* Shown dynamically via JS */
     justify-content: space-between;
     align-items: center;
     z-index: 90;
@@ -237,6 +273,10 @@
     display: flex;
   }
 
+  /* -------------------------------------------------------------------------
+     6. BUTTON SYSTEM STYLES
+     Reusable button utility classes mapped to core color themes.
+     ------------------------------------------------------------------------- */
   .btn {
     padding: 12px 22px;
     border-radius: 10px;
@@ -251,6 +291,7 @@
     transition: all 0.2s ease;
   }
 
+  /* Green Action Button */
   .btn-green {
     background: var(--vivid-green);
     color: #fff;
@@ -262,6 +303,7 @@
     transform: translateY(-2px);
   }
 
+  /* Blue Navigation Button */
   .btn-blue {
     background: var(--electric-blue);
     color: #fff;
@@ -273,6 +315,7 @@
     transform: translateY(-2px);
   }
 
+  /* Red Reset/Destructive Button */
   .btn-red {
     background: var(--vivid-red);
     color: #fff;
@@ -284,6 +327,10 @@
     transform: translateY(-2px);
   }
 
+  /* -------------------------------------------------------------------------
+     7. ITINERARY & BUDGET LAYOUT STYLES
+     Two-column layout, form fields, and list components.
+     ------------------------------------------------------------------------- */
   .layout-two-col {
     display: grid;
     grid-template-columns: 320px 1fr;
@@ -297,6 +344,7 @@
     padding: 24px;
   }
 
+  /* Destination Selected Header Banner */
   .place-summary-card {
     background: rgba(2, 132, 199, 0.15);
     border: 2px solid var(--electric-blue);
@@ -317,6 +365,7 @@
     line-height: 1.5;
   }
 
+  /* Form Elements */
   .field {
     margin-bottom: 16px;
   }
@@ -341,6 +390,7 @@
     font-size: 14px;
   }
 
+  /* Itinerary Activity List Items */
   .stop-item {
     background: #050811;
     border: 1px solid var(--border-soft);
@@ -361,6 +411,7 @@
     justify-content: flex-end;
   }
 
+  /* Mobile Responsive Fallback */
   @media(max-width: 768px) {
     .layout-two-col { grid-template-columns: 1fr; }
     header { flex-direction: column; gap: 16px; }
@@ -369,12 +420,20 @@
 </head>
 <body>
 
+<!-- =========================================================================
+     HTML STRUCTURE
+     ========================================================================= -->
 <div class="app">
   
+  <!-- MAIN NAVIGATION HEADER -->
   <header>
+    <!-- Brand Title & Inline SVG Compass Icon -->
     <div class="brand">
       <div class="brand-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+        </svg>
       </div>
       <div>
         <h1>Waypoint</h1>
@@ -382,6 +441,7 @@
       </div>
     </div>
 
+    <!-- View Switcher Tabs -->
     <nav>
       <button id="nav-home" class="active" onclick="showPage('home')">Explore</button>
       <button id="nav-plan" onclick="showPage('plan')">Plan</button>
@@ -389,17 +449,21 @@
     </nav>
   </header>
 
+  <!-- MAIN VIEW CONTAINER -->
   <main>
 
-    <!-- EXPLORE PAGE -->
+    <!-- SECTION 1: EXPLORE VIEW -->
     <section id="page-home" class="page active">
+      <!-- Search Input Box -->
       <div class="search-bar">
         <input type="text" id="search-input" placeholder="Search or add any location..." onkeypress="if(event.key==='Enter') doSearch()">
         <button class="btn btn-blue" style="width:auto; padding: 0 24px;" onclick="doSearch()">Search</button>
       </div>
 
+      <!-- Destination Cards Grid (Populated dynamically via JavaScript) -->
       <div class="grid" id="destinations-grid"></div>
 
+      <!-- Selection Bottom Confirmation Dock -->
       <div class="selection-dock" id="dock">
         <div>
           <span style="font-size: 12px; color: var(--text-muted); display: block;">Selected Destination:</span>
@@ -409,14 +473,16 @@
       </div>
     </section>
 
-    <!-- PLAN PAGE -->
+    <!-- SECTION 2: PLAN & ITINERARY VIEW -->
     <section id="page-plan" class="page">
+      <!-- Selected Location Banner -->
       <div class="place-summary-card" id="place-summary-banner">
         <h2>📍 <span id="banner-title">No Destination Selected</span></h2>
         <p id="banner-desc">Select a location from the Explore screen to view details and construct your schedule.</p>
       </div>
 
       <div class="layout-two-col">
+        <!-- Activity Creation Form Panel -->
         <div class="panel">
           <h2 style="margin-bottom: 20px; font-size: 18px; color: var(--vivid-green);">+ Add Activity</h2>
           <div class="field">
@@ -438,6 +504,7 @@
           <button class="btn btn-green" style="width:100%;" onclick="addStop()">+ Add Stop</button>
         </div>
 
+        <!-- Rendered Schedule Output Container -->
         <div class="panel">
           <div id="itinerary-display"></div>
           
@@ -448,20 +515,27 @@
       </div>
     </section>
 
-    <!-- BUDGET PAGE -->
+    <!-- SECTION 3: BUDGET CALCULATOR VIEW -->
     <section id="page-budget" class="page">
       <div class="panel" style="max-width: 550px; margin: 0 auto;">
         <h2 style="margin-bottom: 20px; color: var(--electric-blue);">💳 Expense Calculator</h2>
+        
+        <!-- Total Target Budget Field -->
         <div class="field">
           <label>Total Allocated Budget ($)</label>
           <input type="number" id="total-budget" value="1000" oninput="recalcBudget()">
         </div>
+
+        <!-- Category Inputs (Populated dynamically via JS) -->
         <div id="budget-fields"></div>
+
+        <!-- Expense Total Display & Visual Meter Bar -->
         <div style="margin-top: 24px; padding: 20px; background: rgba(0,0,0,0.5); border-radius: 12px; border: 1px solid var(--line);">
           <div style="display: flex; justify-content: space-between; font-weight: 700;">
             <span>Estimated Total:</span>
             <span id="spend-total" style="color: var(--vivid-green);">$0</span>
           </div>
+          <!-- Budget Meter Progress Bar (Turns Red if Over Budget) -->
           <div style="height: 10px; background: var(--line); border-radius: 5px; margin-top: 12px; overflow: hidden;">
             <div id="budget-progress" style="height: 100%; width: 0%; background: var(--vivid-green); transition: width 0.3s ease;"></div>
           </div>
@@ -476,7 +550,16 @@
   </main>
 </div>
 
+<!-- =========================================================================
+     JAVASCRIPT LOGIC
+     ========================================================================= -->
 <script>
+  /* -------------------------------------------------------------------------
+     1. APPLICATION STATE MANAGEMENT
+     Central variables tracking destinations, selection status, schedules, & expenses.
+     ------------------------------------------------------------------------- */
+  
+  // Default available travel destinations array
   let places = [
     { id: 1, name: "Tokyo, Japan", desc: "A sprawling metropolis blending futuristic tech with traditional shrines, world-class street food, and vibrant district culture." },
     { id: 2, name: "Rome, Italy", desc: "An open-air museum filled with ancient ruins, iconic architecture, rich history, and authentic culinary traditions." },
@@ -484,24 +567,45 @@
     { id: 4, name: "Swiss Alps, Switzerland", desc: "Dramatic alpine mountain ranges offering premier skiing, historic mountain railways, and panoramic hiking routes." }
   ];
 
+  // Currently selected destination object (null by default)
   let selectedPlace = null;
+
+  // Itinerary schedule data structure initialized with 3 days
   let itinerary = { "Day 1": [], "Day 2": [], "Day 3": [] };
+
+  // Budget breakdown default values
   let budgetCategories = { Transport: 250, Lodging: 400, Food: 150, Activities: 100 };
 
+  /* -------------------------------------------------------------------------
+     2. NAVIGATION & TAB ROUTING LOGIC
+     Switches visible page sections and updates header tab active state.
+     ------------------------------------------------------------------------- */
   function showPage(pageId) {
+    // Hide all page sections
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    // Activate the target requested page
     document.getElementById(`page-${pageId}`).classList.add('active');
 
+    // Reset active highlights on navigation buttons
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    // Highlight active navigation button
     document.getElementById(`nav-${pageId}`).classList.add('active');
   }
 
+  /* -------------------------------------------------------------------------
+     3. DESTINATIONS & EXPLORE PAGE LOGIC
+     Renders cards, handles destination selection, and enables custom search/adds.
+     ------------------------------------------------------------------------- */
+
+  // Dynamically generates destination HTML cards from the 'places' array
   function renderCards() {
     const grid = document.getElementById('destinations-grid');
     let cards = '';
 
     places.forEach(item => {
+      // Check if current card matches the active user selection
       const isSelected = selectedPlace && selectedPlace.id === item.id;
+      
       cards += `
         <div class="card ${isSelected ? 'selected' : ''}" onclick="selectCard(${item.id})">
           <div>
@@ -520,62 +624,85 @@
       `;
     });
 
+    // Inject cards grid into DOM
     grid.innerHTML = cards;
   }
 
+  // Handles clicking a destination card to set active selection
   function selectCard(id) {
     selectedPlace = places.find(p => p.id === id);
+    
+    // Re-render cards to reflect updated selection UI highlights
     renderCards();
 
+    // Show floating confirmation dock at bottom of screen
     const dock = document.getElementById('dock');
     document.getElementById('dock-title').textContent = selectedPlace.name;
     dock.classList.add('active');
 
+    // Update banner summary on the Plan page
     document.getElementById('banner-title').textContent = selectedPlace.name;
     document.getElementById('banner-desc').textContent = selectedPlace.desc;
   }
 
+  // Transitions user from Explore view to Plan view with chosen destination
   function proceedToPlan() {
     if (!selectedPlace) return;
+    
+    // Pre-populate Day 1 arrival stop if schedule is completely empty
     if (itinerary["Day 1"].length === 0) {
       itinerary["Day 1"].unshift({ time: "09:00", name: `Arrive in ${selectedPlace.name}` });
     }
+    
     showPage('plan');
     renderItinerary();
   }
 
+  // Handles search field entry; adds custom location if it doesn't exist
   function doSearch() {
     const val = document.getElementById('search-input').value.trim();
     if (!val) return;
     
+    // Create new destination object from user input string
     const newPlace = {
-      id: Date.now(),
+      id: Date.now(), // Generate unique ID using current timestamp
       name: val,
       desc: `Explore the culture, historical landmarks, and top local spots in ${val}.`
     };
 
+    // Add new destination to beginning of list and auto-select it
     places.unshift(newPlace);
     document.getElementById('search-input').value = '';
     selectCard(newPlace.id);
   }
 
+  /* -------------------------------------------------------------------------
+     4. ITINERARY & SCHEDULE LOGIC
+     Handles adding activities, deleting items, and rendering time blocks.
+     ------------------------------------------------------------------------- */
+
+  // Adds new activity stop from form input into the itinerary state
   function addStop() {
     const day = document.getElementById('stop-day').value;
     const time = document.getElementById('stop-time').value;
     const name = document.getElementById('stop-name').value.trim();
 
-    if (!name) return;
+    if (!name) return; // Prevent adding empty items
+    
     itinerary[day].push({ time, name });
-    document.getElementById('stop-name').value = '';
+    document.getElementById('stop-name').value = ''; // Clear input field
     renderItinerary();
   }
 
+  // Renders formatted itinerary list grouped by days
   function renderItinerary() {
     const container = document.getElementById('itinerary-display');
     let html = '<h2 style="margin-bottom:20px; color: var(--electric-blue);">Itinerary Schedule</h2>';
 
+    // Loop through each scheduled day and render activities
     for (const [day, stops] of Object.entries(itinerary)) {
       html += `<h3 style="color:var(--vivid-green); margin: 16px 0 8px 0;">${day}</h3>`;
+      
       if (stops.length === 0) {
         html += `<p style="font-size:13px; color:var(--text-muted);">No activities planned.</p>`;
       } else {
@@ -586,6 +713,7 @@
                 <strong style="color:var(--electric-blue); margin-right:8px;">${s.time}</strong>
                 <span>${s.name}</span>
               </div>
+              <!-- Delete button passing day and index -->
               <button style="background:none; border:none; color:var(--vivid-red); cursor:pointer; font-weight:bold;" onclick="removeStop('${day}', ${idx})">✕</button>
             </div>
           `;
@@ -595,14 +723,22 @@
     container.innerHTML = html;
   }
 
+  // Removes specific activity item from itinerary state array
   function removeStop(day, idx) {
     itinerary[day].splice(idx, 1);
     renderItinerary();
   }
 
+  /* -------------------------------------------------------------------------
+     5. BUDGET CALCULATOR LOGIC
+     Dynamically calculates expenses and controls visual budget limit meters.
+     ------------------------------------------------------------------------- */
+
+  // Initializes budget input fields on page load
   function initBudget() {
     const container = document.getElementById('budget-fields');
     let html = '';
+    
     for (const [cat, val] of Object.entries(budgetCategories)) {
       html += `
         <div class="field">
@@ -615,22 +751,37 @@
     recalcBudget();
   }
 
+  // Recalculates total cost and adjusts progress bar color/width dynamically
   function recalcBudget() {
     let total = 0;
+    
+    // Sum all category input values
     document.querySelectorAll('.b-input').forEach(i => total += parseFloat(i.value) || 0);
+    
     const limit = parseFloat(document.getElementById('total-budget').value) || 1;
 
+    // Update total dollar display
     document.getElementById('spend-total').textContent = `$${total}`;
+    
+    // Calculate spent percentage relative to max budget
     const pct = Math.min((total / limit) * 100, 100);
     const bar = document.getElementById('budget-progress');
+    
+    // Update bar width percentage
     bar.style.width = `${pct}%`;
+    
+    // Switch progress bar color to Red if budget exceeded, otherwise keep Green
     bar.style.background = total > limit ? 'var(--vivid-red)' : 'var(--vivid-green)';
   }
 
+  /* -------------------------------------------------------------------------
+     6. INITIALIZATION EVENT LISTENERS
+     Fires when DOM is ready to bootstrap initial application state.
+     ------------------------------------------------------------------------- */
   window.addEventListener('DOMContentLoaded', () => {
-    renderCards();
-    renderItinerary();
-    initBudget();
+    renderCards();      // Render default destination cards
+    renderItinerary();  // Initialize itinerary container
+    initBudget();      // Render budget calculator controls
   });
 </script>
 </body>
