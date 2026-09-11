@@ -3,51 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Waypoint — Travel Engine</title>
+<title>Waypoint Ultimate — Travel Engine & Expedition Suite</title>
 
 <!-- =========================================================================
-     CSS STYLES & ARCHITECTURE
+     PRINTABLE STYLESHEET (AUTOMATIC OVERRIDE WHEN PRINTING TO PDF)
+     ========================================================================= -->
+<style media="print">
+  body { background: #fff !important; color: #000 !important; font-size: 12pt !important; }
+  .app, header, nav, .btn, .selection-dock, .search-bar, .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  .print-page { page-break-after: always; padding: 20px; }
+  h1 { color: #0284c7 !important; font-size: 24pt; border-bottom: 2px solid #0284c7; padding-bottom: 8px; }
+  h2 { color: #10b981 !important; font-size: 18pt; margin-top: 20px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+  th { background-color: #f1f5f9; }
+</style>
+
+<!-- =========================================================================
+     APP STYLES (NEON ULTRA-VIBRANT COLOR PALETTE & GLASSMORPHISM)
      ========================================================================= -->
 <style>
   /* -------------------------------------------------------------------------
-     1. CSS CUSTOM PROPERTIES (VARIABLES)
-     Centralized design tokens for easy theme updates and visual consistency.
+     1. EXTENDED HYPER-VIBRANT DESIGN TOKENS
      ------------------------------------------------------------------------- */
   :root {
-    /* Dark Theme Surface Colors */
-    --bg-dark: #050811;      /* Deep obsidian main background */
-    --card-bg: #0c1324;      /* Elevated container/card background */
-    --border-soft: rgba(255, 255, 255, 0.15); /* Soft translucent white borders */
+    /* Deep Cosmic Background Palette */
+    --bg-dark: #030712;
+    --card-bg: rgba(15, 23, 42, 0.85);
+    --border-soft: rgba(255, 255, 255, 0.18);
     
-    /* Primary Accent Color: Vivid Green (Actions & Success States) */
-    --vivid-green: #10b981;
-    --green-glow: rgba(16, 185, 129, 0.5);
+    /* Hyper Neon Accents */
+    --vivid-green: #00ff87;
+    --green-glow: rgba(0, 255, 135, 0.4);
     
-    /* Secondary Accent Color: Electric Blue (Navigation & Headers) */
-    --electric-blue: #0284c7;
-    --blue-glow: rgba(2, 132, 199, 0.5);
+    --electric-blue: #00d2ff;
+    --blue-glow: rgba(0, 210, 255, 0.4);
     
-    /* Tertiary Accent Color: Vivid Red (Destructive Actions & Alerts) */
-    --vivid-red: #ef4444;
-    --red-glow: rgba(239, 68, 68, 0.5);
-    
-    /* Typography & Structural Tokens */
+    --vivid-red: #ff0055;
+    --red-glow: rgba(255, 0, 85, 0.4);
+
+    --neon-purple: #a855f7;
+    --purple-glow: rgba(168, 85, 247, 0.4);
+
+    --neon-orange: #ff9900;
+    --orange-glow: rgba(255, 153, 0, 0.4);
+
+    --neon-pink: #ff007f;
+    --pink-glow: rgba(255, 0, 127, 0.4);
+
+    /* Text & Lines */
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
     --line: #1e293b;
-    --radius: 16px;
+    --radius: 18px;
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 
-  /* -------------------------------------------------------------------------
-     2. BASE & RESET STYLES
-     Standard box-sizing reset and baseline body setup.
-     ------------------------------------------------------------------------- */
-  * { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   
   body {
     background: var(--bg-dark);
@@ -55,13 +68,18 @@
     font-family: var(--font);
     min-height: 100vh;
     overflow-x: hidden;
+    background-image: 
+      radial-gradient(circle at 10% 10%, rgba(0, 210, 255, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(255, 0, 127, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(0, 255, 135, 0.05) 0%, transparent 60%);
   }
 
-  /* Main wrapper ensuring content stays centered and readable */
+  .print-only { display: none; }
+
   .app {
     position: relative;
     z-index: 1;
-    max-width: 1100px;
+    max-width: 1250px;
     margin: 0 auto;
     padding: 20px;
     min-height: 100vh;
@@ -70,11 +88,11 @@
   }
 
   /* -------------------------------------------------------------------------
-     3. HEADER & NAVIGATION STYLES
-     Sticky glassmorphism header containing branding and tab navigation.
+     2. HEADER & NAVIGATION SYSTEM
      ------------------------------------------------------------------------- */
   header {
     background: var(--card-bg);
+    backdrop-filter: blur(16px);
     border: 1px solid var(--border-soft);
     border-radius: var(--radius);
     padding: 16px 24px;
@@ -84,10 +102,9 @@
     position: sticky;
     top: 16px;
     z-index: 100;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(0, 210, 255, 0.2);
   }
 
-  /* Logo badge and title container */
   .brand {
     display: flex;
     align-items: center;
@@ -95,29 +112,36 @@
   }
 
   .brand-icon {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, var(--vivid-green), var(--electric-blue));
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--vivid-green), var(--electric-blue), var(--neon-pink));
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 20px var(--green-glow);
+    animation: pulseGlow 4s infinite alternate;
+  }
+
+  @keyframes pulseGlow {
+    0% { box-shadow: 0 0 15px var(--green-glow); }
+    100% { box-shadow: 0 0 25px var(--pink-glow); }
   }
 
   .brand h1 {
-    font-size: 22px;
-    font-weight: 800;
-    color: #fff;
+    font-size: 24px;
+    font-weight: 900;
+    background: linear-gradient(to right, #fff, var(--electric-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
-  /* Tab Navigation Switcher */
   nav {
     display: flex;
     gap: 6px;
-    background: #050811;
-    padding: 4px;
-    border-radius: 12px;
+    background: #030712;
+    padding: 6px;
+    border-radius: 14px;
     border: 1px solid var(--border-soft);
   }
 
@@ -125,49 +149,111 @@
     background: transparent;
     color: var(--text-muted);
     border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 10px 18px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
   }
 
-  /* Active Nav State with Blue Glow Highlight */
   nav button.active {
     color: #fff;
-    background: var(--electric-blue);
-    box-shadow: 0 0 15px var(--blue-glow);
+    background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple));
+    box-shadow: 0 0 20px var(--blue-glow);
   }
 
   /* -------------------------------------------------------------------------
-     4. PAGE WRAPPERS & FADE-IN ANIMATIONS
-     Controls page visibility and tab transition animations.
+     3. PAGE ANIMATIONS & CONTAINER LAYOUTS
      ------------------------------------------------------------------------- */
-  main {
-    flex: 1;
-    margin-top: 28px;
-  }
+  main { flex: 1; margin-top: 28px; }
 
   .page {
-    display: none; /* Hidden by default until activated by JavaScript */
-    animation: fadeIn 0.3s forwards ease-out;
+    display: none;
+    animation: fadeInSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  .page.active {
-    display: block; /* Shown when active class is applied */
-  }
+  .page.active { display: block; }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+  @keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
+  .layout-two-col {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 24px;
+  }
+
+  .panel {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
   /* -------------------------------------------------------------------------
-     5. EXPLORE VIEW STYLES (Search, Cards, Grid, Dock)
+     4. OVERKILL BUTTON SYSTEM
+     ------------------------------------------------------------------------- */
+  .btn {
+    padding: 12px 22px;
+    border-radius: 12px;
+    border: none;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-green {
+    background: linear-gradient(135deg, var(--vivid-green), #059669);
+    color: #000;
+    box-shadow: 0 4px 20px var(--green-glow);
+  }
+
+  .btn-blue {
+    background: linear-gradient(135deg, var(--electric-blue), #0284c7);
+    color: #000;
+    box-shadow: 0 4px 20px var(--blue-glow);
+  }
+
+  .btn-purple {
+    background: linear-gradient(135deg, var(--neon-purple), #7c3aed);
+    color: #fff;
+    box-shadow: 0 4px 20px var(--purple-glow);
+  }
+
+  .btn-pink {
+    background: linear-gradient(135deg, var(--neon-pink), #c026d3);
+    color: #fff;
+    box-shadow: 0 4px 20px var(--pink-glow);
+  }
+
+  .btn-red {
+    background: linear-gradient(135deg, var(--vivid-red), #dc2626);
+    color: #fff;
+    box-shadow: 0 4px 20px var(--red-glow);
+  }
+
+  .btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    filter: brightness(1.15);
+  }
+
+  /* -------------------------------------------------------------------------
+     5. DESTINATION CARDS & SELECTION DOCK
      ------------------------------------------------------------------------- */
   .search-bar {
     display: flex;
@@ -175,7 +261,7 @@
     margin-bottom: 24px;
     background: var(--card-bg);
     padding: 8px 8px 8px 18px;
-    border-radius: 14px;
+    border-radius: 16px;
     border: 1px solid var(--border-soft);
   }
 
@@ -194,225 +280,153 @@
     gap: 20px;
   }
 
-  /* Destination Cards */
   .card {
     background: var(--card-bg);
     border: 2px solid var(--border-soft);
     border-radius: var(--radius);
     padding: 24px;
-    position: relative;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--electric-blue), var(--neon-purple), var(--vivid-green));
+    opacity: 0;
+    transition: opacity 0.25s;
   }
 
   .card:hover {
     border-color: var(--electric-blue);
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 210, 255, 0.2);
   }
 
-  /* Selected Card State Highlighted in Vivid Green */
+  .card:hover::before { opacity: 1; }
+
   .card.selected {
     border-color: var(--vivid-green);
-    background: rgba(16, 185, 129, 0.12);
-    box-shadow: 0 0 25px var(--green-glow);
+    background: rgba(0, 255, 135, 0.08);
+    box-shadow: 0 0 30px var(--green-glow);
   }
 
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 12px;
-  }
+  .card.selected::before { opacity: 1; background: var(--vivid-green); }
 
-  .card-header h3 {
-    font-size: 20px;
-    color: #fff;
-    font-weight: 700;
-  }
-
-  .card-body p {
-    font-size: 14px;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 16px;
-  }
-
-  .selection-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-muted);
-  }
-
-  .card.selected .selection-indicator {
-    color: var(--vivid-green);
-  }
-
-  /* Floating Bottom Dock for Selection Confirmation */
   .selection-dock {
     position: sticky;
     bottom: 20px;
     margin-top: 24px;
-    background: #0c1324;
+    background: rgba(12, 19, 36, 0.95);
+    backdrop-filter: blur(20px);
     border: 2px solid var(--vivid-green);
-    box-shadow: 0 10px 30px var(--green-glow);
+    box-shadow: 0 10px 40px var(--green-glow);
     border-radius: var(--radius);
     padding: 16px 24px;
-    display: none; /* Shown dynamically via JS */
+    display: none;
     justify-content: space-between;
     align-items: center;
     z-index: 90;
   }
 
-  .selection-dock.active {
-    display: flex;
-  }
+  .selection-dock.active { display: flex; }
 
   /* -------------------------------------------------------------------------
-     6. BUTTON SYSTEM STYLES
-     Reusable button utility classes mapped to core color themes.
+     6. FORM & FIELD STYLES
      ------------------------------------------------------------------------- */
-  .btn {
-    padding: 12px 22px;
-    border-radius: 10px;
-    border: none;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.2s ease;
-  }
-
-  /* Green Action Button */
-  .btn-green {
-    background: var(--vivid-green);
-    color: #fff;
-    box-shadow: 0 4px 14px var(--green-glow);
-  }
-
-  .btn-green:hover {
-    background: #059669;
-    transform: translateY(-2px);
-  }
-
-  /* Blue Navigation Button */
-  .btn-blue {
-    background: var(--electric-blue);
-    color: #fff;
-    box-shadow: 0 4px 14px var(--blue-glow);
-  }
-
-  .btn-blue:hover {
-    background: #0369a1;
-    transform: translateY(-2px);
-  }
-
-  /* Red Reset/Destructive Button */
-  .btn-red {
-    background: var(--vivid-red);
-    color: #fff;
-    box-shadow: 0 4px 14px var(--red-glow);
-  }
-
-  .btn-red:hover {
-    background: #dc2626;
-    transform: translateY(-2px);
-  }
-
-  /* -------------------------------------------------------------------------
-     7. ITINERARY & BUDGET LAYOUT STYLES
-     Two-column layout, form fields, and list components.
-     ------------------------------------------------------------------------- */
-  .layout-two-col {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 24px;
-  }
-
-  .panel {
-    background: var(--card-bg);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
-    padding: 24px;
-  }
-
-  /* Destination Selected Header Banner */
-  .place-summary-card {
-    background: rgba(2, 132, 199, 0.15);
-    border: 2px solid var(--electric-blue);
-    border-radius: 12px;
-    padding: 18px 22px;
-    margin-bottom: 24px;
-  }
-
-  .place-summary-card h2 {
-    color: var(--electric-blue);
-    font-size: 20px;
-    margin-bottom: 6px;
-  }
-
-  .place-summary-card p {
-    font-size: 14px;
-    color: var(--text-main);
-    line-height: 1.5;
-  }
-
-  /* Form Elements */
-  .field {
-    margin-bottom: 16px;
-  }
+  .field { margin-bottom: 16px; }
 
   .field label {
     display: block;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--electric-blue);
     margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: #030712;
+    border: 1px solid var(--border-soft);
+    color: var(--text-main);
+    padding: 12px;
+    border-radius: 10px;
+    outline: none;
+    font-size: 14px;
+    transition: border 0.2s;
+  }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--electric-blue);
+    box-shadow: 0 0 10px var(--blue-glow);
+  }
+
+  /* -------------------------------------------------------------------------
+     7. ACCORDION DROPDOWN STYLES (CUSTOM EXPENSE MAKER)
+     ------------------------------------------------------------------------- */
+  .accordion {
+    background: #030712;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .accordion-header {
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.03);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    color: var(--electric-blue);
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .accordion-header:hover { background: rgba(0, 210, 255, 0.1); }
+
+  .accordion-content {
+    padding: 18px;
+    display: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .accordion-content.open { display: block; }
+
+  .badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
     text-transform: uppercase;
   }
 
-  .field input, .field select {
-    width: 100%;
-    background: #050811;
-    border: 1px solid var(--line);
-    color: var(--text-main);
-    padding: 12px;
-    border-radius: 8px;
-    outline: none;
-    font-size: 14px;
-  }
+  .badge-purple { background: rgba(168, 85, 247, 0.2); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
+  .badge-green { background: rgba(0, 255, 135, 0.2); color: var(--vivid-green); border: 1px solid var(--vivid-green); }
 
-  /* Itinerary Activity List Items */
   .stop-item {
-    background: #050811;
+    background: #030712;
     border: 1px solid var(--border-soft);
     border-left: 4px solid var(--electric-blue);
     border-radius: 10px;
-    padding: 12px 16px;
-    margin-bottom: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  .nav-footer-action {
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border-soft);
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  /* Mobile Responsive Fallback */
-  @media(max-width: 768px) {
+  @media(max-width: 850px) {
     .layout-two-col { grid-template-columns: 1fr; }
     header { flex-direction: column; gap: 16px; }
   }
@@ -421,129 +435,218 @@
 <body>
 
 <!-- =========================================================================
-     HTML STRUCTURE
+     PDF / PRINT LAYOUT (HIDDEN ON SCREEN, SHOWN WHEN PRINTING / SAVING PDF)
+     ========================================================================= -->
+<div class="print-only">
+  <div class="print-page">
+    <h1>Waypoint Expedition Master Briefing</h1>
+    <p>Generated Plan & Budget Itinerary Report</p>
+    
+    <h2>1. Selected Destinations Summary</h2>
+    <div id="print-summary-content"></div>
+
+    <h2>2. Calendar Scheduled Itinerary</h2>
+    <div id="print-itinerary-content"></div>
+
+    <h2>3. Comprehensive Budget & Custom Expenses</h2>
+    <div id="print-budget-content"></div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MAIN APPLICATION UI
      ========================================================================= -->
 <div class="app">
   
-  <!-- MAIN NAVIGATION HEADER -->
+  <!-- NAVIGATION HEADER -->
   <header>
-    <!-- Brand Title & Inline SVG Compass Icon -->
     <div class="brand">
       <div class="brand-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-        </svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
       </div>
       <div>
-        <h1>Waypoint</h1>
-        <p style="font-size: 11px; color: var(--text-muted);">Offline Travel Engine</p>
+        <h1>Waypoint Engine</h1>
+        <p style="font-size: 11px; color: var(--neon-purple); font-weight:700;">PRO EXPEDITION PLATFORM</p>
       </div>
     </div>
 
-    <!-- View Switcher Tabs -->
     <nav>
-      <button id="nav-home" class="active" onclick="showPage('home')">Explore</button>
-      <button id="nav-plan" onclick="showPage('plan')">Plan</button>
-      <button id="nav-budget" onclick="showPage('budget')">Budget</button>
+      <button id="nav-home" class="active" onclick="showPage('home')">🌐 Explore</button>
+      <button id="nav-plan" onclick="showPage('plan')">📅 Calendar Plan</button>
+      <button id="nav-budget" onclick="showPage('budget')">💎 Budget & Custom</button>
+      <button id="nav-summary" onclick="showPage('summary')">📑 Summary Dashboard</button>
     </nav>
   </header>
 
-  <!-- MAIN VIEW CONTAINER -->
   <main>
 
-    <!-- SECTION 1: EXPLORE VIEW -->
+    <!-- PAGE 1: EXPLORE & DESTINATIONS -->
     <section id="page-home" class="page active">
-      <!-- Search Input Box -->
       <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search or add any location..." onkeypress="if(event.key==='Enter') doSearch()">
-        <button class="btn btn-blue" style="width:auto; padding: 0 24px;" onclick="doSearch()">Search</button>
+        <input type="text" id="search-input" placeholder="Search or inject a new custom destination..." onkeypress="if(event.key==='Enter') doSearch()">
+        <button class="btn btn-blue" onclick="doSearch()">+ Add Location</button>
       </div>
 
-      <!-- Destination Cards Grid (Populated dynamically via JavaScript) -->
       <div class="grid" id="destinations-grid"></div>
 
-      <!-- Selection Bottom Confirmation Dock -->
       <div class="selection-dock" id="dock">
         <div>
-          <span style="font-size: 12px; color: var(--text-muted); display: block;">Selected Destination:</span>
-          <strong id="dock-title" style="font-size: 18px; color: #fff;">None</strong>
+          <span style="font-size: 11px; color: var(--text-muted); display: block; text-transform:uppercase; letter-spacing:1px; font-weight:800;">Target Selected</span>
+          <strong id="dock-title" style="font-size: 20px; color: #fff;">None</strong>
         </div>
-        <button class="btn btn-green" onclick="proceedToPlan()">Proceed to Plan &rarr;</button>
+        <button class="btn btn-green" onclick="proceedToPlan()">Lock In & Proceed to Calendar &rarr;</button>
       </div>
     </section>
 
-    <!-- SECTION 2: PLAN & ITINERARY VIEW -->
+    <!-- PAGE 2: CALENDAR DATES PLANNER -->
     <section id="page-plan" class="page">
-      <!-- Selected Location Banner -->
-      <div class="place-summary-card" id="place-summary-banner">
-        <h2>📍 <span id="banner-title">No Destination Selected</span></h2>
-        <p id="banner-desc">Select a location from the Explore screen to view details and construct your schedule.</p>
+      <div class="panel" style="margin-bottom: 24px; border-left: 4px solid var(--electric-blue);">
+        <h2 style="color: var(--electric-blue); font-size: 20px;">📍 Selected Target: <span id="banner-title" style="color: #fff;">None</span></h2>
+        <p id="banner-desc" style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Choose dates and time slots to structure your daily expedition calendar.</p>
       </div>
 
       <div class="layout-two-col">
-        <!-- Activity Creation Form Panel -->
+        <!-- Add Event Form -->
         <div class="panel">
-          <h2 style="margin-bottom: 20px; font-size: 18px; color: var(--vivid-green);">+ Add Activity</h2>
+          <h2 style="margin-bottom: 20px; font-size: 18px; color: var(--vivid-green);">+ Schedule Activity</h2>
+          
           <div class="field">
-            <label>Day</label>
-            <select id="stop-day">
-              <option value="Day 1">Day 1</option>
-              <option value="Day 2">Day 2</option>
-              <option value="Day 3">Day 3</option>
-            </select>
+            <label>Specific Target Date</label>
+            <input type="date" id="stop-date">
           </div>
+
           <div class="field">
-            <label>Time</label>
+            <label>Time Block</label>
             <input type="time" id="stop-time" value="09:00">
           </div>
+
           <div class="field">
-            <label>Location / Activity</label>
-            <input type="text" id="stop-name" placeholder="e.g. Visit Museum">
+            <label>Location / Activity Name</label>
+            <input type="text" id="stop-name" placeholder="e.g., Summit Hike or Dinner Reservation">
           </div>
-          <button class="btn btn-green" style="width:100%;" onclick="addStop()">+ Add Stop</button>
+
+          <button class="btn btn-green" style="width:100%;" onclick="addStop()">+ Commit To Schedule</button>
         </div>
 
-        <!-- Rendered Schedule Output Container -->
+        <!-- Rendered Calendar Schedule -->
         <div class="panel">
           <div id="itinerary-display"></div>
-          
-          <div class="nav-footer-action">
-            <button class="btn btn-blue" onclick="showPage('budget')">Continue to Budget &rarr;</button>
+          <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+            <button class="btn btn-purple" onclick="showPage('budget')">Configure Budget & Custom Expenses &rarr;</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 3: BUDGET CALCULATOR VIEW -->
+    <!-- PAGE 3: BUDGET & DROPDOWN CUSTOM EXPENSE CREATOR -->
     <section id="page-budget" class="page">
-      <div class="panel" style="max-width: 550px; margin: 0 auto;">
-        <h2 style="margin-bottom: 20px; color: var(--electric-blue);">💳 Expense Calculator</h2>
+      <div class="layout-two-col">
         
-        <!-- Total Target Budget Field -->
-        <div class="field">
-          <label>Total Allocated Budget ($)</label>
-          <input type="number" id="total-budget" value="1000" oninput="recalcBudget()">
-        </div>
+        <!-- Left Panel: Custom Expense Builder Dropdown -->
+        <div class="panel">
+          <h2 style="margin-bottom: 16px; color: var(--neon-pink);">⚙️ Expense Builder</h2>
 
-        <!-- Category Inputs (Populated dynamically via JS) -->
-        <div id="budget-fields"></div>
-
-        <!-- Expense Total Display & Visual Meter Bar -->
-        <div style="margin-top: 24px; padding: 20px; background: rgba(0,0,0,0.5); border-radius: 12px; border: 1px solid var(--line);">
-          <div style="display: flex; justify-content: space-between; font-weight: 700;">
-            <span>Estimated Total:</span>
-            <span id="spend-total" style="color: var(--vivid-green);">$0</span>
+          <!-- Dropdown Accordion Item 1: Preset Categories -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion('acc-1')">
+              <span>📊 Primary Category Allocations</span>
+              <span>▼</span>
+            </div>
+            <div class="accordion-content open" id="acc-1">
+              <div class="field">
+                <label>Flight / Transport ($)</label>
+                <input type="number" class="b-input" id="b-transport" value="450" oninput="recalcBudget()">
+              </div>
+              <div class="field">
+                <label>Hotels / Lodging ($)</label>
+                <input type="number" class="b-input" id="b-lodging" value="600" oninput="recalcBudget()">
+              </div>
+              <div class="field">
+                <label>Food & Dining ($)</label>
+                <input type="number" class="b-input" id="b-food" value="300" oninput="recalcBudget()">
+              </div>
+            </div>
           </div>
-          <!-- Budget Meter Progress Bar (Turns Red if Over Budget) -->
-          <div style="height: 10px; background: var(--line); border-radius: 5px; margin-top: 12px; overflow: hidden;">
-            <div id="budget-progress" style="height: 100%; width: 0%; background: var(--vivid-green); transition: width 0.3s ease;"></div>
+
+          <!-- Dropdown Accordion Item 2: Create Custom Dynamic Expenses -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion('acc-2')">
+              <span>➕ Add Custom Custom Line Item</span>
+              <span>▼</span>
+            </div>
+            <div class="accordion-content" id="acc-2">
+              <div class="field">
+                <label>Expense Name / Note</label>
+                <input type="text" id="custom-exp-name" placeholder="e.g. Scuba Gear Rental">
+              </div>
+              <div class="field">
+                <label>Cost Amount ($)</label>
+                <input type="number" id="custom-exp-cost" placeholder="150">
+              </div>
+              <button class="btn btn-pink" style="width: 100%;" onclick="addCustomExpense()">+ Inject Custom Expense</button>
+            </div>
           </div>
         </div>
 
-        <div class="nav-footer-action" style="justify-content: center; margin-top: 24px;">
-          <button class="btn btn-red" style="width: 100%;" onclick="showPage('home')">Back to Explore</button>
+        <!-- Right Panel: Live Budget Progress & Custom Expenses Breakdown -->
+        <div class="panel">
+          <h2 style="margin-bottom: 20px; color: var(--vivid-green);">💳 Live Financial Dashboard</h2>
+
+          <div class="field">
+            <label>Set Total Budget Limit ($)</label>
+            <input type="number" id="total-budget" value="2000" oninput="recalcBudget()" style="font-size: 18px; font-weight:800; color:var(--vivid-green);">
+          </div>
+
+          <!-- Progress Bar Meter -->
+          <div style="padding: 20px; background: #030712; border-radius: 14px; border: 1px solid var(--border-soft); margin-bottom:24px;">
+            <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 16px;">
+              <span>Total Estimated Spend:</span>
+              <span id="spend-total" style="color: var(--vivid-green);">$0</span>
+            </div>
+            <div style="height: 12px; background: var(--line); border-radius: 6px; margin-top: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+              <div id="budget-progress" style="height: 100%; width: 0%; background: var(--vivid-green); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);"></div>
+            </div>
+          </div>
+
+          <h3 style="font-size: 15px; color: var(--electric-blue); margin-bottom: 12px;">Custom Expense Items</h3>
+          <div id="custom-expense-list"></div>
         </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 4: SUMMARY DASHBOARD & PRINT/PDF EXPORT PAGE -->
+    <section id="page-summary" class="page">
+      <div class="panel" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, rgba(0, 210, 255, 0.15), rgba(168, 85, 247, 0.15)); border: 2px solid var(--electric-blue);">
+        <div>
+          <h2 style="font-size: 24px; color: #fff;">📑 Master Summary Dashboard</h2>
+          <p style="color: var(--text-muted); margin-top: 4px;">Review your consolidated trip itinerary, locations, and budget details.</p>
+        </div>
+        <button class="btn btn-green" onclick="generatePDFPrint()">🖨️ Export / Print PDF</button>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+        
+        <!-- Summary Box 1: Selected Destination -->
+        <div class="panel" style="border-top: 4px solid var(--electric-blue);">
+          <span class="badge badge-purple">Location Brief</span>
+          <h3 id="sum-dest-name" style="font-size:22px; color:#fff; margin-top:10px;">None Selected</h3>
+          <p id="sum-dest-desc" style="color: var(--text-muted); margin-top:8px; font-size:14px; line-height:1.6;">Select a target destination from the Explore tab.</p>
+        </div>
+
+        <!-- Summary Box 2: Financial Overview -->
+        <div class="panel" style="border-top: 4px solid var(--vivid-green);">
+          <span class="badge badge-green">Financial Status</span>
+          <h3 id="sum-budget-total" style="font-size:32px; color:var(--vivid-green); margin-top:10px;">$0</h3>
+          <p style="color: var(--text-muted); font-size:13px;" id="sum-budget-status">Budget Allocated</p>
+        </div>
+
+      </div>
+
+      <!-- Summary Box 3: Full Date Schedule -->
+      <div class="panel" style="margin-top:24px; border-top: 4px solid var(--neon-pink);">
+        <h3 style="color: var(--neon-pink); font-size: 18px; margin-bottom: 16px;">📅 Calendar Schedule Breakdown</h3>
+        <div id="sum-schedule-display"></div>
       </div>
     </section>
 
@@ -551,237 +654,316 @@
 </div>
 
 <!-- =========================================================================
-     JAVASCRIPT LOGIC
+     FULL JAVASCRIPT ARCHITECTURE & LOGIC
      ========================================================================= -->
 <script>
   /* -------------------------------------------------------------------------
-     1. APPLICATION STATE MANAGEMENT
-     Central variables tracking destinations, selection status, schedules, & expenses.
+     1. GLOBAL APP STATE
      ------------------------------------------------------------------------- */
-  
-  // Default available travel destinations array
   let places = [
-    { id: 1, name: "Tokyo, Japan", desc: "A sprawling metropolis blending futuristic tech with traditional shrines, world-class street food, and vibrant district culture." },
-    { id: 2, name: "Rome, Italy", desc: "An open-air museum filled with ancient ruins, iconic architecture, rich history, and authentic culinary traditions." },
-    { id: 3, name: "Maui, Hawaii", desc: "A tropical destination featuring volcanic coastlines, crystal waters, scenic mountain highways, and lush valleys." },
-    { id: 4, name: "Swiss Alps, Switzerland", desc: "Dramatic alpine mountain ranges offering premier skiing, historic mountain railways, and panoramic hiking routes." }
+    { id: 1, name: "Tokyo, Japan", desc: "A sprawling metropolis blending futuristic neon tech, historic temples, and world-class culinary experiences." },
+    { id: 2, name: "Rome, Italy", desc: "The eternal city featuring ancient Roman ruins, grand architecture, vibrant piazzas, and authentic cuisine." },
+    { id: 3, name: "Maui, Hawaii", desc: "Tropical island paradise with dramatic volcanic coastlines, lush rainforests, and world-renowned beaches." },
+    { id: 4, name: "Swiss Alps, Switzerland", desc: "Majestic alpine peak trails, luxury ski resorts, mountain railways, and serene glacial valleys." }
   ];
 
-  // Currently selected destination object (null by default)
-  let selectedPlace = null;
-
-  // Itinerary schedule data structure initialized with 3 days
-  let itinerary = { "Day 1": [], "Day 2": [], "Day 3": [] };
-
-  // Budget breakdown default values
-  let budgetCategories = { Transport: 250, Lodging: 400, Food: 150, Activities: 100 };
+  let selectedPlace = places[0]; // Default select first
+  let calendarItinerary = {};    // Structure: { "2026-10-12": [ {time, name} ] }
+  let customExpenses = [];       // Structure: [ {id, name, cost} ]
 
   /* -------------------------------------------------------------------------
-     2. NAVIGATION & TAB ROUTING LOGIC
-     Switches visible page sections and updates header tab active state.
+     2. ROUTING & PAGE NAVIGATION
      ------------------------------------------------------------------------- */
   function showPage(pageId) {
-    // Hide all page sections
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    // Activate the target requested page
     document.getElementById(`page-${pageId}`).classList.add('active');
 
-    // Reset active highlights on navigation buttons
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    // Highlight active navigation button
     document.getElementById(`nav-${pageId}`).classList.add('active');
+
+    if (pageId === 'summary') updateSummaryDashboard();
   }
 
   /* -------------------------------------------------------------------------
-     3. DESTINATIONS & EXPLORE PAGE LOGIC
-     Renders cards, handles destination selection, and enables custom search/adds.
+     3. DESTINATION EXPLORER LOGIC
      ------------------------------------------------------------------------- */
-
-  // Dynamically generates destination HTML cards from the 'places' array
   function renderCards() {
     const grid = document.getElementById('destinations-grid');
-    let cards = '';
+    let html = '';
 
     places.forEach(item => {
-      // Check if current card matches the active user selection
       const isSelected = selectedPlace && selectedPlace.id === item.id;
-      
-      cards += `
+      html += `
         <div class="card ${isSelected ? 'selected' : ''}" onclick="selectCard(${item.id})">
           <div>
-            <div class="card-header">
-              <h3>${item.name}</h3>
-              <span style="color:${isSelected ? 'var(--vivid-green)' : 'var(--electric-blue)'}">📍</span>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+              <h3 style="font-size:20px; color:#fff;">${item.name}</h3>
+              <span style="color:${isSelected ? 'var(--vivid-green)' : 'var(--electric-blue)'}; font-size:20px;">📍</span>
             </div>
-            <div class="card-body">
-              <p>${item.desc}</p>
-            </div>
+            <p style="font-size:14px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">${item.desc}</p>
           </div>
-          <div class="selection-indicator">
-            <span>${isSelected ? '✓ Selected' : '○ Click to select'}</span>
+          <div style="font-size:12px; font-weight:800; color:${isSelected ? 'var(--vivid-green)' : 'var(--text-muted)'}">
+            ${isSelected ? '✓ ACTIVE SELECTION' : '○ CLICK TO SELECT'}
           </div>
         </div>
       `;
     });
-
-    // Inject cards grid into DOM
-    grid.innerHTML = cards;
+    grid.innerHTML = html;
   }
 
-  // Handles clicking a destination card to set active selection
   function selectCard(id) {
     selectedPlace = places.find(p => p.id === id);
-    
-    // Re-render cards to reflect updated selection UI highlights
     renderCards();
 
-    // Show floating confirmation dock at bottom of screen
     const dock = document.getElementById('dock');
     document.getElementById('dock-title').textContent = selectedPlace.name;
     dock.classList.add('active');
 
-    // Update banner summary on the Plan page
     document.getElementById('banner-title').textContent = selectedPlace.name;
     document.getElementById('banner-desc').textContent = selectedPlace.desc;
   }
 
-  // Transitions user from Explore view to Plan view with chosen destination
   function proceedToPlan() {
     if (!selectedPlace) return;
-    
-    // Pre-populate Day 1 arrival stop if schedule is completely empty
-    if (itinerary["Day 1"].length === 0) {
-      itinerary["Day 1"].unshift({ time: "09:00", name: `Arrive in ${selectedPlace.name}` });
-    }
-    
     showPage('plan');
-    renderItinerary();
   }
 
-  // Handles search field entry; adds custom location if it doesn't exist
   function doSearch() {
     const val = document.getElementById('search-input').value.trim();
     if (!val) return;
-    
-    // Create new destination object from user input string
     const newPlace = {
-      id: Date.now(), // Generate unique ID using current timestamp
+      id: Date.now(),
       name: val,
-      desc: `Explore the culture, historical landmarks, and top local spots in ${val}.`
+      desc: `Explore the unique cultural sights, landmarks, and experiences in ${val}.`
     };
-
-    // Add new destination to beginning of list and auto-select it
     places.unshift(newPlace);
     document.getElementById('search-input').value = '';
     selectCard(newPlace.id);
   }
 
   /* -------------------------------------------------------------------------
-     4. ITINERARY & SCHEDULE LOGIC
-     Handles adding activities, deleting items, and rendering time blocks.
+     4. CALENDAR DATES & ITINERARY LOGIC
      ------------------------------------------------------------------------- */
-
-  // Adds new activity stop from form input into the itinerary state
   function addStop() {
-    const day = document.getElementById('stop-day').value;
-    const time = document.getElementById('stop-time').value;
-    const name = document.getElementById('stop-name').value.trim();
+    const dateVal = document.getElementById('stop-date').value;
+    const timeVal = document.getElementById('stop-time').value;
+    const nameVal = document.getElementById('stop-name').value.trim();
 
-    if (!name) return; // Prevent adding empty items
-    
-    itinerary[day].push({ time, name });
-    document.getElementById('stop-name').value = ''; // Clear input field
+    if (!dateVal || !nameVal) {
+      alert("Please select a date and enter an activity name.");
+      return;
+    }
+
+    if (!calendarItinerary[dateVal]) {
+      calendarItinerary[dateVal] = [];
+    }
+
+    calendarItinerary[dateVal].push({ time: timeVal, name: nameVal });
+    document.getElementById('stop-name').value = '';
     renderItinerary();
   }
 
-  // Renders formatted itinerary list grouped by days
   function renderItinerary() {
     const container = document.getElementById('itinerary-display');
-    let html = '<h2 style="margin-bottom:20px; color: var(--electric-blue);">Itinerary Schedule</h2>';
+    const dates = Object.keys(calendarItinerary).sort();
 
-    // Loop through each scheduled day and render activities
-    for (const [day, stops] of Object.entries(itinerary)) {
-      html += `<h3 style="color:var(--vivid-green); margin: 16px 0 8px 0;">${day}</h3>`;
-      
-      if (stops.length === 0) {
-        html += `<p style="font-size:13px; color:var(--text-muted);">No activities planned.</p>`;
-      } else {
-        stops.forEach((s, idx) => {
-          html += `
-            <div class="stop-item">
-              <div>
-                <strong style="color:var(--electric-blue); margin-right:8px;">${s.time}</strong>
-                <span>${s.name}</span>
-              </div>
-              <!-- Delete button passing day and index -->
-              <button style="background:none; border:none; color:var(--vivid-red); cursor:pointer; font-weight:bold;" onclick="removeStop('${day}', ${idx})">✕</button>
-            </div>
-          `;
-        });
-      }
+    if (dates.length === 0) {
+      container.innerHTML = `<p style="color:var(--text-muted); font-size:14px;">No dates or activities scheduled yet.</p>`;
+      return;
     }
+
+    let html = '<h2 style="color: var(--electric-blue); font-size: 18px; margin-bottom: 16px;">Scheduled Calendar</h2>';
+
+    dates.forEach(date => {
+      html += `<h3 style="color:var(--vivid-green); margin:16px 0 8px 0; font-size:15px;">🗓️ ${date}</h3>`;
+      calendarItinerary[date].forEach((stop, idx) => {
+        html += `
+          <div class="stop-item">
+            <div>
+              <strong style="color:var(--electric-blue); margin-right:10px;">${stop.time}</strong>
+              <span>${stop.name}</span>
+            </div>
+            <button style="background:none; border:none; color:var(--vivid-red); cursor:pointer; font-weight:bold;" onclick="removeStop('${date}', ${idx})">✕</button>
+          </div>
+        `;
+      });
+    });
+
     container.innerHTML = html;
   }
 
-  // Removes specific activity item from itinerary state array
-  function removeStop(day, idx) {
-    itinerary[day].splice(idx, 1);
+  function removeStop(date, idx) {
+    calendarItinerary[date].splice(idx, 1);
+    if (calendarItinerary[date].length === 0) delete calendarItinerary[date];
     renderItinerary();
   }
 
   /* -------------------------------------------------------------------------
-     5. BUDGET CALCULATOR LOGIC
-     Dynamically calculates expenses and controls visual budget limit meters.
+     5. BUDGET & DROPDOWN EXPENSE BUILDER
      ------------------------------------------------------------------------- */
+  function toggleAccordion(id) {
+    const acc = document.getElementById(id);
+    acc.classList.toggle('open');
+  }
 
-  // Initializes budget input fields on page load
-  function initBudget() {
-    const container = document.getElementById('budget-fields');
-    let html = '';
+  function addCustomExpense() {
+    const name = document.getElementById('custom-exp-name').value.trim();
+    const cost = parseFloat(document.getElementById('custom-exp-cost').value);
+
+    if (!name || isNaN(cost)) return;
+
+    customExpenses.push({ id: Date.now(), name, cost });
+    document.getElementById('custom-exp-name').value = '';
+    document.getElementById('custom-exp-cost').value = '';
     
-    for (const [cat, val] of Object.entries(budgetCategories)) {
-      html += `
-        <div class="field">
-          <label>${cat} ($)</label>
-          <input type="number" class="b-input" value="${val}" oninput="recalcBudget()">
-        </div>
-      `;
-    }
-    container.innerHTML = html;
+    renderCustomExpenses();
     recalcBudget();
   }
 
-  // Recalculates total cost and adjusts progress bar color/width dynamically
+  function renderCustomExpenses() {
+    const list = document.getElementById('custom-expense-list');
+    if (customExpenses.length === 0) {
+      list.innerHTML = `<p style="color:var(--text-muted); font-size:13px;">No custom expense items added yet.</p>`;
+      return;
+    }
+
+    let html = '';
+    customExpenses.forEach(item => {
+      html += `
+        <div style="display:flex; justify-space-between; align-items:center; background:#030712; padding:10px 14px; border-radius:8px; margin-bottom:8px; border:1px solid var(--border-soft);">
+          <span style="font-size:14px; color:#fff;">${item.name}</span>
+          <div>
+            <strong style="color:var(--neon-pink); margin-right:12px;">$${item.cost.toFixed(2)}</strong>
+            <button style="background:none; border:none; color:var(--vivid-red); cursor:pointer;" onclick="removeCustomExpense(${item.id})">✕</button>
+          </div>
+        </div>
+      `;
+    });
+    list.innerHTML = html;
+  }
+
+  function removeCustomExpense(id) {
+    customExpenses = customExpenses.filter(e => e.id !== id);
+    renderCustomExpenses();
+    recalcBudget();
+  }
+
   function recalcBudget() {
-    let total = 0;
-    
-    // Sum all category input values
-    document.querySelectorAll('.b-input').forEach(i => total += parseFloat(i.value) || 0);
-    
+    let baseTotal = 0;
+    document.querySelectorAll('.b-input').forEach(i => baseTotal += parseFloat(i.value) || 0);
+
+    let customTotal = customExpenses.reduce((sum, item) => sum + item.cost, 0);
+    let total = baseTotal + customTotal;
+
     const limit = parseFloat(document.getElementById('total-budget').value) || 1;
 
-    // Update total dollar display
-    document.getElementById('spend-total').textContent = `$${total}`;
-    
-    // Calculate spent percentage relative to max budget
+    document.getElementById('spend-total').textContent = `$${total.toFixed(2)}`;
     const pct = Math.min((total / limit) * 100, 100);
+    
     const bar = document.getElementById('budget-progress');
-    
-    // Update bar width percentage
     bar.style.width = `${pct}%`;
-    
-    // Switch progress bar color to Red if budget exceeded, otherwise keep Green
     bar.style.background = total > limit ? 'var(--vivid-red)' : 'var(--vivid-green)';
   }
 
   /* -------------------------------------------------------------------------
-     6. INITIALIZATION EVENT LISTENERS
-     Fires when DOM is ready to bootstrap initial application state.
+     6. SUMMARY DASHBOARD & PDF EXPORT
+     ------------------------------------------------------------------------- */
+  function updateSummaryDashboard() {
+    if (selectedPlace) {
+      document.getElementById('sum-dest-name').textContent = selectedPlace.name;
+      document.getElementById('sum-dest-desc').textContent = selectedPlace.desc;
+    }
+
+    let baseTotal = 0;
+    document.querySelectorAll('.b-input').forEach(i => baseTotal += parseFloat(i.value) || 0);
+    let customTotal = customExpenses.reduce((sum, item) => sum + item.cost, 0);
+    let grandTotal = baseTotal + customTotal;
+
+    document.getElementById('sum-budget-total').textContent = `$${grandTotal.toFixed(2)}`;
+
+    // Render schedule summary
+    const display = document.getElementById('sum-schedule-display');
+    const dates = Object.keys(calendarItinerary).sort();
+
+    if (dates.length === 0) {
+      display.innerHTML = `<p style="color:var(--text-muted); font-size:14px;">No activities scheduled on the calendar.</p>`;
+      return;
+    }
+
+    let html = '';
+    dates.forEach(date => {
+      html += `<h4 style="color:var(--vivid-green); margin-top:12px;">🗓️ Date: ${date}</h4><ul>`;
+      calendarItinerary[date].forEach(s => {
+        html += `<li style="color:var(--text-main); margin-left:20px; font-size:14px;"><strong>${s.time}</strong> — ${s.name}</li>`;
+      });
+      html += '</ul>';
+    });
+    display.innerHTML = html;
+  }
+
+  function generatePDFPrint() {
+    // Populate Printable PDF Container
+    const printSummary = document.getElementById('print-summary-content');
+    printSummary.innerHTML = `
+      <p><strong>Destination:</strong> ${selectedPlace ? selectedPlace.name : 'None Selected'}</p>
+      <p>${selectedPlace ? selectedPlace.desc : ''}</p>
+    `;
+
+    const printItinerary = document.getElementById('print-itinerary-content');
+    const dates = Object.keys(calendarItinerary).sort();
+    if (dates.length === 0) {
+      printItinerary.innerHTML = '<p>No activities planned.</p>';
+    } else {
+      let html = '';
+      dates.forEach(d => {
+        html += `<h3>Date: ${d}</h3><ul>`;
+        calendarItinerary[d].forEach(s => {
+          html += `<li><strong>${s.time}</strong>: ${s.name}</li>`;
+        });
+        html += '</ul>';
+      });
+      printItinerary.innerHTML = html;
+    }
+
+    const printBudget = document.getElementById('print-budget-content');
+    let baseTotal = 0;
+    document.querySelectorAll('.b-input').forEach(i => baseTotal += parseFloat(i.value) || 0);
+    let customTotal = customExpenses.reduce((sum, item) => sum + item.cost, 0);
+
+    let budgetTable = `
+      <table>
+        <tr><th>Category / Item</th><th>Cost Amount ($)</th></tr>
+        <tr><td>Transport / Flights</td><td>$${document.getElementById('b-transport').value}</td></tr>
+        <tr><td>Hotels / Lodging</td><td>$${document.getElementById('b-lodging').value}</td></tr>
+        <tr><td>Food & Dining</td><td>$${document.getElementById('b-food').value}</td></tr>
+    `;
+
+    customExpenses.forEach(c => {
+      budgetTable += `<tr><td>Custom: ${c.name}</td><td>$${c.cost.toFixed(2)}</td></tr>`;
+    });
+
+    budgetTable += `
+        <tr><td><strong>TOTAL ESTIMATED COST</strong></td><td><strong>$${(baseTotal + customTotal).toFixed(2)}</strong></td></tr>
+      </table>
+    `;
+
+    printBudget.innerHTML = budgetTable;
+
+    // Trigger browser PDF Print Prompt
+    window.print();
+  }
+
+  /* -------------------------------------------------------------------------
+     7. INITIALIZATION
      ------------------------------------------------------------------------- */
   window.addEventListener('DOMContentLoaded', () => {
-    renderCards();      // Render default destination cards
-    renderItinerary();  // Initialize itinerary container
-    initBudget();      // Render budget calculator controls
+    // Set default date to today in date picker
+    document.getElementById('stop-date').valueToDate = new Date();
+    
+    renderCards();
+    selectCard(1);
+    renderCustomExpenses();
+    recalcBudget();
   });
 </script>
 </body>
