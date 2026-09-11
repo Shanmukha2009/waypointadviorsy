@@ -179,9 +179,9 @@
 <div class="app">
  
   <!-- ============================================================
-       HEADER + NAV BAR
-       The three buttons below call goToPage() with the id of the
-       page they should show ("home", "plan", or "budget").
+        HEADER + NAV BAR
+        The three buttons below call goToPage() with the id of the
+        page they should show ("home", "plan", or "budget").
   ============================================================ -->
   <header>
     <h1>🧭 Waypoint</h1>
@@ -196,7 +196,7 @@
   <main>
  
     <!-- ============================================================
-         PAGE 1: HOME / EXPLORE
+          PAGE 1: HOME / EXPLORE
     ============================================================ -->
     <section class="page active" id="page-home">
       <div class="intro">
@@ -214,7 +214,7 @@
     </section>
  
     <!-- ============================================================
-         PAGE 2: PLAN (Itinerary builder)
+          PAGE 2: PLAN (Itinerary builder)
     ============================================================ -->
     <section class="page" id="page-plan">
       <div class="intro">
@@ -252,7 +252,7 @@
     </section>
  
     <!-- ============================================================
-         PAGE 3: BUDGET (last page — includes a "back to home" button)
+          PAGE 3: BUDGET (last page — includes a "back to home" button)
     ============================================================ -->
     <section class="page" id="page-budget">
       <div class="intro">
@@ -296,27 +296,15 @@
  
 <!-- ============================================================
      JAVASCRIPT
-     Plain, beginner-level JS. Every function has a comment
-     explaining what it does and why.
 ============================================================ -->
 <script>
- 
-  /* -----------------------------------------------------------
-     goToPage(pageName)
-     Switches which page is visible and which nav button is
-     highlighted. Called whenever a nav button (or the "Back to
-     Home" button) is clicked.
-  ----------------------------------------------------------- */
   function goToPage(pageName) {
-    // Hide every page first
     var allPages = document.querySelectorAll('.page');
     for (var i = 0; i < allPages.length; i++) {
       allPages[i].classList.remove('active');
     }
-    // Show only the page we want
     document.getElementById('page-' + pageName).classList.add('active');
  
-    // Un-highlight every nav button, then highlight the matching one
     var allNavButtons = document.querySelectorAll('nav button');
     for (var j = 0; j < allNavButtons.length; j++) {
       allNavButtons[j].classList.remove('active');
@@ -324,13 +312,9 @@
     document.getElementById('nav-' + pageName).classList.add('active');
   }
  
- 
   /* =============================================================
      PAGE 1: HOME / EXPLORE
   ============================================================= */
- 
-  // List of sample destinations to show as cards.
-  // Each one has a name, a category, a color, and a short description.
   var destinations = [
     { name: "Asheville, NC",       type: "Nature",    color: "#2F4B3C", desc: "Mountain trails, waterfalls, and a walkable downtown." },
     { name: "Chicago, IL",         type: "City",      color: "#1B2A2F", desc: "Museums, deep-dish pizza, and a lakefront you can walk for miles." },
@@ -341,21 +325,36 @@
   ];
  
   var filterOptions = ["All", "City", "Nature", "Beach", "Road trip"];
-  var activeFilter = "All";       // which filter chip is currently selected
-  var tripsAdded = [];            // list of destination names the user has "added"
+  var activeFilter = "All";
+  var searchQuery = "";
+  var tripsAdded = [];
  
-  /* -----------------------------------------------------------
-     renderFilterChips()
-     Builds the row of filter buttons (All / City / Nature / etc)
-     one time when the page loads.
-  ----------------------------------------------------------- */
   function renderFilterChips() {
     var chipRow = document.getElementById('chip-row');
-    chipRow.innerHTML = ""; // clear anything already there
+    chipRow.innerHTML = "";
  
+    // Render the search box directly inside the filter row without altering CSS structure
+    var searchBox = document.createElement('input');
+    searchBox.type = 'text';
+    searchBox.placeholder = 'Search U.S. location...';
+    searchBox.value = searchQuery;
+    searchBox.style.padding = '6px 12px';
+    searchBox.style.border = '1px solid var(--line)';
+    searchBox.style.borderRadius = '20px';
+    searchBox.style.fontSize = '13px';
+    searchBox.style.background = 'var(--paper)';
+    searchBox.style.fontFamily = 'inherit';
+    searchBox.style.outline = 'none';
+
+    searchBox.oninput = function () {
+      searchQuery = this.value.toLowerCase().trim();
+      renderDestinations();
+    };
+
+    chipRow.appendChild(searchBox);
+
     for (var i = 0; i < filterOptions.length; i++) {
       var optionName = filterOptions[i];
- 
       var chipButton = document.createElement('button');
       chipButton.className = 'chip';
       if (optionName === activeFilter) {
@@ -363,38 +362,36 @@
       }
       chipButton.textContent = optionName;
  
-      // When clicked, this chip becomes the active filter
       chipButton.onclick = function () {
         activeFilter = this.textContent;
-        renderFilterChips();     // redraw chips so the right one is highlighted
-        renderDestinations();    // redraw cards to match the new filter
+        renderFilterChips();
+        renderDestinations();
       };
  
       chipRow.appendChild(chipButton);
     }
   }
  
-  /* -----------------------------------------------------------
-     renderDestinations()
-     Builds the grid of destination cards, showing only the ones
-     that match the currently selected filter.
-  ----------------------------------------------------------- */
   function renderDestinations() {
     var grid = document.getElementById('destination-grid');
-    grid.innerHTML = ""; // clear the grid before redrawing it
+    grid.innerHTML = "";
  
+    var matches = 0;
+
     for (var i = 0; i < destinations.length; i++) {
       var place = destinations[i];
  
-      // Skip this destination if it doesn't match the active filter
       if (activeFilter !== "All" && place.type !== activeFilter) {
         continue;
       }
- 
-      // Check whether this trip has already been "added"
+
+      if (searchQuery !== "" && place.name.toLowerCase().indexOf(searchQuery) === -1 && place.desc.toLowerCase().indexOf(searchQuery) === -1) {
+        continue;
+      }
+
+      matches++;
       var alreadyAdded = tripsAdded.indexOf(place.name) !== -1;
  
-      // Build the card's HTML using a template string
       var card = document.createElement('div');
       card.className = 'card';
       card.innerHTML =
@@ -408,94 +405,82 @@
  
       grid.appendChild(card);
     }
+
+    // Dynamic fallback: If no preset matches the typed U.S. location, generate a card on the fly
+    if (matches === 0 && searchQuery !== "") {
+      var formattedName = searchQuery.charAt(0).toUpperCase() + searchQuery.slice(1);
+      var customCard = document.createElement('div');
+      customCard.className = 'card';
+      var alreadyAdded = tripsAdded.indexOf(formattedName) !== -1;
+
+      customCard.innerHTML =
+        '<div class="card-top" style="background:var(--forest)">' + formattedName + ', USA</div>' +
+        '<div class="card-body">' +
+          '<p>Custom destination added via search.</p>' +
+          '<button class="' + (alreadyAdded ? 'added' : '') + '" onclick="toggleTrip(\'' + formattedName + ', USA\', this)">' +
+            (alreadyAdded ? '✓ Added to planner' : 'Add to my trip') +
+          '</button>' +
+        '</div>';
+
+      grid.appendChild(customCard);
+    }
   }
  
-  /* -----------------------------------------------------------
-     toggleTrip(name, button)
-     Adds or removes a destination from the "added trips" list
-     when its card button is clicked, and updates the button text.
-  ----------------------------------------------------------- */
   function toggleTrip(name, button) {
     var index = tripsAdded.indexOf(name);
  
     if (index === -1) {
-      // Not added yet -> add it
       tripsAdded.push(name);
       button.classList.add('added');
       button.textContent = '✓ Added to planner';
     } else {
-      // Already added -> remove it
       tripsAdded.splice(index, 1);
       button.classList.remove('added');
       button.textContent = 'Add to my trip';
     }
   }
  
- 
   /* =============================================================
      PAGE 2: PLAN (Itinerary builder)
   ============================================================= */
- 
-  // The itinerary is stored as an object where each key is a day
-  // and each value is a list of stops for that day.
   var itinerary = {
     "Day 1": [{ time: "09:00", name: "Arrive & check into hotel" }],
     "Day 2": [],
     "Day 3": []
   };
  
-  /* -----------------------------------------------------------
-     addStop()
-     Reads the day/time/name from the form fields, adds a new
-     stop to that day's list, sorts the day by time, and
-     re-draws the itinerary.
-  ----------------------------------------------------------- */
   function addStop() {
     var day = document.getElementById('stop-day').value;
     var time = document.getElementById('stop-time').value || "—";
     var name = document.getElementById('stop-name').value.trim();
  
-    // Don't add a blank stop — send focus back to the name field instead
     if (name === "") {
       document.getElementById('stop-name').focus();
       return;
     }
  
     itinerary[day].push({ time: time, name: name });
- 
-    // Sort that day's stops so earlier times appear first
     itinerary[day].sort(function (a, b) {
       return a.time.localeCompare(b.time);
     });
  
-    document.getElementById('stop-name').value = ""; // clear the input box
+    document.getElementById('stop-name').value = "";
     renderItinerary();
   }
  
-  /* -----------------------------------------------------------
-     removeStop(day, index)
-     Deletes one stop from a given day's list, then redraws.
-  ----------------------------------------------------------- */
   function removeStop(day, index) {
     itinerary[day].splice(index, 1);
     renderItinerary();
   }
  
-  /* -----------------------------------------------------------
-     moveStop(day, index, direction)
-     Moves a stop up (direction = -1) or down (direction = 1)
-     within its day's list, then redraws.
-  ----------------------------------------------------------- */
   function moveStop(day, index, direction) {
     var list = itinerary[day];
     var newIndex = index + direction;
  
-    // Do nothing if the move would go outside the list
     if (newIndex < 0 || newIndex >= list.length) {
       return;
     }
  
-    // Swap the two stops
     var temp = list[index];
     list[index] = list[newIndex];
     list[newIndex] = temp;
@@ -503,16 +488,10 @@
     renderItinerary();
   }
  
-  /* -----------------------------------------------------------
-     renderItinerary()
-     Draws every day and its stops onto the page, with
-     up/down/remove buttons next to each stop.
-  ----------------------------------------------------------- */
   function renderItinerary() {
     var container = document.getElementById('itinerary-list');
     container.innerHTML = "";
  
-    // Loop through each day in the itinerary object
     for (var day in itinerary) {
       var dayStops = itinerary[day];
  
@@ -529,7 +508,6 @@
         continue;
       }
  
-      // Loop through each stop within this day
       for (var i = 0; i < dayStops.length; i++) {
         var stop = dayStops[i];
  
@@ -548,20 +526,12 @@
     }
   }
  
- 
   /* =============================================================
      PAGE 3: BUDGET (last page)
   ============================================================= */
- 
-  // Budget categories and a starting estimate for each one
   var budgetCategories = ["Transport", "Lodging", "Food", "Activities", "Misc"];
   var budgetStartValues = { Transport: 80, Lodging: 150, Food: 90, Activities: 50, Misc: 20 };
  
-  /* -----------------------------------------------------------
-     buildBudgetForm()
-     Creates one number input per budget category, one time,
-     when the page loads.
-  ----------------------------------------------------------- */
   function buildBudgetForm() {
     var fieldsContainer = document.getElementById('budget-fields');
     fieldsContainer.innerHTML = "";
@@ -580,16 +550,9 @@
     }
   }
  
-  /* -----------------------------------------------------------
-     updateBudget()
-     Adds up every category's cost, compares it to the total
-     budget, and updates the summary box (amount, progress bar,
-     and warning message). Runs every time a number is typed.
-  ----------------------------------------------------------- */
   function updateBudget() {
     var total = 0;
  
-    // Add up every category input
     for (var i = 0; i < budgetCategories.length; i++) {
       var category = budgetCategories[i];
       var inputValue = parseFloat(document.getElementById('cat-' + category).value);
@@ -600,11 +563,9 @@
     var budget = parseFloat(document.getElementById('total-budget').value);
     if (isNaN(budget)) { budget = 0; }
  
-    // Update the text showing the total spend and the budget
     document.getElementById('spend-amount').textContent = '$' + total;
     document.getElementById('budget-of').textContent = 'of $' + budget + ' budget';
  
-    // Update the progress bar width (capped at 100%)
     var percentUsed = 0;
     if (budget > 0) {
       percentUsed = (total / budget) * 100;
@@ -613,7 +574,6 @@
     var bar = document.getElementById('bar-fill');
     bar.style.width = percentUsed + '%';
  
-    // Update the warning message depending on whether we're over budget
     var statusMsg = document.getElementById('status-msg');
     if (total > budget) {
       bar.classList.add('over');
@@ -624,19 +584,12 @@
     }
   }
  
- 
-  /* =============================================================
-     STARTUP
-     Run these once when the page first loads, so everything
-     is drawn on screen before the user does anything.
-  ============================================================= */
+  /* STARTUP */
   renderFilterChips();
   renderDestinations();
   renderItinerary();
   buildBudgetForm();
   updateBudget();
- 
 </script>
 </body>
 </html>
- 
