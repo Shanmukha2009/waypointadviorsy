@@ -3,593 +3,743 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Waypoint — Plan trips without the chaos</title>
- 
-<!-- ============================================================
-     STYLES
-     Basic CSS: colors are defined once at the top as variables
-     so the whole site stays consistent. Everything below that
-     is grouped by section (header, home page, plan page, etc).
-============================================================ -->
+<title>Waypoint — Pure Front-End Travel Engine</title>
+
+<!-- Front-End CDN Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <style>
-  /* ---- COLOR VARIABLES ----
-     Defining colors once here means if we want to change the
-     theme later, we only change it in one place. */
-  :root{
-    --ink:#1B2A2F;      /* dark navy - header background */
-    --paper:#EFEAD9;    /* warm off-white - page background */
-    --forest:#2F4B3C;   /* green - main buttons */
-    --forest-dark:#203930;
-    --brass:#C08A34;    /* gold - accent color, active states */
-    --rust:#B4532A;     /* orange/red - warnings */
-    --text:#232323;     /* main text color */
-    --text-soft:#5A5A50;/* lighter gray text for descriptions */
-    --line:#C9C2A8;     /* border color */
-    --white:#FCFBF6;
+  :root {
+    --ink: #070a12;
+    --paper: #0e1526;
+    --glass: rgba(22, 32, 54, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --forest: #10b981;
+    --forest-glow: rgba(16, 185, 129, 0.4);
+    --brass: #f59e0b;
+    --rust: #ef4444;
+    --cyan: #06b6d4;
+    --violet: #8b5cf6;
+    --text: #f8fafc;
+    --text-soft: #94a3b8;
+    --line: #1e293b;
+    --radius: 16px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
- 
-  * { box-sizing: border-box; }
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--text);
-    font-family: Georgia, 'Times New Roman', serif; /* body text */
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    overflow-x: hidden;
   }
-  h1, h2, h3{
-    font-family: 'Trebuchet MS', sans-serif; /* headings look different from body text */
-    color:var(--ink);
-    margin:0;
+
+  #fx-canvas {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 0;
+    pointer-events: none;
   }
- 
-  .app{
-    max-width:900px;
-    margin:0 auto;
-    background:var(--white);
+
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
- 
-  /* ---- HEADER + NAVIGATION BAR ---- */
-  header{
-    background:var(--ink);
-    padding:20px 24px;
+
+  header {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 16px;
+    z-index: 100;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   }
-  header h1{ color:var(--white); font-size:24px; }
-  header p{ color:#B8C4BA; font-size:13px; margin:4px 0 18px 0; }
- 
-  nav{ display:flex; gap:10px; }
-  nav button{
-    background:#2A3D38;
-    color:#CBD6CE;
-    border:none;
-    padding:10px 16px;
-    border-radius:5px;
-    cursor:pointer;
-    font-size:14px;
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  nav button.active{
-    background:var(--brass);
-    color:var(--white);
-    font-weight:bold;
+
+  .brand-icon {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
   }
- 
-  main{ padding:28px 24px; }
- 
-  /* Each "page" is a div. We hide all pages, then show only
-     the one whose id matches the button that was clicked. */
-  .page{ display:none; }
-  .page.active{ display:block; }
- 
-  .intro{ max-width:600px; margin-bottom:26px; }
-  .intro h2{ font-size:24px; margin-bottom:8px; }
-  .intro p{ color:var(--text-soft); font-size:15px; }
-  .label-small{ font-size:12px; color:var(--rust); font-weight:bold; margin-bottom:6px; }
- 
-  /* ---- HOME PAGE: filter buttons + destination cards ---- */
-  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px; }
-  .chip{
-    border:1px solid var(--line);
-    background:var(--paper);
-    padding:6px 14px;
-    border-radius:20px;
-    font-size:13px;
-    cursor:pointer;
+
+  .brand h1 {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(to right, #fff, var(--text-soft));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
-  .chip.active{ background:var(--forest); color:var(--white); border-color:var(--forest); }
- 
-  .card-grid{
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap:16px;
+
+  nav {
+    display: flex;
+    gap: 6px;
+    background: rgba(14, 21, 38, 0.8);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
   }
-  .card{ border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--white); }
-  .card-top{ height:80px; display:flex; align-items:flex-end; padding:10px; color:var(--white); font-weight:bold; }
-  .card-body{ padding:12px; }
-  .card-body p{ font-size:13px; color:var(--text-soft); min-height:36px; }
-  .card-body button{
-    width:100%; padding:8px; background:var(--forest); color:var(--white);
-    border:none; border-radius:4px; cursor:pointer; font-weight:bold;
+
+  nav button {
+    background: transparent;
+    color: var(--text-soft);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
   }
-  .card-body button.added{ background:var(--brass); }
- 
-  /* ---- PLAN PAGE: form + itinerary list ---- */
-  .plan-layout{ display:flex; gap:28px; flex-wrap:wrap; }
-  .plan-form{ flex:1; min-width:220px; }
-  .plan-results{ flex:1.4; min-width:260px; }
- 
-  .field{ margin-bottom:14px; }
-  .field label{ display:block; font-size:12px; font-weight:bold; margin-bottom:4px; }
-  .field input, .field select{
-    width:100%; padding:8px; border:1px solid var(--line); border-radius:4px; font-size:14px;
+
+  nav button.active {
+    color: #fff;
+    background: linear-gradient(135deg, var(--cyan), #0891b2);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
   }
-  .btn-main{
-    width:100%; padding:10px; background:var(--forest); color:var(--white);
-    border:none; border-radius:4px; font-weight:bold; cursor:pointer;
+
+  .api-btn {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid var(--brass);
+    color: var(--brass);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
   }
- 
-  .day-title{ font-weight:bold; margin:14px 0 8px 0; color:var(--ink); }
-  .stop-row{
-    display:flex; justify-content:space-between; align-items:center;
-    background:var(--paper); padding:8px 10px; border-radius:4px; margin-bottom:6px; font-size:13.5px;
+
+  .api-btn:hover {
+    background: var(--brass);
+    color: var(--ink);
   }
-  .stop-row .time{ color:var(--rust); font-weight:bold; margin-right:6px; }
-  .stop-row button{
-    border:1px solid var(--line); background:none; border-radius:4px;
-    width:24px; height:24px; cursor:pointer; margin-left:4px;
+
+  main {
+    flex: 1;
+    margin-top: 28px;
   }
-  .empty-msg{ font-style:italic; color:var(--text-soft); font-size:13px; }
- 
-  /* ---- BUDGET PAGE (last page) ---- */
-  .budget-layout{ display:flex; gap:28px; flex-wrap:wrap; }
-  .budget-form{ flex:1; min-width:220px; }
-  .budget-summary{ flex:1; min-width:220px; }
- 
-  .budget-row{
-    display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px;
+
+  .page {
+    display: none;
+    opacity: 0;
   }
-  .budget-row input{ width:90px; padding:7px; border:1px solid var(--line); border-radius:4px; }
- 
-  .summary-box{ background:var(--ink); color:var(--white); border-radius:8px; padding:20px; }
-  .summary-box .big-number{ font-size:34px; font-weight:bold; margin:4px 0; }
-  .bar-track{ height:10px; background:#33453D; border-radius:10px; overflow:hidden; margin:14px 0 6px 0; }
-  .bar-fill{ height:100%; background:var(--brass); width:0%; }
-  .bar-fill.over{ background:var(--rust); }
-  .status-msg{ font-size:13px; margin-top:12px; padding-top:12px; border-top:1px solid #33453D; }
- 
-  /* ---- "Back to Home" button on the last page ---- */
-  .home-return{
-    margin-top:30px;
-    padding-top:16px;
-    border-top:1px dashed var(--line);
+
+  .page.active {
+    display: block;
+    opacity: 1;
   }
-  .home-return button{
-    background:none;
-    border:2px solid var(--forest);
-    color:var(--forest);
-    padding:10px 18px;
-    border-radius:5px;
-    font-weight:bold;
-    cursor:pointer;
-    font-size:14px;
+
+  .search-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    background: var(--glass);
+    padding: 8px 8px 8px 18px;
+    border-radius: 14px;
+    border: 1px solid var(--glass-border);
   }
-  .home-return button:hover{ background:var(--forest); color:var(--white); }
- 
-  footer{ text-align:center; padding:16px; font-size:12px; color:var(--text-soft); border-top:1px solid var(--line); }
+
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 16px;
+    outline: none;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.3s ease, transform 0.2s ease;
+    transform-style: preserve-3d;
+  }
+
+  .card:hover {
+    border-color: var(--cyan);
+  }
+
+  .card-img {
+    height: 180px;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .card-body h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+
+  .card-body p {
+    font-size: 13px;
+    color: var(--text-soft);
+    line-height: 1.5;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--forest), #059669);
+    color: #fff;
+    box-shadow: 0 4px 12px var(--forest-glow);
+    width: 100%;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--forest-glow);
+  }
+
+  .layout-two-col {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+  }
+
+  .panel {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-soft);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    background: rgba(14, 21, 38, 0.9);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 12px;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+  }
+
+  .stop-item {
+    background: rgba(14, 21, 38, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .modal.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal-card {
+    background: var(--paper);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 480px;
+    padding: 28px;
+  }
+
+  @media(max-width: 768px) {
+    .layout-two-col { grid-template-columns: 1fr; }
+    header { flex-direction: column; gap: 16px; }
+  }
 </style>
 </head>
 <body>
+
+<canvas id="fx-canvas"></canvas>
+
 <div class="app">
- 
-  <!-- ============================================================
-        HEADER + NAV BAR
-        The three buttons below call goToPage() with the id of the
-        page they should show ("home", "plan", or "budget").
-  ============================================================ -->
+  
   <header>
-    <h1>🧭 Waypoint</h1>
-    <p>plan the trip, not the panic</p>
+    <div class="brand">
+      <div class="brand-icon"><i data-lucide="compass" style="color: #fff;"></i></div>
+      <div>
+        <h1>Waypoint</h1>
+        <p style="font-size: 11px; color: var(--text-soft);">Pure Front-End Engine</p>
+      </div>
+    </div>
+
     <nav>
-      <button id="nav-home" class="active" onclick="goToPage('home')">1. Explore</button>
-      <button id="nav-plan" onclick="goToPage('plan')">2. Plan</button>
-      <button id="nav-budget" onclick="goToPage('budget')">3. Budget</button>
+      <button id="nav-home" class="active" onclick="showPage('home')">
+        <i data-lucide="map-pin"></i> Explore
+      </button>
+      <button id="nav-plan" onclick="showPage('plan')">
+        <i data-lucide="calendar"></i> Plan
+      </button>
+      <button id="nav-budget" onclick="showPage('budget')">
+        <i data-lucide="wallet"></i> Budget
+      </button>
     </nav>
+
+    <div class="api-btn" onclick="openApiModal()">
+      <i data-lucide="key"></i> <span id="api-status">API Keys</span>
+    </div>
   </header>
- 
+
   <main>
- 
-    <!-- ============================================================
-          PAGE 1: HOME / EXPLORE
-    ============================================================ -->
-    <section class="page active" id="page-home">
-      <div class="intro">
-        <div class="label-small">THE PROBLEM</div>
-        <h2>Trip planning shouldn't live in eleven browser tabs.</h2>
-        <p>Waypoint helps students and first-time trip planners pick a destination,
-           build a day-by-day plan, and track a budget — all in one place.</p>
+
+    <!-- EXPLORE PAGE -->
+    <section id="page-home" class="page active">
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search any place on Earth (OpenAI / Wiki Fetch)..." onkeypress="if(event.key==='Enter') doSearch()">
+        <button class="btn btn-primary" style="width:auto; padding: 0 24px;" onclick="doSearch()">Search</button>
       </div>
- 
-      <!-- Filter buttons get filled in by JavaScript (see renderFilterChips) -->
-      <div class="chip-row" id="chip-row"></div>
- 
-      <!-- Destination cards get filled in by JavaScript (see renderDestinations) -->
-      <div class="card-grid" id="destination-grid"></div>
+
+      <div class="grid" id="destinations-grid"></div>
     </section>
- 
-    <!-- ============================================================
-          PAGE 2: PLAN (Itinerary builder)
-    ============================================================ -->
-    <section class="page" id="page-plan">
-      <div class="intro">
-        <div class="label-small">FEATURE 1 — ITINERARY BUILDER</div>
-        <h2>Lay out each day, stop by stop.</h2>
-        <p>Pick a day, add a time and an activity, then hit add. You can reorder
-           or delete any stop after it's added.</p>
-      </div>
- 
-      <div class="plan-layout">
-        <!-- Form for adding a new stop -->
-        <div class="plan-form">
+
+    <!-- PLAN PAGE -->
+    <section id="page-plan" class="page">
+      <div class="layout-two-col">
+        <div class="panel">
+          <h2 style="margin-bottom: 20px; font-size: 18px;"><i data-lucide="plus-circle" style="color:var(--forest);"></i> Add Activity</h2>
           <div class="field">
-            <label for="stop-day">Day</label>
+            <label>Day</label>
             <select id="stop-day">
-              <option>Day 1</option>
-              <option>Day 2</option>
-              <option>Day 3</option>
+              <option value="Day 1">Day 1</option>
+              <option value="Day 2">Day 2</option>
+              <option value="Day 3">Day 3</option>
             </select>
           </div>
           <div class="field">
-            <label for="stop-time">Time</label>
+            <label>Time</label>
             <input type="time" id="stop-time" value="09:00">
           </div>
           <div class="field">
-            <label for="stop-name">Stop or activity</label>
-            <input type="text" id="stop-name" placeholder="e.g. Check into hostel">
+            <label>Location / Activity</label>
+            <input type="text" id="stop-name" placeholder="e.g. Visit Louvre Museum">
           </div>
-          <button class="btn-main" onclick="addStop()">Add to itinerary</button>
+          <button class="btn btn-primary" onclick="addStop()"><i data-lucide="plus"></i> Add Stop</button>
         </div>
- 
-        <!-- The itinerary itself gets filled in by JavaScript (see renderItinerary) -->
-        <div class="plan-results" id="itinerary-list"></div>
+
+        <div class="panel" id="itinerary-display"></div>
       </div>
     </section>
- 
-    <!-- ============================================================
-          PAGE 3: BUDGET (last page — includes a "back to home" button)
-    ============================================================ -->
-    <section class="page" id="page-budget">
-      <div class="intro">
-        <div class="label-small">FEATURE 2 — LIVE BUDGET TRACKER</div>
-        <h2>Watch the total before it watches you.</h2>
-        <p>Set what you can spend, then estimate costs by category. The total
-           updates as you type and warns you if you go over.</p>
-      </div>
- 
-      <div class="budget-layout">
-        <div class="budget-form">
-          <div class="budget-row">
-            <label for="total-budget">Total budget ($)</label>
-            <input type="number" id="total-budget" value="400" min="0" oninput="updateBudget()">
-          </div>
-          <!-- Category inputs get filled in by JavaScript (see buildBudgetForm) -->
-          <div id="budget-fields"></div>
+
+    <!-- BUDGET PAGE -->
+    <section id="page-budget" class="page">
+      <div class="panel" style="max-width: 550px; margin: 0 auto;">
+        <h2 style="margin-bottom: 20px;">Expense Calculator</h2>
+        <div class="field">
+          <label>Total Allocated Budget ($)</label>
+          <input type="number" id="total-budget" value="1000" oninput="recalcBudget()">
         </div>
- 
-        <div class="budget-summary">
-          <div class="summary-box">
-            <div>Estimated spend</div>
-            <div class="big-number" id="spend-amount">$0</div>
-            <div id="budget-of">of $400 budget</div>
-            <div class="bar-track"><div class="bar-fill" id="bar-fill"></div></div>
-            <div class="status-msg" id="status-msg">You're within budget.</div>
+        <div id="budget-fields"></div>
+        <div style="margin-top: 24px; padding: 20px; background: rgba(0,0,0,0.4); border-radius: 12px;">
+          <div style="display: flex; justify-content: space-between; font-weight: 700;">
+            <span>Estimated Total:</span>
+            <span id="spend-total" style="color: var(--cyan);">$0</span>
+          </div>
+          <div style="height: 8px; background: var(--line); border-radius: 4px; margin-top: 12px; overflow: hidden;">
+            <div id="budget-progress" style="height: 100%; width: 0%; background: var(--forest); transition: width 0.3s ease;"></div>
           </div>
         </div>
-      </div>
- 
-      <!-- Return-to-home button, since this is the last screen in the flow -->
-      <div class="home-return">
-        <button onclick="goToPage('home')">← Back to Home</button>
       </div>
     </section>
- 
+
   </main>
- 
-  <footer>Waypoint — a class project prototype, not for real bookings.</footer>
 </div>
- 
-<!-- ============================================================
-     JAVASCRIPT
-============================================================ -->
+
+<!-- API KEY MODAL -->
+<div class="modal" id="api-modal">
+  <div class="modal-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h3 style="display: flex; align-items: center; gap: 8px;"><i data-lucide="key" style="color: var(--brass);"></i> API Configuration</h3>
+      <i data-lucide="x" style="cursor: pointer;" onclick="closeApiModal()"></i>
+    </div>
+    <p style="font-size: 13px; color: var(--text-soft); margin-bottom: 16px; line-height: 1.5;">
+      You can enter your API keys dynamically below, or paste them directly into the code comments.
+    </p>
+    <div class="field">
+      <label>OpenAI API Key</label>
+      <input type="password" id="openai-key-field" placeholder="sk-proj-...">
+    </div>
+    <div class="field">
+      <label>Unsplash Access Key</label>
+      <input type="text" id="unsplash-key-field" placeholder="Paste Unsplash Client-ID...">
+    </div>
+    <button class="btn btn-primary" onclick="saveKey()">Save Keys</button>
+  </div>
+</div>
+
 <script>
-  function goToPage(pageName) {
-    var allPages = document.querySelectorAll('.page');
-    for (var i = 0; i < allPages.length; i++) {
-      allPages[i].classList.remove('active');
-    }
-    document.getElementById('page-' + pageName).classList.add('active');
- 
-    var allNavButtons = document.querySelectorAll('nav button');
-    for (var j = 0; j < allNavButtons.length; j++) {
-      allNavButtons[j].classList.remove('active');
-    }
-    document.getElementById('nav-' + pageName).classList.add('active');
-  }
- 
-  /* =============================================================
-     PAGE 1: HOME / EXPLORE
-  ============================================================= */
-  var destinations = [
-    { name: "Asheville, NC",       type: "Nature",    color: "#2F4B3C", desc: "Mountain trails, waterfalls, and a walkable downtown." },
-    { name: "Chicago, IL",         type: "City",      color: "#1B2A2F", desc: "Museums, deep-dish pizza, and a lakefront you can walk for miles." },
-    { name: "Outer Banks, NC",     type: "Beach",     color: "#3C6E71", desc: "Wide beaches, lighthouses, and quiet fishing towns." },
-    { name: "Nashville, TN",       type: "City",      color: "#7A3B2E", desc: "Live music on every corner and food trucks everywhere." },
-    { name: "Blue Ridge Parkway",  type: "Road trip", color: "#4B5D3A", desc: "Scenic overlooks strung along miles of mountain road." },
-    { name: "Savannah, GA",        type: "Nature",    color: "#4E6E58", desc: "Oak-lined squares, coastal marsh, and walkable history." }
+  /* =========================================================================
+     API KEYS CONFIGURATION
+     =========================================================================
+     Option 1: Paste your secret keys directly inside the quotes below.
+     Option 2: Leave them blank and enter them via the UI popup button in top right.
+     ========================================================================= */
+
+  // 🔑 PASTE YOUR OPENAI API KEY HERE:
+  let OPENAI_API_KEY = localStorage.getItem('waypoint_openai_key') || 'YOUR_OPENAI_API_KEY_HERE';
+
+  // 🔑 PASTE YOUR UNSPLASH API KEY HERE (OPTIONAL):
+  let unsplashKey = localStorage.getItem('waypoint_unsplash_key') || 'YOUR_UNSPLASH_API_KEY_HERE';
+
+  /* ========================================================================= */
+
+  let places = [
+    { name: "Tokyo, Japan", type: "City", desc: "Futuristic skyscrapers, historic shrines, and world-renowned food." },
+    { name: "Rome, Italy", type: "Culture", desc: "Ancient ruins, Colosseum, vibrant street life, and gelato." },
+    { name: "Maui, Hawaii", type: "Beach", desc: "Volcanic beaches, whale watching, and scenic coastal drives." },
+    { name: "Swiss Alps, Switzerland", type: "Nature", desc: "Breathtaking mountain peaks, skiing, and scenic railways." }
   ];
- 
-  var filterOptions = ["All", "City", "Nature", "Beach", "Road trip"];
-  var activeFilter = "All";
-  var searchQuery = "";
-  var tripsAdded = [];
- 
-  function renderFilterChips() {
-    var chipRow = document.getElementById('chip-row');
-    chipRow.innerHTML = "";
- 
-    // Render the search box directly inside the filter row without altering CSS structure
-    var searchBox = document.createElement('input');
-    searchBox.type = 'text';
-    searchBox.placeholder = 'Search U.S. location...';
-    searchBox.value = searchQuery;
-    searchBox.style.padding = '6px 12px';
-    searchBox.style.border = '1px solid var(--line)';
-    searchBox.style.borderRadius = '20px';
-    searchBox.style.fontSize = '13px';
-    searchBox.style.background = 'var(--paper)';
-    searchBox.style.fontFamily = 'inherit';
-    searchBox.style.outline = 'none';
 
-    searchBox.oninput = function () {
-      searchQuery = this.value.toLowerCase().trim();
-      renderDestinations();
-    };
+  let itinerary = { "Day 1": [], "Day 2": [], "Day 3": [] };
+  let budgetCategories = { Transport: 250, Lodging: 400, Food: 150, Activities: 100 };
 
-    chipRow.appendChild(searchBox);
+  // Canvas particle background setup
+  const canvas = document.getElementById('fx-canvas');
+  const ctx = canvas.getContext('2d');
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
 
-    for (var i = 0; i < filterOptions.length; i++) {
-      var optionName = filterOptions[i];
-      var chipButton = document.createElement('button');
-      chipButton.className = 'chip';
-      if (optionName === activeFilter) {
-        chipButton.className += ' active';
-      }
-      chipButton.textContent = optionName;
- 
-      chipButton.onclick = function () {
-        activeFilter = this.textContent;
-        renderFilterChips();
-        renderDestinations();
-      };
- 
-      chipRow.appendChild(chipButton);
-    }
-  }
- 
-  function renderDestinations() {
-    var grid = document.getElementById('destination-grid');
-    grid.innerHTML = "";
- 
-    var matches = 0;
+  let particles = Array.from({length: 30}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2 + 1,
+    dx: (Math.random() - 0.5) * 0.4,
+    dy: (Math.random() - 0.5) * 0.4
+  }));
 
-    for (var i = 0; i < destinations.length; i++) {
-      var place = destinations[i];
- 
-      if (activeFilter !== "All" && place.type !== activeFilter) {
-        continue;
-      }
-
-      if (searchQuery !== "" && place.name.toLowerCase().indexOf(searchQuery) === -1 && place.desc.toLowerCase().indexOf(searchQuery) === -1) {
-        continue;
-      }
-
-      matches++;
-      var alreadyAdded = tripsAdded.indexOf(place.name) !== -1;
- 
-      var card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML =
-        '<div class="card-top" style="background:' + place.color + '">' + place.name + '</div>' +
-        '<div class="card-body">' +
-          '<p>' + place.desc + '</p>' +
-          '<button class="' + (alreadyAdded ? 'added' : '') + '" onclick="toggleTrip(\'' + place.name + '\', this)">' +
-            (alreadyAdded ? '✓ Added to planner' : 'Add to my trip') +
-          '</button>' +
-        '</div>';
- 
-      grid.appendChild(card);
-    }
-
-    // Dynamic fallback: If no preset matches the typed U.S. location, generate a card on the fly
-    if (matches === 0 && searchQuery !== "") {
-      var formattedName = searchQuery.charAt(0).toUpperCase() + searchQuery.slice(1);
-      var customCard = document.createElement('div');
-      customCard.className = 'card';
-      var alreadyAdded = tripsAdded.indexOf(formattedName) !== -1;
-
-      customCard.innerHTML =
-        '<div class="card-top" style="background:var(--forest)">' + formattedName + ', USA</div>' +
-        '<div class="card-body">' +
-          '<p>Custom destination added via search.</p>' +
-          '<button class="' + (alreadyAdded ? 'added' : '') + '" onclick="toggleTrip(\'' + formattedName + ', USA\', this)">' +
-            (alreadyAdded ? '✓ Added to planner' : 'Add to my trip') +
-          '</button>' +
-        '</div>';
-
-      grid.appendChild(customCard);
-    }
-  }
- 
-  function toggleTrip(name, button) {
-    var index = tripsAdded.indexOf(name);
- 
-    if (index === -1) {
-      tripsAdded.push(name);
-      button.classList.add('added');
-      button.textContent = '✓ Added to planner';
-    } else {
-      tripsAdded.splice(index, 1);
-      button.classList.remove('added');
-      button.textContent = 'Add to my trip';
-    }
-  }
- 
-  /* =============================================================
-     PAGE 2: PLAN (Itinerary builder)
-  ============================================================= */
-  var itinerary = {
-    "Day 1": [{ time: "09:00", name: "Arrive & check into hotel" }],
-    "Day 2": [],
-    "Day 3": []
-  };
- 
-  function addStop() {
-    var day = document.getElementById('stop-day').value;
-    var time = document.getElementById('stop-time').value || "—";
-    var name = document.getElementById('stop-name').value.trim();
- 
-    if (name === "") {
-      document.getElementById('stop-name').focus();
-      return;
-    }
- 
-    itinerary[day].push({ time: time, name: name });
-    itinerary[day].sort(function (a, b) {
-      return a.time.localeCompare(b.time);
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(6, 182, 212, 0.25)";
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
     });
- 
-    document.getElementById('stop-name').value = "";
-    renderItinerary();
+    requestAnimationFrame(drawParticles);
   }
- 
-  function removeStop(day, index) {
-    itinerary[day].splice(index, 1);
-    renderItinerary();
+  drawParticles();
+
+  function showPage(pageId) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(p => {
+      p.classList.remove('active');
+      p.style.opacity = 0;
+    });
+
+    const target = document.getElementById(`page-${pageId}`);
+    target.classList.add('active');
+    
+    gsap.fromTo(target, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.35 });
+
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(`nav-${pageId}`).classList.add('active');
   }
- 
-  function moveStop(day, index, direction) {
-    var list = itinerary[day];
-    var newIndex = index + direction;
- 
-    if (newIndex < 0 || newIndex >= list.length) {
-      return;
+
+  /* =========================================================================
+     API FETCHING ENGINE (OpenAI + Wikipedia + Unsplash)
+     ========================================================================= */
+  async function fetchPlaceData(placeName) {
+    let img = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80';
+    let text = "An amazing destination ready to be explored.";
+
+    // 1. OpenAI GPT Request for custom travel description
+    if (OPENAI_API_KEY && OPENAI_API_KEY !== 'YOUR_OPENAI_API_KEY_HERE') {
+      try {
+        const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${OPENAI_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{
+              role: "user", 
+              content: `Provide a captivating, 2-sentence travel description for ${placeName}.`
+            }],
+            max_tokens: 60
+          })
+        });
+        const aiData = await aiResponse.json();
+        if (aiData.choices?.[0]?.message?.content) {
+          text = aiData.choices[0].message.content.trim();
+        }
+      } catch(e) {
+        console.warn("OpenAI API call failed, falling back to Wikipedia/Default", e);
+      }
     }
- 
-    var temp = list[index];
-    list[index] = list[newIndex];
-    list[newIndex] = temp;
- 
+
+    // 2. Unsplash API Request for photos
+    if (unsplashKey && unsplashKey !== 'YOUR_UNSPLASH_API_KEY_HERE') {
+      try {
+        const res = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(placeName)}&client_id=${unsplashKey}&per_page=1`);
+        const data = await res.json();
+        if (data.results?.[0]) img = data.results[0].urls.regular;
+      } catch(e) {}
+    }
+
+    // 3. Wikipedia API fallback if OpenAI key is not provided
+    if (text === "An amazing destination ready to be explored.") {
+      try {
+        const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`);
+        const wikiData = await wikiRes.json();
+        if (wikiData.extract) text = wikiData.extract;
+        if ((!unsplashKey || unsplashKey === 'YOUR_UNSPLASH_API_KEY_HERE') && wikiData.thumbnail) {
+          img = wikiData.thumbnail.source;
+        }
+      } catch(e) {}
+    }
+
+    return { img, text };
+  }
+
+  async function renderCards() {
+    const grid = document.getElementById('destinations-grid');
+    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">Fetching Place Details...</div>';
+
+    let cards = '';
+    for (const item of places) {
+      const data = await fetchPlaceData(item.name);
+      cards += `
+        <div class="card" onmousemove="tilt(event, this)" onmouseleave="untilt(this)">
+          <img class="card-img" src="${data.img}" alt="${item.name}">
+          <div class="card-body">
+            <h3>${item.name}</h3>
+            <p>${data.text || item.desc}</p>
+            <button class="btn btn-primary" onclick="quickAdd('${item.name}')">
+              <i data-lucide="plus"></i> Add To Itinerary
+            </button>
+          </div>
+        </div>
+      `;
+    }
+    grid.innerHTML = cards;
+    lucide.createIcons();
+
+    gsap.from('.card', { opacity: 0, y: 30, duration: 0.5, stagger: 0.1 });
+  }
+
+  function tilt(e, el) {
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width/2;
+    const y = e.clientY - r.top - r.height/2;
+    el.style.transform = `perspective(1000px) rotateX(${-y/25}deg) rotateY(${x/25}deg) translateY(-4px)`;
+  }
+  function untilt(el) {
+    el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
+  }
+
+  async function doSearch() {
+    const val = document.getElementById('search-input').value.trim();
+    if (!val) return;
+    places.unshift({ name: val, type: "Search", desc: "Generating overview..." });
+    await renderCards();
+    confetti({ particleCount: 40, spread: 50, origin: { y: 0.8 } });
+  }
+
+  function addStop() {
+    const day = document.getElementById('stop-day').value;
+    const time = document.getElementById('stop-time').value;
+    const name = document.getElementById('stop-name').value.trim();
+
+    if (!name) return;
+    itinerary[day].push({ time, name });
+    document.getElementById('stop-name').value = '';
+    renderItinerary();
+    confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 } });
+  }
+
+  function quickAdd(placeName) {
+    itinerary["Day 1"].push({ time: "10:00", name: `Visit ${placeName}` });
+    showPage('plan');
     renderItinerary();
   }
- 
+
   function renderItinerary() {
-    var container = document.getElementById('itinerary-list');
-    container.innerHTML = "";
- 
-    for (var day in itinerary) {
-      var dayStops = itinerary[day];
- 
-      var dayTitle = document.createElement('div');
-      dayTitle.className = 'day-title';
-      dayTitle.textContent = day;
-      container.appendChild(dayTitle);
- 
-      if (dayStops.length === 0) {
-        var emptyMsg = document.createElement('div');
-        emptyMsg.className = 'empty-msg';
-        emptyMsg.textContent = 'No stops yet — add one on the left.';
-        container.appendChild(emptyMsg);
-        continue;
-      }
- 
-      for (var i = 0; i < dayStops.length; i++) {
-        var stop = dayStops[i];
- 
-        var row = document.createElement('div');
-        row.className = 'stop-row';
-        row.innerHTML =
-          '<span><span class="time">' + stop.time + '</span>' + stop.name + '</span>' +
-          '<span>' +
-            '<button onclick="moveStop(\'' + day + '\',' + i + ',-1)" title="Move up">↑</button>' +
-            '<button onclick="moveStop(\'' + day + '\',' + i + ',1)" title="Move down">↓</button>' +
-            '<button onclick="removeStop(\'' + day + '\',' + i + ')" title="Remove">✕</button>' +
-          '</span>';
- 
-        container.appendChild(row);
+    const container = document.getElementById('itinerary-display');
+    let html = '<h2 style="margin-bottom:20px;">Itinerary Schedule</h2>';
+
+    for (const [day, stops] of Object.entries(itinerary)) {
+      html += `<h3 style="color:var(--cyan); margin: 16px 0 8px 0;">${day}</h3>`;
+      if (stops.length === 0) {
+        html += `<p style="font-size:12px; color:var(--text-soft);">No activities planned.</p>`;
+      } else {
+        stops.forEach((s, idx) => {
+          html += `
+            <div class="stop-item">
+              <div>
+                <strong style="color:var(--brass); margin-right:8px;">${s.time}</strong>
+                <span>${s.name}</span>
+              </div>
+              <i data-lucide="trash-2" style="cursor:pointer; color:var(--rust); width:16px;" onclick="removeStop('${day}', ${idx})"></i>
+            </div>
+          `;
+        });
       }
     }
+    container.innerHTML = html;
+    lucide.createIcons();
   }
- 
-  /* =============================================================
-     PAGE 3: BUDGET (last page)
-  ============================================================= */
-  var budgetCategories = ["Transport", "Lodging", "Food", "Activities", "Misc"];
-  var budgetStartValues = { Transport: 80, Lodging: 150, Food: 90, Activities: 50, Misc: 20 };
- 
-  function buildBudgetForm() {
-    var fieldsContainer = document.getElementById('budget-fields');
-    fieldsContainer.innerHTML = "";
- 
-    for (var i = 0; i < budgetCategories.length; i++) {
-      var category = budgetCategories[i];
- 
-      var row = document.createElement('div');
-      row.className = 'budget-row';
-      row.innerHTML =
-        '<label for="cat-' + category + '">' + category + '</label>' +
-        '<input type="number" id="cat-' + category + '" min="0" ' +
-        'value="' + budgetStartValues[category] + '" oninput="updateBudget()">';
- 
-      fieldsContainer.appendChild(row);
-    }
+
+  function removeStop(day, idx) {
+    itinerary[day].splice(idx, 1);
+    renderItinerary();
   }
- 
-  function updateBudget() {
-    var total = 0;
- 
-    for (var i = 0; i < budgetCategories.length; i++) {
-      var category = budgetCategories[i];
-      var inputValue = parseFloat(document.getElementById('cat-' + category).value);
-      if (isNaN(inputValue)) { inputValue = 0; }
-      total = total + inputValue;
+
+  function initBudget() {
+    const container = document.getElementById('budget-fields');
+    let html = '';
+    for (const [cat, val] of Object.entries(budgetCategories)) {
+      html += `
+        <div class="field">
+          <label>${cat} ($)</label>
+          <input type="number" class="b-input" value="${val}" oninput="recalcBudget()">
+        </div>
+      `;
     }
- 
-    var budget = parseFloat(document.getElementById('total-budget').value);
-    if (isNaN(budget)) { budget = 0; }
- 
-    document.getElementById('spend-amount').textContent = '$' + total;
-    document.getElementById('budget-of').textContent = 'of $' + budget + ' budget';
- 
-    var percentUsed = 0;
-    if (budget > 0) {
-      percentUsed = (total / budget) * 100;
-      if (percentUsed > 100) { percentUsed = 100; }
-    }
-    var bar = document.getElementById('bar-fill');
-    bar.style.width = percentUsed + '%';
- 
-    var statusMsg = document.getElementById('status-msg');
-    if (total > budget) {
-      bar.classList.add('over');
-      statusMsg.textContent = 'Over budget by $' + (total - budget) + '. Trim a category or raise the total.';
-    } else {
-      bar.classList.remove('over');
-      statusMsg.textContent = "You're within budget, with $" + (budget - total) + ' left.';
-    }
+    container.innerHTML = html;
+    recalcBudget();
   }
- 
-  /* STARTUP */
-  renderFilterChips();
-  renderDestinations();
-  renderItinerary();
-  buildBudgetForm();
-  updateBudget();
+
+  function recalcBudget() {
+    let total = 0;
+    document.querySelectorAll('.b-input').forEach(i => total += parseFloat(i.value) || 0);
+    const limit = parseFloat(document.getElementById('total-budget').value) || 1;
+
+    document.getElementById('spend-total').textContent = `$${total}`;
+    const pct = Math.min((total / limit) * 100, 100);
+    const bar = document.getElementById('budget-progress');
+    bar.style.width = `${pct}%`;
+    bar.style.background = total > limit ? 'var(--rust)' : 'var(--forest)';
+  }
+
+  function openApiModal() { document.getElementById('api-modal').classList.add('active'); }
+  function closeApiModal() { document.getElementById('api-modal').classList.remove('active'); }
+  
+  function saveKey() {
+    const openAiVal = document.getElementById('openai-key-field').value.trim();
+    const unsplashVal = document.getElementById('unsplash-key-field').value.trim();
+    
+    if (openAiVal) {
+      OPENAI_API_KEY = openAiVal;
+      localStorage.setItem('waypoint_openai_key', openAiVal);
+    }
+    if (unsplashVal) {
+      unsplashKey = unsplashVal;
+      localStorage.setItem('waypoint_unsplash_key', unsplashVal);
+    }
+
+    document.getElementById('api-status').textContent = "Keys Active";
+    closeApiModal();
+    renderCards();
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    if (OPENAI_API_KEY && OPENAI_API_KEY !== 'YOUR_OPENAI_API_KEY_HERE') {
+      document.getElementById('openai-key-field').value = OPENAI_API_KEY;
+      document.getElementById('api-status').textContent = "Keys Active";
+    }
+    if (unsplashKey && unsplashKey !== 'YOUR_UNSPLASH_API_KEY_HERE') {
+      document.getElementById('unsplash-key-field').value = unsplashKey;
+    }
+    renderCards();
+    renderItinerary();
+    initBudget();
+  });
 </script>
 </body>
 </html>
