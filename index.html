@@ -1,1373 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Waypoint Ultimate — Travel Engine & Expedition Suite</title>
-
-<!--
-  ===========================================================================
-  WHAT IS THIS FILE?
-  ===========================================================================
-  This is a single-page web app (everything - HTML, CSS, and JavaScript -
-  lives in one file). It's a fake trip planner with 4 tabs:
-    1. Explore  - pick a destination
-    2. Calendar - add activities on specific dates
-    3. Budget   - track how much you're spending
-    4. Summary  - see everything together and print/export a PDF
-
-  The file has 3 main parts, in this order:
-    <style>  ...CSS...        -> how everything LOOKS
-    <body>   ...HTML...        -> what elements EXIST on the page
-    <script> ...JavaScript...  -> how the page BEHAVES (clicks, typing, etc)
-  ===========================================================================
--->
-
-<!-- =========================================================================
-     PRINTABLE STYLESHEET
-     This block of CSS ONLY applies when the page is being printed
-     (like when the "Export / Print PDF" button calls window.print()).
-     It hides the colorful app and shows a plain black-and-white report
-     instead - that's why most rules below say "!important" (force this
-     style to win) and hide things like the nav bar and buttons.
-     ========================================================================= -->
-<style media="print">
-  body { background: #fff !important; color: #000 !important; font-size: 12pt !important; }
-  /* Hide all the interactive app UI - none of this makes sense on paper */
-  .app, header, nav, .btn, .selection-dock, .search-bar, .no-print { display: none !important; }
-  /* Show the plain print-only report instead (it's hidden the rest of the time) */
-  .print-only { display: block !important; }
-  .print-page { page-break-after: always; padding: 20px; }
-  h1 { color: #0284c7 !important; font-size: 24pt; border-bottom: 2px solid #0284c7; padding-bottom: 8px; }
-  h2 { color: #10b981 !important; font-size: 18pt; margin-top: 20px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-  th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
-  th { background-color: #f1f5f9; }
-</style>
-
-<!-- =========================================================================
-     APP STYLES (colors, layout, and animations for the actual on-screen app)
-     ========================================================================= -->
-<style>
-  /* -------------------------------------------------------------------------
-     1. COLOR PALETTE ("CSS VARIABLES")
-     -------------------------------------------------------------------------
-     Think of ":root { ... }" as a settings file for colors. Instead of
-     typing the same hex code (like #00ff87) in 30 different places, we
-     give it a nickname once here (--vivid-green), then reuse the nickname
-     everywhere else with var(--vivid-green). If you want to change the
-     whole app's color scheme, you mostly just edit THIS block.
-     ------------------------------------------------------------------------- */
-  :root {
-    /* Background colors - very dark, almost black, like a night sky */
-    --bg-dark: #030712;
-    --card-bg: rgba(15, 23, 42, 0.85); /* semi-transparent so blur effect shows through */
-    --border-soft: rgba(255, 255, 255, 0.18); /* faint white border */
-
-    /* Bright "neon" accent colors used for buttons, glows, and highlights */
-    --vivid-green: #00ff87;
-    --green-glow: rgba(0, 255, 135, 0.4); /* same green, but see-through, used for glow shadows */
-
-    --electric-blue: #00d2ff;
-    --blue-glow: rgba(0, 210, 255, 0.4);
-
-    --vivid-red: #ff0055;
-    --red-glow: rgba(255, 0, 85, 0.4);
-
-    --neon-purple: #a855f7;
-    --purple-glow: rgba(168, 85, 247, 0.4);
-
-    --neon-orange: #ff9900;
-    --orange-glow: rgba(255, 153, 0, 0.4);
-
-    --neon-pink: #ff007f;
-    --pink-glow: rgba(255, 0, 127, 0.4);
-
-    --neon-yellow: #fff700;
-    --yellow-glow: rgba(255, 247, 0, 0.4);
-
-    --neon-teal: #00ffd5;
-    --teal-glow: rgba(0, 255, 213, 0.4);
-
-    /* Text colors */
-    --text-main: #f8fafc;   /* near-white, for normal text */
-    --text-muted: #94a3b8;  /* grey, for less important text */
-    --line: #1e293b;        /* subtle divider lines */
-    --radius: 18px;         /* how rounded corners are, reused everywhere */
-    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-
-  /* Reset: browsers add their own default spacing to every element.
-     This wipes that out so OUR spacing choices are the only ones that matter. */
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  /* Some people set their OS/browser to "reduce motion" (for motion
-     sickness or just preference). This respects that by making every
-     animation basically instant for them, instead of ignoring their choice. */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.001ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.001ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
-
-  /* Makes clicking an in-page link scroll smoothly instead of jumping instantly */
-  html { scroll-behavior: smooth; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ultimate High-Energy Instructions</title>
   
-  body {
-    background: var(--bg-dark);
-    color: var(--text-main);
-    font-family: var(--font);
-    min-height: 100vh; /* at least the full height of the screen */
-    overflow-x: hidden; /* never allow sideways scrolling */
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
-    /* This stacks 5 soft colored "spotlights" (radial-gradient = a circle
-       of color that fades to transparent) in different corners of the
-       screen, layered behind everything else, to make the background
-       feel alive instead of flat black. */
-    background-image: 
-      radial-gradient(circle at 10% 10%, rgba(0, 210, 255, 0.15) 0%, transparent 40%),
-      radial-gradient(circle at 90% 15%, rgba(255, 0, 127, 0.15) 0%, transparent 40%),
-      radial-gradient(circle at 80% 90%, rgba(255, 153, 0, 0.12) 0%, transparent 45%),
-      radial-gradient(circle at 15% 85%, rgba(0, 255, 135, 0.12) 0%, transparent 45%),
-      radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.1) 0%, transparent 60%);
-    background-attachment: fixed; /* background doesn't scroll with the page */
-    background-size: 200% 200%;  /* make the background bigger than the screen... */
-    animation: bgDrift 30s ease-in-out infinite; /* ...so we can slowly slide it around */
-  }
+  <style>
+    /* ==========================================================================
+       1. GLOBAL RESET & ANIMATED GRADIENT BACKGROUND
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
 
-  /* This animation slowly moves those background spotlights around in a
-     loop, taking 30 seconds to go there and back, forever ("infinite"). */
-  @keyframes bgDrift {
-    0%   { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 50% 50%; }
-    50%  { background-position: 15% 10%, 85% 20%, 90% 85%, 10% 90%, 55% 45%; }
-    100% { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 50% 50%; }
-  }
+    body {
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-  .print-only { display: none; } /* hidden normally, only shown when printing (see top of file) */
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-  .app {
-    position: relative;
-    z-index: 1; /* keeps app content above the background layer */
-    max-width: 1250px; /* app won't stretch wider than this on huge monitors */
-    margin: 0 auto;    /* centers the app horizontally */
-    padding: 20px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column; /* stack header/main vertically */
-  }
+    /* Floating ambient background particles */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 0;
+      opacity: 0.6;
+      animation: float 8s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .orb-1 { width: 300px; height: 300px; background: #ff007f; top: 10%; left: 5%; }
+    .orb-2 { width: 400px; height: 400px; background: #00f0ff; bottom: 10%; right: 5%; animation-delay: -4s; }
 
-  /* -------------------------------------------------------------------------
-     2. HEADER & NAVIGATION (the bar at the top with tabs)
-     ------------------------------------------------------------------------- */
-  header {
-    background: var(--card-bg);
-    backdrop-filter: blur(16px); /* frosted-glass blur effect over whatever's behind it */
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between; /* logo on the left, nav buttons on the right */
-    align-items: center;
-    position: sticky; /* stays pinned near the top even while you scroll down */
-    top: 16px;
-    z-index: 100; /* stays above all other content */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 25px rgba(0, 210, 255, 0.25);
-  }
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-40px) rotate(20deg); }
+    }
 
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px; /* space between the logo icon and the text next to it */
-  }
+    /* ==========================================================================
+       2. HEADER & HERO SECTION
+       ========================================================================== */
+    header {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
 
-  .brand-icon {
-    width: 44px;
-    height: 44px;
-    /* A gradient with 5 colors in it, made extra-large (300% 300%) so we
-       can animate SLIDING it, which makes the colors appear to shift. */
-    background: linear-gradient(135deg, var(--vivid-green), var(--electric-blue), var(--neon-purple), var(--neon-pink), var(--neon-orange));
-    background-size: 300% 300%;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 20px var(--green-glow);
-    /* Two animations running on the same element at once, separated by a comma:
-       one makes it glow different colors, the other slides the gradient. */
-    animation: pulseGlow 4s infinite alternate, gradientShift 6s ease infinite;
-  }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.9rem;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      animation: pulseBadge 2s infinite alternate;
+    }
 
-  /* Glow color slowly cycles between green, pink, and orange */
-  @keyframes pulseGlow {
-    0% { box-shadow: 0 0 15px var(--green-glow); }
-    50% { box-shadow: 0 0 25px var(--pink-glow); }
-    100% { box-shadow: 0 0 25px var(--orange-glow); }
-  }
+    @keyframes pulseBadge {
+      0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
+      100% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 255, 255, 0.9); }
+    }
 
-  /* Reusable "slide the gradient sideways" animation - used all over the
-     app anywhere we want a rainbow effect to look alive instead of static. */
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+    h1.hero-title {
+      font-size: 4rem;
+      font-weight: 900;
+      margin: 20px 0;
+      text-transform: uppercase;
+      text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      line-height: 1.1;
+    }
 
-  .brand h1 {
-    font-size: 24px;
-    font-weight: 900;
-    /* This is the trick for making TEXT itself show a gradient: paint a
-       gradient as the "background", then tell the browser to use that
-       background as the text's fill color and make the text fill invisible
-       everywhere except where letters are. */
-    background: linear-gradient(to right, var(--vivid-green), var(--electric-blue), var(--neon-purple), var(--neon-pink));
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientShift 5s ease infinite;
-  }
+    .hero-title span {
+      background: linear-gradient(to right, #ffe600, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      animation: textWobble 3s ease-in-out infinite;
+    }
 
-  nav {
-    display: flex;
-    gap: 6px;
-    background: #030712;
-    padding: 6px;
-    border-radius: 14px;
-    border: 1px solid var(--border-soft);
-  }
+    @keyframes textWobble {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(1deg); }
+    }
 
-  nav button {
-    background: transparent;
-    color: var(--text-muted);
-    border: none;
-    padding: 10px 18px;
-    border-radius: 10px;
-    cursor: pointer; /* shows a hand-pointer when hovering, hinting it's clickable */
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.25s ease; /* smoothly animates any property that changes (like color) */
-  }
+    p.hero-subtitle {
+      font-size: 1.4rem;
+      max-width: 650px;
+      margin: 0 auto;
+      opacity: 0.95;
+      font-weight: 600;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
 
-  nav button:hover { color: var(--electric-blue); }
+    /* ==========================================================================
+       3. MAIN STEP-BY-STEP CONTAINER
+       ========================================================================== */
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 100px;
+    }
 
-  /* The currently-open tab gets a highlighted, animated gradient background
-     so it's obvious which page you're looking at. JavaScript adds/removes
-     this "active" class when you click a tab - see showPage() below. */
-  nav button.active {
-    color: #fff;
-    background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple), var(--neon-pink));
-    background-size: 200% 200%;
-    animation: gradientShift 4s ease infinite;
-    box-shadow: 0 0 20px var(--blue-glow);
-  }
+    .step-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 30px;
+      padding: 40px;
+      margin-bottom: 50px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
 
-  /* -------------------------------------------------------------------------
-     3. PAGE / TAB SWITCHING ANIMATION
-     -------------------------------------------------------------------------
-     Only ONE of the 4 "pages" (Explore/Calendar/Budget/Summary) is visible
-     at a time. JavaScript controls which one by adding/removing the
-     "active" class. CSS handles what that looks like:
-     ------------------------------------------------------------------------- */
-  main { flex: 1; margin-top: 28px; }
+    .step-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      border-color: #ffe600;
+      box-shadow: 0 30px 60px rgba(255, 230, 0, 0.4);
+    }
 
-  .page {
-    display: none; /* hidden by default */
-  }
+    /* Alternating visual layout for variety */
+    .step-card:nth-child(even) {
+      direction: rtl;
+    }
+    .step-card:nth-child(even) .step-text-content {
+      direction: ltr;
+    }
 
-  /* When JavaScript adds "active", the page appears AND plays a quick
-     fade-up entrance animation, so switching tabs feels smooth. */
-  .page.active {
-    display: block;
-    animation: fadeInSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
+    /* ==========================================================================
+       4. STEP TEXT & INSTRUCTION STYLING
+       ========================================================================== */
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #ffe600, #ff5e00);
+      color: #000;
+      font-weight: 900;
+      font-size: 1.8rem;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(255, 230, 0, 0.6);
+    }
 
-  @keyframes fadeInSlide {
-    from { opacity: 0; transform: translateY(15px); } /* start invisible, slightly lower */
-    to { opacity: 1; transform: translateY(0); }        /* end fully visible, in place */
-  }
+    .step-text-content h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
 
-  .layout-two-col {
-    display: grid;
-    grid-template-columns: 360px 1fr; /* fixed-width sidebar + flexible main area */
-    gap: 24px;
-  }
+    .step-text-content p {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      opacity: 0.95;
+    }
 
-  .panel {
-    background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    position: relative;
-  }
+    .instruction-list {
+      list-style: none;
+    }
 
-  /* -------------------------------------------------------------------------
-     3b. SCROLL-REVEAL SYSTEM ("appear as you scroll" animations)
-     -------------------------------------------------------------------------
-     HOW THIS WORKS (the short version):
-       1. In the CSS below, elements with class "reveal" start invisible
-          and shifted out of place (opacity: 0, transform: moved).
-       2. JavaScript uses something called an "IntersectionObserver" (see
-          the <script> section near the bottom) to WATCH these elements.
-       3. The instant one scrolls into view, JavaScript adds the class
-          "in-view" to it.
-       4. That triggers THIS CSS rule below (".reveal.in-view"), which
-          animates it back to opacity:1 and its normal position.
-     So: CSS defines the "before" and "after" look + how long the
-     transition takes, and JavaScript's only job is deciding WHEN to
-     flip the switch (by adding the "in-view" class).
-     ------------------------------------------------------------------------- */
+    .instruction-list li {
+      position: relative;
+      padding-left: 35px;
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
 
-  /* Fades in while sliding up and slightly growing - used for cards/grids */
-  .reveal {
-    opacity: 0;
-    transform: translateY(36px) scale(0.98);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform; /* hints to the browser to optimize this for animation */
-  }
-  .reveal.in-view {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+    .instruction-list li i {
+      position: absolute;
+      left: 0;
+      top: 3px;
+      color: #00f0ff;
+      font-size: 1.3rem;
+      filter: drop-shadow(0 0 5px #00f0ff);
+    }
 
-  /* Slides in from the left - used for panels on the left side of a layout */
-  .reveal-left {
-    opacity: 0;
-    transform: translateX(-40px);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .reveal-left.in-view { opacity: 1; transform: translateX(0); }
+    /* ==========================================================================
+       5. HIGH-IMPACT PICTURE HOVER EFFECTS
+       ========================================================================== */
+    .step-image-wrapper {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      border: 3px solid rgba(255, 255, 255, 0.5);
+    }
 
-  /* Slides in from the right - used for panels on the right side of a layout */
-  .reveal-right {
-    opacity: 0;
-    transform: translateX(40px);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .reveal-right.in-view { opacity: 1; transform: translateX(0); }
+    .step-image-wrapper img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease, filter 0.6s ease;
+    }
 
-  /* Pops in with a little bounce - available for extra emphasis if needed */
-  .reveal-pop {
-    opacity: 0;
-    transform: scale(0.8) rotate(-2deg);
-    transition: opacity 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .reveal-pop.in-view { opacity: 1; transform: scale(1) rotate(0deg); }
+    .step-card:hover .step-image-wrapper img {
+      transform: scale(1.15) rotate(1deg);
+      filter: brightness(1.1);
+    }
 
-  /* -------------------------------------------------------------------------
-     4. BUTTONS
-     -------------------------------------------------------------------------
-     Each color variant (.btn-green, .btn-blue, etc.) is the same shape,
-     just with a different gradient and matching glow shadow, so you can
-     mix-and-match "btn" + a color class on any button in the HTML.
-     ------------------------------------------------------------------------- */
-  .btn {
-    padding: 12px 22px;
-    border-radius: 12px;
-    border: none;
-    font-size: 14px;
-    font-weight: 800;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
+    .image-overlay-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffe600;
+      font-size: 2rem;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
 
-  .btn-green  { background: linear-gradient(135deg, var(--vivid-green), var(--neon-teal));   color: #000; box-shadow: 0 4px 20px var(--green-glow); }
-  .btn-blue   { background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple)); color: #000; box-shadow: 0 4px 20px var(--blue-glow); }
-  .btn-purple { background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));    color: #fff; box-shadow: 0 4px 20px var(--purple-glow); }
-  .btn-pink   { background: linear-gradient(135deg, var(--neon-pink), var(--vivid-red));      color: #fff; box-shadow: 0 4px 20px var(--pink-glow); }
-  .btn-red    { background: linear-gradient(135deg, var(--vivid-red), var(--neon-orange));    color: #fff; box-shadow: 0 4px 20px var(--red-glow); }
+    .step-card:hover .image-overlay-icon {
+      transform: translate(-50%, -50%) scale(1);
+    }
 
-  /* On hover, every button lifts up slightly and gets a bit brighter -
-     a small detail that makes buttons feel "clickable" */
-  .btn:hover {
-    transform: translateY(-3px) scale(1.02);
-    filter: brightness(1.15);
-  }
+    /* ==========================================================================
+       6. OVER-THE-TOP CTA BUTTON
+       ========================================================================== */
+    .cta-container {
+      text-align: center;
+      margin-top: 60px;
+    }
 
-  /* -------------------------------------------------------------------------
-     5. DESTINATION CARDS & THE "SELECTION DOCK" BAR
-     ------------------------------------------------------------------------- */
-  .search-bar {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-    background: var(--card-bg);
-    padding: 8px 8px 8px 18px;
-    border-radius: 16px;
-    border: 1px solid var(--border-soft);
-  }
+    .btn-overkill {
+      position: relative;
+      display: inline-block;
+      padding: 25px 60px;
+      font-size: 1.6rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #000;
+      background: linear-gradient(90deg, #ffe600, #00f0ff, #ff007f, #ffe600);
+      background-size: 300% 300%;
+      border: none;
+      border-radius: 60px;
+      cursor: pointer;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.8);
+      animation: glowGradient 4s ease infinite;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-  .search-bar input {
-    flex: 1; /* input stretches to fill all remaining space next to the button */
-    background: transparent;
-    border: none;
-    color: var(--text-main);
-    font-size: 16px;
-    outline: none; /* removes the default blue focus ring so our own border style shows instead */
-  }
+    .btn-overkill:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 60px rgba(255, 0, 127, 1);
+    }
 
-  .grid {
-    display: grid;
-    /* auto-fill: fit as many 280px-minimum columns as will comfortably fit;
-       1fr: let each column grow evenly to fill leftover space */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-  }
+    .btn-overkill:active {
+      transform: scale(0.98);
+    }
 
-  .card {
-    background: var(--card-bg);
-    border: 2px solid var(--border-soft);
-    border-radius: var(--radius);
-    padding: 24px;
-    transition: all 0.25s ease;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* pushes the "click to select" label to the bottom */
-    position: relative;
-    overflow: hidden;
-  }
+    @keyframes glowGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-  /* This invisible colored line sits along the very top edge of every
-     card, but starts at opacity 0 (invisible). ::before means "create a
-     fake extra element glued to the top of this card" without adding
-     real HTML for it. */
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 4px;
-    background: linear-gradient(90deg, var(--electric-blue), var(--neon-purple), var(--neon-pink), var(--neon-orange), var(--vivid-green));
-    background-size: 300% 100%;
-    opacity: 0;
-    transition: opacity 0.25s;
-  }
-
-  .card:hover {
-    border-color: var(--electric-blue);
-    transform: translateY(-6px); /* card lifts up slightly on hover */
-    box-shadow: 0 14px 30px rgba(0, 210, 255, 0.25);
-  }
-
-  /* When hovering, reveal that colored top line AND animate it sliding
-     through its rainbow colors */
-  .card:hover::before { opacity: 1; animation: gradientShift 2s linear infinite; }
-
-  /* Extra styling for whichever card the user has picked as their destination */
-  .card.selected {
-    border-color: var(--vivid-green);
-    background: rgba(0, 255, 135, 0.08);
-    box-shadow: 0 0 30px var(--green-glow);
-  }
-  .card.selected::before { opacity: 1; background: var(--vivid-green); }
-
-  /* The floating bar at the bottom of the Explore page that shows which
-     destination is selected + a button to continue. "sticky" + "bottom: 20px"
-     means it hovers 20px above the bottom of the screen as you scroll. */
-  .selection-dock {
-    position: sticky;
-    bottom: 20px;
-    margin-top: 24px;
-    background: rgba(12, 19, 36, 0.95);
-    backdrop-filter: blur(20px);
-    border: 2px solid var(--vivid-green);
-    box-shadow: 0 10px 40px var(--green-glow);
-    border-radius: var(--radius);
-    padding: 16px 24px;
-    display: none; /* hidden until a destination is picked */
-    justify-content: space-between;
-    align-items: center;
-    z-index: 90;
-  }
-
-  /* JavaScript adds "active" the moment you pick a destination, which
-     both shows the bar AND plays a little pop-in animation */
-  .selection-dock.active { display: flex; animation: dockPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-  @keyframes dockPop {
-    from { opacity: 0; transform: translateY(20px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  /* -------------------------------------------------------------------------
-     6. FORM FIELDS (the date/time/name inputs, budget number inputs, etc.)
-     ------------------------------------------------------------------------- */
-  .field { margin-bottom: 16px; }
-
-  .field label {
-    display: block;
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--electric-blue);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .field input, .field select, .field textarea {
-    width: 100%;
-    background: #030712;
-    border: 1px solid var(--border-soft);
-    color: var(--text-main);
-    padding: 12px;
-    border-radius: 10px;
-    outline: none;
-    font-size: 14px;
-    transition: border 0.2s;
-  }
-
-  /* Highlighted border + glow while the user is actively typing in a field */
-  .field input:focus, .field select:focus {
-    border-color: var(--electric-blue);
-    box-shadow: 0 0 10px var(--blue-glow);
-  }
-
-  /* -------------------------------------------------------------------------
-     7. ACCORDIONS (the collapsible "Primary Category" / "Add Custom Item"
-        sections on the Budget page)
-     ------------------------------------------------------------------------- */
-  .accordion {
-    background: #030712;
-    border: 1px solid var(--border-soft);
-    border-radius: 12px;
-    margin-bottom: 12px;
-    overflow: hidden; /* important: keeps the sliding content from spilling out during animation */
-  }
-
-  .accordion-header {
-    padding: 14px 18px;
-    background: rgba(255,255,255,0.03);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between; /* title on the left, ▼ arrow on the right */
-    align-items: center;
-    font-weight: 700;
-    color: var(--electric-blue);
-    user-select: none; /* stops the title text from getting highlighted when clicked repeatedly */
-    transition: background 0.2s;
-  }
-
-  .accordion-header:hover { background: rgba(0, 210, 255, 0.1); }
-
-  /* Collapsed state: the content area has 0 height, so nothing shows,
-     even though the HTML is technically still there. We animate
-     "max-height" (rather than "height") because you can't smoothly
-     animate to "auto" height directly in CSS - max-height is the
-     standard workaround. */
-  .accordion-content {
-    padding: 0 18px;
-    max-height: 0;
-    overflow: hidden;
-    border-top: 0px solid var(--line);
-    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.4s ease;
-  }
-
-  /* Expanded state: JavaScript's toggleAccordion() function adds/removes
-     this "open" class when you click the header */
-  .accordion-content.open {
-    padding: 18px;
-    max-height: 600px; /* just needs to be taller than the content will ever be */
-    border-top: 1px solid var(--line);
-  }
-
-  .badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-  }
-  .badge-purple { background: rgba(168, 85, 247, 0.2); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
-  .badge-green  { background: rgba(0, 255, 135, 0.2);  color: var(--vivid-green); border: 1px solid var(--vivid-green); }
-
-  /* One row in the calendar itinerary list (one scheduled activity) */
-  .stop-item {
-    background: #030712;
-    border: 1px solid var(--border-soft);
-    border-left: 4px solid var(--electric-blue); /* colored stripe on the left edge */
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between; /* time+name on the left, delete (✕) button on the right */
-    align-items: center;
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .stop-item:hover {
-    transform: translateX(6px); /* nudges right on hover, like it's "reaching out" */
-    border-left-color: var(--neon-pink);
-    box-shadow: 0 4px 16px rgba(255, 0, 127, 0.15);
-  }
-
-  /* This class is added ONLY to a brand-new stop item for a moment (see
-     renderItinerary() in the JS below), so it visibly pops in instead of
-     just silently appearing in the list. */
-  .stop-item.new-stop-anim { animation: stopIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-  @keyframes stopIn {
-    from { opacity: 0; transform: translateX(-24px) scale(0.95); }
-    to { opacity: 1; transform: translateX(0) scale(1); }
-  }
-
-  /* Every custom expense row plays this same "pop in" animation when it's
-     (re)rendered - simpler than the stop-item version because the whole
-     list just gets rebuilt each time one is added */
-  .custom-expense-row { animation: stopIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-  /* On narrow / mobile screens, stack the two-column layouts into one
-     column, and let the header wrap to two rows instead of squeezing */
-  @media(max-width: 850px) {
-    .layout-two-col { grid-template-columns: 1fr; }
-    header { flex-direction: column; gap: 16px; }
-  }
-</style>
+    /* Responsive Design for Mobile Devices */
+    @media (max-width: 768px) {
+      .step-card {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 25px;
+      }
+      .step-card:nth-child(even) {
+        direction: ltr;
+      }
+      h1.hero-title {
+        font-size: 2.8rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<!-- =========================================================================
-     PDF / PRINT LAYOUT
-     This whole block is invisible while you use the app normally. It only
-     becomes visible (via the "print-only" CSS rule above) the instant the
-     browser's print dialog opens. JavaScript fills in these empty <div>s
-     with real content right before calling window.print() - look for
-     generatePDFPrint() further down.
-     ========================================================================= -->
-<div class="print-only">
-  <div class="print-page">
-    <h1>Waypoint Expedition Master Briefing</h1>
-    <p>Generated Plan & Budget Itinerary Report</p>
-    
-    <h2>1. Selected Destinations Summary</h2>
-    <div id="print-summary-content"></div>
+  <!-- Background Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
 
-    <h2>2. Calendar Scheduled Itinerary</h2>
-    <div id="print-itinerary-content"></div>
-
-    <h2>3. Comprehensive Budget & Custom Expenses</h2>
-    <div id="print-budget-content"></div>
-  </div>
-</div>
-
-<!-- =========================================================================
-     MAIN APPLICATION UI
-     ========================================================================= -->
-<div class="app">
-  
-  <!-- NAVIGATION HEADER: logo on the left, 4 tab buttons on the right.
-       Each button calls showPage('someId') when clicked - that JS function
-       (defined below) hides every page and shows just the one you asked for. -->
+  <!-- Header Section -->
   <header>
-    <div class="brand">
-      <div class="brand-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Next-Gen Setup Guide</div>
+    <h1 class="hero-title">Master The <span>Process</span></h1>
+    <p class="hero-subtitle">Clear instructions, vibrant steps, and high-octane visual guidance designed to get you results instantly.</p>
+  </header>
+
+  <!-- Main Instructions Section -->
+  <main class="container">
+
+    <!-- STEP 1 -->
+    <div class="step-card">
+      <div class="step-text-content">
+        <div class="step-badge">01</div>
+        <h2>Initialize Your Workspace</h2>
+        <p>Start strong by setting up your core tools with laser-focused accuracy. Make sure every prerequisite is ready before launching into action.</p>
+        <ul class="instruction-list">
+          <li><i class="fa-solid fa-circle-check"></i> Download and launch the master control suite.</li>
+          <li><i class="fa-solid fa-circle-check"></i> Verify high-speed network connectivity.</li>
+          <li><i class="fa-solid fa-circle-check"></i> Unlock full admin privileges to maximize throughput.</li>
+        </ul>
       </div>
-      <div>
-        <h1>Waypoint Engine</h1>
-        <p style="font-size: 11px; color: var(--neon-purple); font-weight:700;">PRO EXPEDITION PLATFORM</p>
+      <div class="step-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80" alt="Futuristic Tech Setup">
+        <div class="image-overlay-icon"><i class="fa-solid fa-rocket"></i></div>
       </div>
     </div>
 
-    <nav>
-      <button id="nav-home" class="active" onclick="showPage('home')">🌐 Explore</button>
-      <button id="nav-plan" onclick="showPage('plan')">📅 Calendar Plan</button>
-      <button id="nav-budget" onclick="showPage('budget')">💎 Budget & Custom</button>
-      <button id="nav-summary" onclick="showPage('summary')">📑 Summary Dashboard</button>
-    </nav>
-  </header>
-
-  <main>
-
-    <!-- ======================================================================
-         PAGE 1: EXPLORE
-         Shows a search box + a grid of destination cards. Clicking a card
-         calls selectCard(id), which remembers it as "selectedPlace" and
-         shows the floating dock bar at the bottom.
-         ====================================================================== -->
-    <section id="page-home" class="page active">
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search or inject a new custom destination..." onkeypress="if(event.key==='Enter') doSearch()">
-        <button class="btn btn-blue" onclick="doSearch()">+ Add Location</button>
+    <!-- STEP 2 -->
+    <div class="step-card">
+      <div class="step-text-content">
+        <div class="step-badge">02</div>
+        <h2>Configure Turbo Parameters</h2>
+        <p>Tune your configuration settings for maximum power. Follow our high-contrast visual cues to ensure flawless execution.</p>
+        <ul class="instruction-list">
+          <li><i class="fa-solid fa-sliders"></i> Navigate to the advanced customization matrix.</li>
+          <li><i class="fa-solid fa-sliders"></i> Toggle performance modes to "Overdrive."</li>
+          <li><i class="fa-solid fa-sliders"></i> Save changes and apply settings instantly.</li>
+        </ul>
       </div>
-
-      <!-- This grid starts EMPTY in the HTML - JavaScript's renderCards()
-           function fills it with <div class="card"> elements once the page
-           loads (see the JS "INITIALIZATION" section at the bottom). -->
-      <div class="grid" id="destinations-grid"></div>
-
-      <!-- Hidden until you select a destination (see .selection-dock CSS) -->
-      <div class="selection-dock" id="dock">
-        <div>
-          <span style="font-size: 11px; color: var(--text-muted); display: block; text-transform:uppercase; letter-spacing:1px; font-weight:800;">Target Selected</span>
-          <strong id="dock-title" style="font-size: 20px; color: #fff;">None</strong>
-        </div>
-        <button class="btn btn-green" onclick="proceedToPlan()">Lock In & Proceed to Calendar &rarr;</button>
+      <div class="step-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80" alt="Cyberpunk Data Matrix">
+        <div class="image-overlay-icon"><i class="fa-solid fa-gears"></i></div>
       </div>
-    </section>
+    </div>
 
-    <!-- ======================================================================
-         PAGE 2: CALENDAR PLAN
-         Left panel = a form to add one activity (date + time + name).
-         Right panel = the running list of everything you've added,
-         grouped by date, generated by renderItinerary().
-         ====================================================================== -->
-    <section id="page-plan" class="page">
-      <div class="panel" style="margin-bottom: 24px; border-left: 4px solid var(--electric-blue);">
-        <h2 style="color: var(--electric-blue); font-size: 20px;">📍 Selected Target: <span id="banner-title" style="color: #fff;">None</span></h2>
-        <p id="banner-desc" style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Choose dates and time slots to structure your daily expedition calendar.</p>
+    <!-- STEP 3 -->
+    <div class="step-card">
+      <div class="step-text-content">
+        <div class="step-badge">03</div>
+        <h2>Execute & Enjoy Results</h2>
+        <p>Hit launch and watch your project come to life in full color. Enjoy ultra-smooth operation and real-time visual feedback.</p>
+        <ul class="instruction-list">
+          <li><i class="fa-solid fa-star"></i> Press the primary execution trigger below.</li>
+          <li><i class="fa-solid fa-star"></i> Monitor progress through live visual updates.</li>
+          <li><i class="fa-solid fa-star"></i> Celebrate your high-powered completion!</li>
+        </ul>
       </div>
-
-      <div class="layout-two-col">
-        <!-- Add Event Form -->
-        <div class="panel">
-          <h2 style="margin-bottom: 20px; font-size: 18px; color: var(--vivid-green);">+ Schedule Activity</h2>
-          
-          <div class="field">
-            <label>Specific Target Date</label>
-            <input type="date" id="stop-date">
-          </div>
-
-          <div class="field">
-            <label>Time Block</label>
-            <input type="time" id="stop-time" value="09:00">
-          </div>
-
-          <div class="field">
-            <label>Location / Activity Name</label>
-            <input type="text" id="stop-name" placeholder="e.g., Summit Hike or Dinner Reservation">
-          </div>
-
-          <!-- Reads the 3 fields above and calls addStop() when clicked -->
-          <button class="btn btn-green" style="width:100%;" onclick="addStop()">+ Commit To Schedule</button>
-        </div>
-
-        <!-- Rendered Calendar Schedule: this <div> is empty here in the HTML;
-             renderItinerary() builds its contents in JavaScript every time
-             an activity is added or removed. -->
-        <div class="panel">
-          <div id="itinerary-display"></div>
-          <div style="margin-top:20px; display:flex; justify-content:flex-end;">
-            <button class="btn btn-purple" onclick="showPage('budget')">Configure Budget & Custom Expenses &rarr;</button>
-          </div>
-        </div>
+      <div class="step-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80" alt="Neon Glowing Tech Circuit">
+        <div class="image-overlay-icon"><i class="fa-solid fa-trophy"></i></div>
       </div>
-    </section>
+    </div>
 
-    <!-- ======================================================================
-         PAGE 3: BUDGET & CUSTOM EXPENSES
-         Left panel = two collapsible "accordions": one for the 3 fixed
-         budget categories (transport/lodging/food), one for adding your
-         own custom line items. Right panel = a live total + progress bar
-         that recalculates any time a number changes (via recalcBudget()).
-         ====================================================================== -->
-    <section id="page-budget" class="page">
-      <div class="layout-two-col">
-        
-        <!-- Left Panel: Custom Expense Builder Dropdown -->
-        <div class="panel">
-          <h2 style="margin-bottom: 16px; color: var(--neon-pink);">⚙️ Expense Builder</h2>
-
-          <!-- Accordion 1: starts OPEN (note the "open" class already on
-               .accordion-content below) so the 3 main categories are
-               visible right away -->
-          <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion('acc-1')">
-              <span>📊 Primary Category Allocations</span>
-              <span>▼</span>
-            </div>
-            <div class="accordion-content open" id="acc-1">
-              <!-- Each of these has class "b-input" so recalcBudget() can
-                   easily find and add up ALL of them at once, without
-                   needing to know each field's specific id -->
-              <div class="field">
-                <label>Flight / Transport ($)</label>
-                <input type="number" class="b-input" id="b-transport" value="450" oninput="recalcBudget()">
-              </div>
-              <div class="field">
-                <label>Hotels / Lodging ($)</label>
-                <input type="number" class="b-input" id="b-lodging" value="600" oninput="recalcBudget()">
-              </div>
-              <div class="field">
-                <label>Food & Dining ($)</label>
-                <input type="number" class="b-input" id="b-food" value="300" oninput="recalcBudget()">
-              </div>
-            </div>
-          </div>
-
-          <!-- Accordion 2: starts CLOSED (no "open" class) -->
-          <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion('acc-2')">
-              <span>➕ Add Custom Custom Line Item</span>
-              <span>▼</span>
-            </div>
-            <div class="accordion-content" id="acc-2">
-              <div class="field">
-                <label>Expense Name / Note</label>
-                <input type="text" id="custom-exp-name" placeholder="e.g. Scuba Gear Rental">
-              </div>
-              <div class="field">
-                <label>Cost Amount ($)</label>
-                <input type="number" id="custom-exp-cost" placeholder="150">
-              </div>
-              <button class="btn btn-pink" style="width: 100%;" onclick="addCustomExpense()">+ Inject Custom Expense</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Panel: Live Budget Progress & Custom Expenses Breakdown -->
-        <div class="panel">
-          <h2 style="margin-bottom: 20px; color: var(--vivid-green);">💳 Live Financial Dashboard</h2>
-
-          <div class="field">
-            <label>Set Total Budget Limit ($)</label>
-            <input type="number" id="total-budget" value="2000" oninput="recalcBudget()" style="font-size: 18px; font-weight:800; color:var(--vivid-green);">
-          </div>
-
-          <!-- Progress Bar Meter: the inner <div id="budget-progress"> has
-               its "width" changed by JavaScript (0% to 100%) to visually
-               show how much of the budget has been used -->
-          <div style="padding: 20px; background: #030712; border-radius: 14px; border: 1px solid var(--border-soft); margin-bottom:24px;">
-            <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 16px;">
-              <span>Total Estimated Spend:</span>
-              <span id="spend-total" style="color: var(--vivid-green);">$0</span>
-            </div>
-            <div style="height: 12px; background: var(--line); border-radius: 6px; margin-top: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-              <div id="budget-progress" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--vivid-green), var(--neon-teal)); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);"></div>
-            </div>
-          </div>
-
-          <h3 style="font-size: 15px; color: var(--electric-blue); margin-bottom: 12px;">Custom Expense Items</h3>
-          <!-- Filled in by renderCustomExpenses() -->
-          <div id="custom-expense-list"></div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         PAGE 4: SUMMARY DASHBOARD
-         Pulls together the destination, the total budget, and the full
-         schedule into one read-only view, plus the Export/Print button.
-         Everything here is filled in by updateSummaryDashboard(), which
-         runs automatically every time you click this tab (see showPage()).
-         ====================================================================== -->
-    <section id="page-summary" class="page">
-      <div class="panel" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, rgba(0, 210, 255, 0.18), rgba(168, 85, 247, 0.18), rgba(255, 0, 127, 0.12)); border: 2px solid var(--electric-blue);">
-        <div>
-          <h2 style="font-size: 24px; color: #fff;">📑 Master Summary Dashboard</h2>
-          <p style="color: var(--text-muted); margin-top: 4px;">Review your consolidated trip itinerary, locations, and budget details.</p>
-        </div>
-        <!-- This is the button that fills the hidden print-only section
-             and then triggers the browser's print/PDF dialog -->
-        <button class="btn btn-green" onclick="generatePDFPrint()">🖨️ Export / Print PDF</button>
-      </div>
-
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
-        
-        <!-- Summary Box 1: Selected Destination -->
-        <div class="panel" style="border-top: 4px solid var(--electric-blue);">
-          <span class="badge badge-purple">Location Brief</span>
-          <h3 id="sum-dest-name" style="font-size:22px; color:#fff; margin-top:10px;">None Selected</h3>
-          <p id="sum-dest-desc" style="color: var(--text-muted); margin-top:8px; font-size:14px; line-height:1.6;">Select a target destination from the Explore tab.</p>
-        </div>
-
-        <!-- Summary Box 2: Financial Overview -->
-        <div class="panel" style="border-top: 4px solid var(--vivid-green);">
-          <span class="badge badge-green">Financial Status</span>
-          <h3 id="sum-budget-total" style="font-size:32px; color:var(--vivid-green); margin-top:10px;">$0</h3>
-          <p style="color: var(--text-muted); font-size:13px;" id="sum-budget-status">Budget Allocated</p>
-        </div>
-
-      </div>
-
-      <!-- Summary Box 3: Full Date Schedule -->
-      <div class="panel" style="margin-top:24px; border-top: 4px solid var(--neon-pink);">
-        <h3 style="color: var(--neon-pink); font-size: 18px; margin-bottom: 16px;">📅 Calendar Schedule Breakdown</h3>
-        <div id="sum-schedule-display"></div>
-      </div>
-    </section>
+    <!-- Action Callout -->
+    <div class="cta-container">
+      <button class="btn-overkill" onclick="triggerConfetti()">
+        <i class="fa-solid fa-fire"></i> Launch Main Engine Now
+      </button>
+    </div>
 
   </main>
-</div>
 
-<!-- =========================================================================
-     JAVASCRIPT - THIS SECTION CONTROLS *BEHAVIOR*
-     Everything above (HTML/CSS) is like a stage set - it exists, but does
-     nothing by itself. This script is what actually responds to clicks,
-     remembers your data, and updates the screen.
-
-     Big-picture pattern used throughout this file:
-       1. Keep the "truth" in a plain JavaScript variable (like `places`,
-          `calendarItinerary`, `customExpenses`).
-       2. Whenever that data changes, re-generate the matching bit of HTML
-          as a big text string and drop it into the page with
-          `.innerHTML = ...`.
-     This is a simple (not the most efficient, but very easy to follow)
-     way to keep what's on screen in sync with what's in memory.
-     ========================================================================= -->
-<script>
-  /* -------------------------------------------------------------------------
-     1. GLOBAL APP STATE
-     -------------------------------------------------------------------------
-     These variables hold ALL the data for the whole app. Nothing is saved
-     to a server or even to your browser's storage - refreshing the page
-     resets everything back to these starting values.
-     ------------------------------------------------------------------------- */
-
-  // The list of destinations shown as cards on the Explore page.
-  // Each one is a plain JavaScript object with a few properties.
-  let places = [
-    { id: 1, name: "Tokyo, Japan", desc: "A sprawling metropolis blending futuristic neon tech, historic temples, and world-class culinary experiences.", accent: "var(--electric-blue)" },
-    { id: 2, name: "Rome, Italy", desc: "The eternal city featuring ancient Roman ruins, grand architecture, vibrant piazzas, and authentic cuisine.", accent: "var(--neon-orange)" },
-    { id: 3, name: "Maui, Hawaii", desc: "Tropical island paradise with dramatic volcanic coastlines, lush rainforests, and world-renowned beaches.", accent: "var(--vivid-green)" },
-    { id: 4, name: "Swiss Alps, Switzerland", desc: "Majestic alpine peak trails, luxury ski resorts, mountain railways, and serene glacial valleys.", accent: "var(--neon-purple)" }
-  ];
-
-  // A small list of colors we can cycle through for new items (new
-  // destinations, calendar dates, expense rows) so everything doesn't
-  // end up the same color.
-  const accentPool = ["var(--electric-blue)", "var(--neon-purple)", "var(--neon-pink)", "var(--neon-orange)", "var(--vivid-green)", "var(--neon-teal)"];
-
-  let selectedPlace = places[0]; // which destination is currently picked (starts as the first one)
-
-  // The calendar data is stored as an "object of arrays":
-  //   { "2026-10-12": [ {time: "09:00", name: "Hike"}, {time: "18:00", name: "Dinner"} ] }
-  // The date is the "key", and the value is a list of activities on that date.
-  let calendarItinerary = {};
-
-  let customExpenses = [];       // list of {id, name, cost, accent} objects
-  let lastAddedStopKey = null;   // remembers which calendar row was JUST added, so we can animate only that one
-
-  /* -------------------------------------------------------------------------
-     1b. SCROLL-REVEAL OBSERVER ("appear as you scroll" animations)
-     -------------------------------------------------------------------------
-     WHAT IS AN IntersectionObserver?
-     It's a built-in browser tool that watches one or more elements and
-     tells you the moment they scroll into (or out of) the visible part
-     of the screen ("the viewport"). Instead of us manually checking
-     scroll position on every single scroll event (slow and messy), we
-     just say "watch these elements and call this function when they
-     become visible" - the browser handles the hard part efficiently.
-     ------------------------------------------------------------------------- */
-
-  const revealObserver = new IntersectionObserver((entries) => {
-    // "entries" is a list of elements whose visibility just changed.
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        // isIntersecting = true means "this element is now on screen"
-        entry.target.classList.add('in-view'); // triggers the CSS animation (see .reveal.in-view above)
-        revealObserver.unobserve(entry.target); // stop watching it - it only needs to animate in once
-      }
-    });
-  }, {
-    threshold: 0.15,              // fire once 15% of the element is visible
-    rootMargin: '0px 0px -40px 0px' // shrink the "visible zone" by 40px from the bottom, so it triggers slightly earlier
-  });
-
-  // Call this any time NEW elements with class "reveal"/"reveal-left"/etc.
-  // get added to the page (e.g. after re-rendering the destination cards),
-  // so the observer starts watching them too. Without this, newly-added
-  // elements would just stay invisible forever, since nothing would ever
-  // tell the browser to watch them.
-  function scanReveals(root = document) {
-    root.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-pop').forEach(el => {
-      if (!el.classList.contains('in-view')) revealObserver.observe(el);
-    });
-  }
-
-  /* -------------------------------------------------------------------------
-     2. ROUTING & PAGE NAVIGATION (switching between the 4 tabs)
-     ------------------------------------------------------------------------- */
-  function showPage(pageId) {
-    // Step 1: hide every page...
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    // ...then show only the one that was asked for.
-    document.getElementById(`page-${pageId}`).classList.add('active');
-
-    // Same idea for the nav buttons: un-highlight all of them, then
-    // highlight just the one matching the page we're switching to.
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById(`nav-${pageId}`).classList.add('active');
-
-    // The Summary page's numbers should always be fresh right before
-    // it's shown, since the user might have changed things on other tabs.
-    if (pageId === 'summary') updateSummaryDashboard();
-
-    // requestAnimationFrame waits until the browser has actually drawn
-    // the newly-shown page before we scan for reveal-animation targets -
-    // this avoids a timing glitch where we'd check for elements before
-    // they're really visible/measurable.
-    requestAnimationFrame(() => scanReveals(document.getElementById(`page-${pageId}`)));
-  }
-
-  /* -------------------------------------------------------------------------
-     3. DESTINATION EXPLORER LOGIC (the Explore tab)
-     ------------------------------------------------------------------------- */
-
-  // Rebuilds the entire grid of destination cards from the `places` array.
-  // This runs once at startup, and again any time a place is added or
-  // selected (so the "selected" highlight moves to the right card).
-  function renderCards() {
-    const grid = document.getElementById('destinations-grid');
-    let html = ''; // we'll build one long string of HTML, then insert it all at once
-
-    places.forEach((item, i) => {
-      const isSelected = selectedPlace && selectedPlace.id === item.id;
-      const accent = item.accent || accentPool[i % accentPool.length]; // fallback color if none was set
-      // Template literals (the backtick-quoted strings below) let us mix
-      // plain text with JavaScript values using ${ } - much easier to
-      // read than joining lots of small strings with +.
-      html += `
-        <div class="card reveal ${isSelected ? 'selected' : ''}" style="transition-delay:${Math.min(i,8) * 60}ms;" onclick="selectCard(${item.id})">
-          <div>
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-              <h3 style="font-size:20px; color:#fff;">${item.name}</h3>
-              <span style="color:${isSelected ? 'var(--vivid-green)' : accent}; font-size:20px;">📍</span>
-            </div>
-            <p style="font-size:14px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">${item.desc}</p>
-          </div>
-          <div style="font-size:12px; font-weight:800; color:${isSelected ? 'var(--vivid-green)' : 'var(--text-muted)'}">
-            ${isSelected ? '✓ ACTIVE SELECTION' : '○ CLICK TO SELECT'}
-          </div>
-        </div>
-      `;
-    });
-    grid.innerHTML = html; // replace the grid's contents with our freshly-built cards
-    scanReveals(grid);     // tell the scroll-observer to start watching these new cards
-  }
-
-  // Called when a card is clicked. Updates which place is "selected" and
-  // refreshes every part of the UI that shows the selected place.
-  function selectCard(id) {
-    selectedPlace = places.find(p => p.id === id); // look up the full place object by its id
-    renderCards(); // redraw cards so the newly-picked one shows as "selected"
-
-    const dock = document.getElementById('dock');
-    document.getElementById('dock-title').textContent = selectedPlace.name;
-    dock.classList.add('active'); // reveals the floating bottom bar
-
-    document.getElementById('banner-title').textContent = selectedPlace.name;
-    document.getElementById('banner-desc').textContent = selectedPlace.desc;
-  }
-
-  // The green "Lock In & Proceed" button just jumps to the Calendar tab
-  function proceedToPlan() {
-    if (!selectedPlace) return; // safety check: do nothing if nothing is selected
-    showPage('plan');
-  }
-
-  // Lets the user type their own destination instead of picking a preset one
-  function doSearch() {
-    const val = document.getElementById('search-input').value.trim(); // trim() removes extra spaces
-    if (!val) return; // do nothing if the box was empty
-    const newPlace = {
-      id: Date.now(), // Date.now() gives a unique-enough number (current time in milliseconds) to use as an id
-      name: val,
-      desc: `Explore the unique cultural sights, landmarks, and experiences in ${val}.`,
-      accent: accentPool[places.length % accentPool.length]
-    };
-    places.unshift(newPlace); // unshift() adds it to the FRONT of the list, so it shows up first
-    document.getElementById('search-input').value = ''; // clear the search box
-    selectCard(newPlace.id); // automatically select the new place
-  }
-
-  /* -------------------------------------------------------------------------
-     4. CALENDAR DATES & ITINERARY LOGIC (the Calendar Plan tab)
-     ------------------------------------------------------------------------- */
-
-  // Reads the date/time/name fields and adds one new activity
-  function addStop() {
-    const dateVal = document.getElementById('stop-date').value;
-    const timeVal = document.getElementById('stop-time').value;
-    const nameVal = document.getElementById('stop-name').value.trim();
-
-    if (!dateVal || !nameVal) {
-      alert("Please select a date and enter an activity name.");
-      return; // stop here - don't add an incomplete entry
+  <script>
+    function triggerConfetti() {
+      alert("🚀 ENGINE LAUNCHED! Enjoy the ultimate vibrant experience!");
     }
+  </script>
 
-    // If this is the first activity on this date, create an empty list for it first
-    if (!calendarItinerary[dateVal]) {
-      calendarItinerary[dateVal] = [];
-    }
-
-    calendarItinerary[dateVal].push({ time: timeVal, name: nameVal });
-
-    // Remember exactly which row is new (by date + its position in that
-    // date's list), so renderItinerary() can play the pop-in animation
-    // on ONLY that row instead of every row.
-    lastAddedStopKey = `${dateVal}__${calendarItinerary[dateVal].length - 1}`;
-
-    document.getElementById('stop-name').value = ''; // clear the name field for the next entry
-    renderItinerary();
-  }
-
-  // Rebuilds the whole itinerary list on the right side of the Calendar page
-  function renderItinerary() {
-    const container = document.getElementById('itinerary-display');
-    const dates = Object.keys(calendarItinerary).sort(); // get all dates as text, sorted earliest-first
-
-    if (dates.length === 0) {
-      container.innerHTML = `<p style="color:var(--text-muted); font-size:14px;">No dates or activities scheduled yet.</p>`;
-      return;
-    }
-
-    const dateColors = ["var(--vivid-green)", "var(--electric-blue)", "var(--neon-pink)", "var(--neon-orange)", "var(--neon-purple)", "var(--neon-teal)"];
-    let html = '<h2 style="color: var(--electric-blue); font-size: 18px; margin-bottom: 16px;">Scheduled Calendar</h2>';
-
-    // Loop over every date, then loop over every activity within that date
-    dates.forEach((date, di) => {
-      const dColor = dateColors[di % dateColors.length]; // % (modulo) loops back to the start of the color list once we run out of colors
-      html += `<h3 style="color:${dColor}; margin:16px 0 8px 0; font-size:15px;">🗓️ ${date}</h3>`;
-      calendarItinerary[date].forEach((stop, idx) => {
-        const key = `${date}__${idx}`;
-        const isNew = key === lastAddedStopKey; // is THIS the row we just added?
-        html += `
-          <div class="stop-item ${isNew ? 'new-stop-anim' : ''}" style="border-left-color:${dColor};">
-            <div>
-              <strong style="color:${dColor}; margin-right:10px;">${stop.time}</strong>
-              <span>${stop.name}</span>
-            </div>
-            <button style="background:none; border:none; color:var(--vivid-red); cursor:pointer; font-weight:bold;" onclick="removeStop('${date}', ${idx})">✕</button>
-          </div>
-        `;
-      });
-    });
-
-    container.innerHTML = html;
-    lastAddedStopKey = null; // reset, so nothing animates again next time we re-render for an unrelated reason
-  }
-
-  // Removes one activity by its date and its position (index) in that date's list
-  function removeStop(date, idx) {
-    calendarItinerary[date].splice(idx, 1); // splice(start, count) removes 1 item at position idx
-    if (calendarItinerary[date].length === 0) delete calendarItinerary[date]; // clean up empty dates entirely
-    renderItinerary();
-  }
-
-  /* -------------------------------------------------------------------------
-     5. BUDGET & CUSTOM EXPENSE BUILDER (the Budget & Custom tab)
-     ------------------------------------------------------------------------- */
-
-  // Opens/closes an accordion section by flipping its "open" CSS class
-  function toggleAccordion(id) {
-    const acc = document.getElementById(id);
-    acc.classList.toggle('open'); // toggle: adds the class if missing, removes it if present
-  }
-
-  // Reads the custom expense name/cost fields and adds a new line item
-  function addCustomExpense() {
-    const name = document.getElementById('custom-exp-name').value.trim();
-    const cost = parseFloat(document.getElementById('custom-exp-cost').value); // parseFloat turns text like "150" into the number 150
-
-    if (!name || isNaN(cost)) return; // isNaN checks "is this NOT a valid number" - bail out if so
-
-    customExpenses.push({ id: Date.now(), name, cost, accent: accentPool[customExpenses.length % accentPool.length] });
-    document.getElementById('custom-exp-name').value = '';
-    document.getElementById('custom-exp-cost').value = '';
-    
-    renderCustomExpenses();
-    recalcBudget(); // the total needs to update too, since we just added a cost
-  }
-
-  // Rebuilds the list of custom expense rows from the customExpenses array
-  function renderCustomExpenses() {
-    const list = document.getElementById('custom-expense-list');
-    if (customExpenses.length === 0) {
-      list.innerHTML = `<p style="color:var(--text-muted); font-size:13px;">No custom expense items added yet.</p>`;
-      return;
-    }
-
-    let html = '';
-    customExpenses.forEach(item => {
-      html += `
-        <div class="custom-expense-row" style="display:flex; justify-content:space-between; align-items:center; background:#030712; padding:10px 14px; border-radius:8px; margin-bottom:8px; border:1px solid var(--border-soft); border-left:3px solid ${item.accent};">
-          <span style="font-size:14px; color:#fff;">${item.name}</span>
-          <div>
-            <strong style="color:${item.accent}; margin-right:12px;">$${item.cost.toFixed(2)}</strong>
-            <button style="background:none; border:none; color:var(--vivid-red); cursor:pointer;" onclick="removeCustomExpense(${item.id})">✕</button>
-          </div>
-        </div>
-      `;
-    });
-    list.innerHTML = html;
-  }
-
-  // Removes a custom expense by its unique id
-  function removeCustomExpense(id) {
-    // filter() keeps every item EXCEPT the one whose id matches - a common
-    // JavaScript way to "remove an item" from a list without a loop
-    customExpenses = customExpenses.filter(e => e.id !== id);
-    renderCustomExpenses();
-    recalcBudget();
-  }
-
-  // Adds up all the costs and updates the total + progress bar. Runs any
-  // time a budget number changes (see the oninput="recalcBudget()" on
-  // the number inputs in the HTML above).
-  function recalcBudget() {
-    let baseTotal = 0;
-    // Find every input with class "b-input" (transport/lodging/food) and add them up
-    document.querySelectorAll('.b-input').forEach(i => baseTotal += parseFloat(i.value) || 0);
-    // "|| 0" means: if the field is empty/invalid, treat it as 0 instead of crashing
-
-    let customTotal = customExpenses.reduce((sum, item) => sum + item.cost, 0); // reduce() adds up a list into a single number
-    let total = baseTotal + customTotal;
-
-    const limit = parseFloat(document.getElementById('total-budget').value) || 1; // avoid dividing by 0 below
-
-    document.getElementById('spend-total').textContent = `$${total.toFixed(2)}`; // toFixed(2) formats as e.g. "1234.50"
-    const pct = Math.min((total / limit) * 100, 100); // cap the bar at 100% even if you go over budget
-    
-    const bar = document.getElementById('budget-progress');
-    bar.style.width = `${pct}%`; // this is what actually grows/shrinks the visual bar
-    // Turn the bar red/orange once spending exceeds the budget, otherwise keep it green
-    bar.style.background = total > limit
-      ? 'linear-gradient(90deg, var(--vivid-red), var(--neon-orange))'
-      : 'linear-gradient(90deg, var(--vivid-green), var(--neon-teal))';
-  }
-
-  /* -------------------------------------------------------------------------
-     6. SUMMARY DASHBOARD & PDF EXPORT (the Summary tab)
-     ------------------------------------------------------------------------- */
-
-  // Refreshes every number/text on the Summary page based on current state.
-  // Called automatically each time you open this tab (see showPage()).
-  function updateSummaryDashboard() {
-    if (selectedPlace) {
-      document.getElementById('sum-dest-name').textContent = selectedPlace.name;
-      document.getElementById('sum-dest-desc').textContent = selectedPlace.desc;
-    }
-
-    let baseTotal = 0;
-    document.querySelectorAll('.b-input').forEach(i => baseTotal += parseFloat(i.value) || 0);
-    let customTotal = customExpenses.reduce((sum, item) => sum + item.cost, 0);
-    let grandTotal = baseTotal + customTotal;
-
-    document.getElementById('sum-budget-total').textContent = `$${grandTotal.toFixed(2)}`;
-
-    // Render schedule summary (very similar loop to renderItinerary() above,
-    // just simpler markup since nothing here needs to be clickable)
-    const display = document.getElementById('sum-schedule-display');
-    const dates = Object.keys(calendarItinerary).sort();
-
-    if (dates.length === 0) {
-      display.innerHTML = `<p style="color:var(--text-muted); font-size:14px;">No activities scheduled on the calendar.</p>`;
-      return;
-    }
-
-    const dateColors = ["var(--vivid-green)", "var(--electric-blue)", "var(--neon-pink)", "var(--neon-orange)", "var(--neon-purple)", "var(--neon-teal)"];
-    let html = '';
-    dates.forEach((date, di) => {
-      html += `<h4 style="color:${dateColors[di % dateColors.length]}; margin-top:12px;">🗓️ Date: ${date}</h4><ul>`;
-      calendarItinerary[date].forEach(s => {
-        html += `<li style="color:var(--text-main); margin-left:20px; font-size:14px;"><strong>${s.time}</strong> — ${s.name}</li>`;
-      });
-      html += '</ul>';
-    });
-    display.innerHTML = html;
-  }
-
-  // Fills the hidden "print-only" section with a plain-text version of
-  // everything, then asks the browser to open its print/Save-as-PDF dialog.
-  function generatePDFPrint() {
-    // 1. Destination summary
-    const printSummary = document.getElementById('print-summary-content');
-    printSummary.innerHTML = `
-      <p><strong>Destination:</strong> ${selectedPlace ? selectedPlace.name : 'None Selected'}</p>
-      <p>${selectedPlace ? selectedPlace.desc : ''}</p>
-    `;
-
-    // 2. Itinerary, as a simple list per date
-    const printItinerary = document.getElementById('print-itinerary-content');
-    const dates = Object.keys(calendarItinerary).sort();
-    if (dates.length === 0) {
-      printItinerary.innerHTML = '<p>No activities planned.</p>';
-    } else {
-      let html = '';
-      dates.forEach(d => {
-        html += `<h3>Date: ${d}</h3><ul>`;
-        calendarItinerary[d].forEach(s => {
-          html += `<li><strong>${s.time}</strong>: ${s.name}</li>`;
-        });
-        html += '</ul>';
-      });
-      printItinerary.innerHTML = html;
-    }
-
-    // 3. Budget, as a plain HTML <table> (tables print cleanly, unlike
-    //    the flashy divs we use on-screen)
-    const printBudget = document.getElementById('print-budget-content');
-    let baseTotal = 0;
-    document.querySelectorAll('.b-input').forEach(i => baseTotal += parseFloat(i.value) || 0);
-    let customTotal = customExpenses.reduce((sum, item) => sum + item.cost, 0);
-
-    let budgetTable = `
-      <table>
-        <tr><th>Category / Item</th><th>Cost Amount ($)</th></tr>
-        <tr><td>Transport / Flights</td><td>$${document.getElementById('b-transport').value}</td></tr>
-        <tr><td>Hotels / Lodging</td><td>$${document.getElementById('b-lodging').value}</td></tr>
-        <tr><td>Food & Dining</td><td>$${document.getElementById('b-food').value}</td></tr>
-    `;
-
-    customExpenses.forEach(c => {
-      budgetTable += `<tr><td>Custom: ${c.name}</td><td>$${c.cost.toFixed(2)}</td></tr>`;
-    });
-
-    budgetTable += `
-        <tr><td><strong>TOTAL ESTIMATED COST</strong></td><td><strong>$${(baseTotal + customTotal).toFixed(2)}</strong></td></tr>
-      </table>
-    `;
-
-    printBudget.innerHTML = budgetTable;
-
-    // window.print() is a built-in browser function - it opens the same
-    // print dialog as pressing Ctrl/Cmd+P. The user can choose "Save as
-    // PDF" from there. Our @media print CSS rules (top of file) make sure
-    // only the print-only report is visible when this fires.
-    window.print();
-  }
-
-  /* -------------------------------------------------------------------------
-     7. INITIALIZATION
-     -------------------------------------------------------------------------
-     This code runs ONCE, automatically, the moment the page finishes
-     loading. It's responsible for drawing all the initial content that
-     was left empty in the HTML (card grid, expense list, etc.) and
-     setting up the very first destination as "selected".
-     ------------------------------------------------------------------------- */
-  window.addEventListener('DOMContentLoaded', () => {
-    // Set default date to today in date picker
-    document.getElementById('stop-date').valueToDate = new Date();
-    
-    renderCards();          // draw the destination cards
-    selectCard(1);          // pre-select Tokyo (id 1) so the app isn't empty on first load
-    renderCustomExpenses(); // draw the (currently empty) custom expense list
-    recalcBudget();         // calculate the starting total/progress bar
-
-    // Mark the main panels/dock for scroll-reveal animation. We do this
-    // here (once, at startup) rather than in the CSS/HTML because we
-    // want to alternate left/right and stagger the timing with a tiny
-    // bit of JavaScript logic, which plain HTML can't do on its own.
-    document.querySelectorAll('#page-home .selection-dock, #page-plan .panel, #page-budget .panel, #page-summary .panel')
-      .forEach((el, i) => {
-        el.classList.add(i % 2 === 0 ? 'reveal-left' : 'reveal-right'); // alternate left/right based on even/odd position
-        el.style.transitionDelay = `${Math.min(i, 6) * 70}ms`; // each one starts slightly later than the last
-      });
-
-    scanReveals(); // start watching everything marked with a reveal class
-  });
-</script>
 </body>
 </html>
