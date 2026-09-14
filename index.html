@@ -3,76 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Waypoint Ultimate — Travel Engine & Expedition Suite</title>
+<title>LuminaJourneys — Cozy Nighttime Expedition Suite</title>
 
-<!--
-  ===========================================================================
-  WHAT IS THIS FILE?
-  ===========================================================================
-  This is a high-energy, vibrant, hyper-animated single-page web app.
-  It includes interactive trip planning across 4 primary modules:
-    1. Explore  - Choose or inject custom destinations with step-by-step guidance
-    2. Calendar - Schedule activities with precise date and time slots
-    3. Budget   - Monitor baseline & custom expense items in real-time
-    4. Summary  - Master briefing, analytics, and instant print/export suite
-  ===========================================================================
--->
-
-<!-- =========================================================================
-     PRINTABLE STYLESHEET
-     ========================================================================= -->
+<!-- Printable Stylesheet -->
 <style media="print">
-  body { background: #fff !important; color: #000 !important; font-size: 12pt !important; }
-  .app, header, nav, .btn, .selection-dock, .search-bar, .no-print, .instructions-banner { display: none !important; }
+  body { background: #fff !important; color: #000 !important; font-size: 11pt !important; }
+  .no-print, header, nav, .btn, .dock, .action-row, .budget-slider { display: none !important; }
   .print-only { display: block !important; }
-  .print-page { page-break-after: always; padding: 20px; }
-  h1 { color: #0284c7 !important; font-size: 24pt; border-bottom: 2px solid #0284c7; padding-bottom: 8px; }
-  h2 { color: #10b981 !important; font-size: 18pt; margin-top: 20px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-  th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
-  th { background-color: #f1f5f9; }
+  .print-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; page-break-inside: avoid; }
+  h1, h2, h3 { color: #000 !important; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th, td { border: 1px solid #999; padding: 8px; text-align: left; }
 </style>
 
-<!-- =========================================================================
-     APP STYLES (Ultra-Colorful, Animated & Vibrant High-Contrast Visuals)
-     ========================================================================= -->
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
 
   :root {
-    --bg-dark: #030712;
-    --card-bg: rgba(15, 23, 42, 0.88);
-    --border-soft: rgba(255, 255, 255, 0.22);
+    --bg-dark: #070913;
+    --card-bg: rgba(18, 22, 41, 0.88);
+    --card-border: rgba(255, 255, 255, 0.15);
 
-    --vivid-green: #00ff87;
-    --green-glow: rgba(0, 255, 135, 0.5);
-
-    --electric-blue: #00d2ff;
-    --blue-glow: rgba(0, 210, 255, 0.5);
-
-    --vivid-red: #ff0055;
-    --red-glow: rgba(255, 0, 85, 0.5);
-
-    --neon-purple: #a855f7;
-    --purple-glow: rgba(168, 85, 247, 0.5);
-
-    --neon-orange: #ff9900;
-    --orange-glow: rgba(255, 153, 0, 0.5);
-
-    --neon-pink: #ff007f;
-    --pink-glow: rgba(255, 0, 127, 0.5);
-
-    --neon-yellow: #fff700;
-    --yellow-glow: rgba(255, 247, 0, 0.5);
-
-    --neon-teal: #00ffd5;
-    --teal-glow: rgba(0, 255, 213, 0.5);
+    --glow-amber: #ffaa00;
+    --glow-pink: #ff007f;
+    --glow-cyan: #00f0ff;
+    --glow-purple: #9d4edd;
+    --glow-green: #00ff87;
 
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
-    --line: #1e293b;
     --radius: 20px;
-    --font: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font: 'Outfit', sans-serif;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -80,357 +41,209 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.001ms !important;
-      animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
-      scroll-behavior: auto !important;
     }
   }
 
-  html { scroll-behavior: smooth; }
-  
   body {
     background: var(--bg-dark);
     color: var(--text-main);
     font-family: var(--font);
     min-height: 100vh;
-    overflow-x: hidden;
     background-image: 
-      radial-gradient(circle at 10% 10%, rgba(0, 210, 255, 0.25) 0%, transparent 40%),
-      radial-gradient(circle at 90% 15%, rgba(255, 0, 127, 0.25) 0%, transparent 40%),
-      radial-gradient(circle at 80% 90%, rgba(255, 153, 0, 0.22) 0%, transparent 45%),
-      radial-gradient(circle at 15% 85%, rgba(0, 255, 135, 0.22) 0%, transparent 45%),
-      radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.2) 0%, transparent 60%);
+      radial-gradient(circle at 15% 15%, rgba(255, 170, 0, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 85% 20%, rgba(255, 0, 127, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 50% 80%, rgba(157, 78, 221, 0.18) 0%, transparent 50%);
     background-attachment: fixed;
-    background-size: 200% 200%;
-    animation: bgDrift 18s ease-in-out infinite alternate;
+    line-height: 1.5;
   }
 
-  @keyframes bgDrift {
-    0%   { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 50% 50%; }
-    50%  { background-position: 20% 15%, 80% 25%, 85% 75%, 15% 85%, 55% 45%; }
-    100% { background-position: 0% 100%, 100% 0%, 0% 0%, 100% 100%, 50% 50%; }
-  }
-
-  .print-only { display: none; }
-
-  .app {
-    position: relative;
-    z-index: 1;
-    max-width: 1300px;
+  .app-container {
+    max-width: 1280px;
     margin: 0 auto;
     padding: 20px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
   }
 
-  /* Header & Navigation Styling */
+  /* Header Navigation */
   header {
     background: var(--card-bg);
     backdrop-filter: blur(20px);
-    border: 2px solid var(--border-soft);
+    border: 2px solid var(--card-border);
     border-radius: var(--radius);
-    padding: 18px 28px;
+    padding: 16px 28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 16px;
     z-index: 100;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 30px rgba(0, 210, 255, 0.35);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(255, 170, 0, 0.2);
   }
 
   .brand {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
   }
 
-  .brand-icon {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, var(--vivid-green), var(--electric-blue), var(--neon-purple), var(--neon-pink), var(--neon-orange));
-    background-size: 300% 300%;
-    border-radius: 14px;
+  .brand-logo {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--glow-amber), var(--glow-pink));
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 25px var(--green-glow);
-    animation: pulseGlow 3s infinite alternate, gradientShift 5s ease infinite;
+    font-size: 22px;
+    box-shadow: 0 0 18px rgba(255, 170, 0, 0.5);
   }
 
-  @keyframes pulseGlow {
-    0% { box-shadow: 0 0 20px var(--green-glow), 0 0 40px var(--teal-glow); transform: scale(1); }
-    50% { box-shadow: 0 0 35px var(--pink-glow), 0 0 60px var(--purple-glow); transform: scale(1.05); }
-    100% { box-shadow: 0 0 30px var(--orange-glow), 0 0 50px var(--yellow-glow); transform: scale(1); }
-  }
-
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  .brand h1 {
-    font-size: 28px;
+  .brand-text h1 {
+    font-size: 24px;
     font-weight: 900;
-    letter-spacing: -0.5px;
-    background: linear-gradient(to right, var(--vivid-green), var(--electric-blue), var(--neon-purple), var(--neon-pink), var(--neon-yellow));
-    background-size: 300% auto;
+    background: linear-gradient(90deg, #fff, var(--glow-amber));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradientShift 4s ease infinite;
   }
 
   nav {
     display: flex;
     gap: 8px;
-    background: #030712;
-    padding: 8px;
-    border-radius: 16px;
-    border: 1px solid var(--border-soft);
+    background: rgba(0,0,0,0.5);
+    padding: 6px;
+    border-radius: 14px;
+    border: 1px solid var(--card-border);
   }
 
   nav button {
     background: transparent;
     color: var(--text-muted);
     border: none;
-    padding: 12px 20px;
-    border-radius: 12px;
+    padding: 10px 18px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 800;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.25s ease;
   }
 
-  nav button:hover {
-    color: var(--neon-yellow);
-    transform: translateY(-2px);
-  }
+  nav button:hover { color: var(--glow-amber); }
 
   nav button.active {
-    color: #fff;
-    background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple), var(--neon-pink));
-    background-size: 200% 200%;
-    animation: gradientShift 3s ease infinite;
-    box-shadow: 0 0 25px var(--blue-glow);
+    color: #000;
+    background: linear-gradient(135deg, var(--glow-amber), var(--glow-pink));
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
   }
 
-  /* Vibrant How-To Banner */
-  .instructions-banner {
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(0, 210, 255, 0.25), rgba(0, 255, 135, 0.25));
-    border: 2px solid var(--neon-purple);
+  /* Personal Greeting Bar */
+  .person-bar {
+    background: var(--card-bg);
+    border: 2px solid var(--glow-amber);
     border-radius: var(--radius);
-    padding: 24px;
-    margin-top: 24px;
-    box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
-    position: relative;
-    overflow: hidden;
-    animation: borderGlow 4s ease-in-out infinite alternate;
-  }
-
-  @keyframes borderGlow {
-    0% { border-color: var(--neon-purple); box-shadow: 0 0 20px var(--purple-glow); }
-    50% { border-color: var(--electric-blue); box-shadow: 0 0 25px var(--blue-glow); }
-    100% { border-color: var(--vivid-green); box-shadow: 0 0 20px var(--green-glow); }
-  }
-
-  .instructions-header {
+    padding: 20px 28px;
+    margin-top: 20px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .instructions-header h3 {
-    font-size: 20px;
-    font-weight: 900;
-    color: var(--neon-yellow);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .steps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 16px;
+    box-shadow: 0 8px 30px rgba(255, 170, 0, 0.15);
   }
 
-  .step-card-mini {
-    background: rgba(3, 7, 18, 0.7);
-    border: 1px solid var(--border-soft);
-    border-radius: 14px;
-    padding: 16px;
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    transition: all 0.3s ease;
-  }
-
-  .step-card-mini:hover {
-    transform: translateY(-4px) scale(1.02);
-    border-color: var(--neon-pink);
-    box-shadow: 0 8px 25px var(--pink-glow);
-  }
-
-  .step-num {
-    background: linear-gradient(135deg, var(--neon-pink), var(--neon-orange));
-    color: #fff;
-    font-weight: 900;
-    font-size: 16px;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px var(--pink-glow);
-  }
-
-  .step-info h4 {
-    font-size: 15px;
+  .person-welcome h2 {
+    font-size: 20px;
     font-weight: 800;
     color: #fff;
+  }
+
+  .person-welcome p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .selector-controls {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .custom-select-group label {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: var(--glow-amber);
+    display: block;
     margin-bottom: 4px;
   }
 
-  .step-info p {
-    font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.4;
-  }
-
-  /* Pages and Layouts */
-  main { flex: 1; margin-top: 24px; }
-
-  .page { display: none; }
-
-  .page.active {
-    display: block;
-    animation: fadeInSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  @keyframes fadeInSlide {
-    from { opacity: 0; transform: translateY(20px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  .layout-two-col {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 24px;
-  }
-
-  .panel {
-    background: var(--card-bg);
-    backdrop-filter: blur(16px);
-    border: 2px solid var(--border-soft);
-    border-radius: var(--radius);
-    padding: 28px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    position: relative;
-    transition: border-color 0.3s ease;
-  }
-
-  .panel:hover {
-    border-color: rgba(255, 255, 255, 0.35);
-  }
-
-  /* Scroll Reveal System */
-  .reveal {
-    opacity: 0;
-    transform: translateY(36px) scale(0.97);
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform;
-  }
-  .reveal.in-view {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-
-  /* Hyper-Vibrant Buttons */
-  .btn {
-    padding: 14px 26px;
-    border-radius: 14px;
-    border: none;
+  select, input[type="date"] {
+    background: #090d1a;
+    border: 2px solid var(--card-border);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-family: var(--font);
     font-size: 14px;
-    font-weight: 900;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-  }
-
-  .btn-green  { background: linear-gradient(135deg, var(--vivid-green), var(--neon-teal));   color: #000; box-shadow: 0 4px 25px var(--green-glow); }
-  .btn-blue   { background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple)); color: #000; box-shadow: 0 4px 25px var(--blue-glow); }
-  .btn-purple { background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));    color: #fff; box-shadow: 0 4px 25px var(--purple-glow); }
-  .btn-pink   { background: linear-gradient(135deg, var(--neon-pink), var(--vivid-red));      color: #fff; box-shadow: 0 4px 25px var(--pink-glow); }
-  .btn-red    { background: linear-gradient(135deg, var(--vivid-red), var(--neon-orange));    color: #fff; box-shadow: 0 4px 25px var(--red-glow); }
-  .btn-yellow { background: linear-gradient(135deg, var(--neon-yellow), var(--neon-orange)); color: #000; box-shadow: 0 4px 25px var(--yellow-glow); }
-
-  .btn:hover {
-    transform: translateY(-4px) scale(1.04);
-    filter: brightness(1.25);
-  }
-
-  .btn:active {
-    transform: translateY(-1px) scale(0.98);
-  }
-
-  /* Cards with Integrated Pictures & Visual Enhancements */
-  .search-bar {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-    background: var(--card-bg);
-    padding: 10px 10px 10px 20px;
-    border-radius: 18px;
-    border: 2px solid var(--border-soft);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-  }
-
-  .search-bar input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--text-main);
-    font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     outline: none;
+    transition: border-color 0.2s;
   }
 
-  .grid {
+  select:focus, input[type="date"]:focus {
+    border-color: var(--glow-cyan);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+  }
+
+  /* Page Displays */
+  .page { display: none; margin-top: 24px; }
+  .page.active { display: block; animation: pageFade 0.35s ease-out; }
+
+  @keyframes pageFade {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Layout Grids */
+  .grid-2col {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 24px;
   }
 
+  .grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  /* Cards */
   .card {
     background: var(--card-bg);
-    border: 2px solid var(--border-soft);
+    border: 2px solid var(--card-border);
     border-radius: var(--radius);
-    padding: 0;
-    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
+    position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: var(--glow-amber);
+    box-shadow: 0 15px 35px rgba(255, 170, 0, 0.25);
+  }
+
+  .card.active-target {
+    border-color: var(--glow-green);
+    box-shadow: 0 0 30px rgba(0, 255, 135, 0.35);
   }
 
   .card-img-wrapper {
-    position: relative;
-    width: 100%;
     height: 180px;
+    position: relative;
     overflow: hidden;
   }
 
@@ -438,737 +251,738 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s ease, filter 0.6s ease;
+    transition: transform 0.5s ease;
   }
 
-  .card:hover .card-img-wrapper img {
-    transform: scale(1.15) rotate(1deg);
-    filter: brightness(1.1);
+  .card:hover .card-img-wrapper img { transform: scale(1.1); }
+
+  .card-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--glow-amber);
+    color: var(--glow-amber);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 900;
   }
 
-  .card-body {
-    padding: 20px;
+  .card-content {
+    padding: 18px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    flex: 1;
     justify-content: space-between;
+    flex: 1;
   }
 
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 5px;
-    background: linear-gradient(90deg, var(--electric-blue), var(--neon-purple), var(--neon-pink), var(--neon-orange), var(--vivid-green));
-    background-size: 300% 100%;
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 2;
+  .card-content h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
   }
 
-  .card:hover {
-    border-color: var(--electric-blue);
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0, 210, 255, 0.3);
+  .card-content p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
   }
 
-  .card:hover::before { opacity: 1; animation: gradientShift 2s linear infinite; }
-
-  .card.selected {
-    border-color: var(--vivid-green);
-    background: rgba(0, 255, 135, 0.1);
-    box-shadow: 0 0 35px var(--green-glow);
-  }
-  .card.selected::before { opacity: 1; background: var(--vivid-green); }
-
-  /* Selection Dock Bar */
-  .selection-dock {
-    position: sticky;
-    bottom: 20px;
-    margin-top: 28px;
-    background: rgba(3, 7, 18, 0.95);
-    backdrop-filter: blur(20px);
-    border: 3px solid var(--vivid-green);
-    box-shadow: 0 10px 50px var(--green-glow);
+  /* Panels */
+  .panel {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
     border-radius: var(--radius);
-    padding: 18px 28px;
-    display: none;
+    padding: 24px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(16px);
+  }
+
+  .panel-header {
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 90;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 12px;
   }
 
-  .selection-dock.active { display: flex; animation: dockPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-  @keyframes dockPop {
-    from { opacity: 0; transform: translateY(30px) scale(0.9); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  /* Form Fields */
-  .field { margin-bottom: 18px; }
-
-  .field label {
-    display: block;
-    font-size: 12px;
+  .panel-header h2 {
+    font-size: 20px;
     font-weight: 900;
-    color: var(--electric-blue);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    color: #fff;
   }
 
-  .field input, .field select, .field textarea {
-    width: 100%;
-    background: #030712;
-    border: 2px solid var(--border-soft);
-    color: var(--text-main);
-    padding: 14px;
+  /* Interactive Lists */
+  .rec-item {
+    background: #090d1a;
+    border: 1px solid var(--card-border);
+    border-left: 5px solid var(--glow-purple);
     border-radius: 12px;
-    outline: none;
-    font-size: 15px;
-    font-weight: 600;
-    transition: all 0.25s ease;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s;
   }
 
-  .field input:focus, .field select:focus {
-    border-color: var(--electric-blue);
-    box-shadow: 0 0 15px var(--blue-glow);
-  }
+  .rec-item:hover { transform: translateX(6px); border-left-color: var(--glow-amber); }
 
-  /* Accordions */
-  .accordion {
-    background: #030712;
-    border: 2px solid var(--border-soft);
-    border-radius: 14px;
-    margin-bottom: 16px;
-    overflow: hidden;
-  }
-
-  .accordion-header {
-    padding: 16px 20px;
-    background: rgba(255,255,255,0.03);
-    cursor: pointer;
+  .rec-item-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: 800;
-    font-size: 16px;
-    color: var(--electric-blue);
-    user-select: none;
-    transition: background 0.2s, color 0.2s;
+    font-size: 15px;
+    color: #fff;
   }
 
-  .accordion-header:hover { background: rgba(0, 210, 255, 0.15); color: #fff; }
-
-  .accordion-content {
-    padding: 0 20px;
-    max-height: 0;
-    overflow: hidden;
-    border-top: 0px solid var(--line);
-    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.4s ease;
+  .rec-item-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
   }
 
-  .accordion-content.open {
-    padding: 20px;
-    max-height: 600px;
-    border-top: 2px solid var(--line);
+  .budget-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+    background: rgba(255,255,255,0.03);
+    padding: 8px 12px;
+    border-radius: 10px;
   }
 
-  .badge {
-    padding: 6px 12px;
-    border-radius: 20px;
+  .budget-control label {
     font-size: 11px;
+    font-weight: 800;
+    color: var(--glow-cyan);
+    min-width: 90px;
+  }
+
+  .budget-control input[type="range"] {
+    flex: 1;
+    accent-color: var(--glow-amber);
+    cursor: pointer;
+  }
+
+  .budget-val {
+    font-size: 13px;
     font-weight: 900;
+    color: var(--glow-amber);
+    min-width: 50px;
+    text-align: right;
+  }
+
+  /* Buttons */
+  .btn {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-  .badge-purple { background: rgba(168, 85, 247, 0.25); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
-  .badge-green  { background: rgba(0, 255, 135, 0.25);  color: var(--vivid-green); border: 1px solid var(--vivid-green); }
-  .badge-pink   { background: rgba(255, 0, 127, 0.25);   color: var(--neon-pink); border: 1px solid var(--neon-pink); }
 
-  /* Calendar Stop Item Row */
-  .stop-item {
-    background: #030712;
-    border: 2px solid var(--border-soft);
-    border-left: 6px solid var(--electric-blue);
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  .btn-amber { background: linear-gradient(135deg, var(--glow-amber), #ff8800); color: #000; box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3); }
+  .btn-pink { background: linear-gradient(135deg, var(--glow-pink), #d6006e); color: #fff; box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3); }
+  .btn-cyan { background: linear-gradient(135deg, var(--glow-cyan), #00b8d4); color: #000; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3); }
+  .btn-green { background: linear-gradient(135deg, var(--glow-green), #00c853); color: #000; box-shadow: 0 4px 15px rgba(0, 255, 135, 0.3); }
+
+  .btn:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.15); }
+
+  /* Summary Dashboard Display */
+  .stat-badge {
+    background: #090d1a;
+    border: 2px solid var(--glow-amber);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
   }
 
-  .stop-item:hover {
-    transform: translateX(8px);
-    border-left-color: var(--neon-pink);
-    box-shadow: 0 6px 20px rgba(255, 0, 127, 0.25);
-  }
+  .stat-badge span { font-size: 11px; color: var(--text-muted); font-weight: 800; text-transform: uppercase; }
+  .stat-badge h3 { font-size: 26px; color: var(--glow-amber); font-weight: 900; }
 
-  .stop-item.new-stop-anim { animation: stopIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-  @keyframes stopIn {
-    from { opacity: 0; transform: translateX(-24px) scale(0.95); }
-    to { opacity: 1; transform: translateX(0) scale(1); }
-  }
-
-  .custom-expense-row { animation: stopIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-  @media(max-width: 850px) {
-    .layout-two-col { grid-template-columns: 1fr; }
-    header { flex-direction: column; gap: 16px; }
-    .steps-grid { grid-template-columns: 1fr; }
+  @media(max-width: 800px) {
+    .grid-2col { grid-template-columns: 1fr; }
+    header, .person-bar { flex-direction: column; align-items: stretch; }
   }
 </style>
 </head>
 <body>
 
-<!-- Printable Briefing -->
+<!-- PRINTABLE SUMMARY PAGE -->
 <div class="print-only">
-  <div class="print-page">
-    <h1>Waypoint Expedition Master Briefing</h1>
-    <p>Generated Plan & Budget Itinerary Report</p>
-    
-    <h2>1. Selected Destinations Summary</h2>
-    <div id="print-summary-content"></div>
-
-    <h2>2. Calendar Scheduled Itinerary</h2>
-    <div id="print-itinerary-content"></div>
-
-    <h2>3. Comprehensive Budget & Custom Expenses</h2>
-    <div id="print-budget-content"></div>
-  </div>
+  <h1>LuminaJourneys — Nighttime Master Itinerary</h1>
+  <p>Your personalized cozy evening trip briefing</p>
+  <hr style="margin: 15px 0;">
+  
+  <div id="print-destination-details"></div>
+  <div id="print-activities-list"></div>
+  <div id="print-budget-summary"></div>
 </div>
 
-<!-- Main Web Application -->
-<div class="app">
-  
+<div class="app-container no-print">
+
+  <!-- TOP APP HEADER -->
   <header>
     <div class="brand">
-      <div class="brand-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-      </div>
-      <div>
-        <h1>Waypoint Engine</h1>
-        <p style="font-size: 11px; color: var(--neon-yellow); font-weight:800; letter-spacing: 1px;">PRO EXPEDITION PLATFORM</p>
+      <div class="brand-logo">🌙</div>
+      <div class="brand-text">
+        <h1>LuminaJourneys</h1>
       </div>
     </div>
-
     <nav>
-      <button id="nav-home" class="active" onclick="showPage('home')">🌐 1. Explore</button>
-      <button id="nav-plan" onclick="showPage('plan')">📅 2. Calendar Plan</button>
-      <button id="nav-budget" onclick="showPage('budget')">💎 3. Budget Suite</button>
-      <button id="nav-summary" onclick="showPage('summary')">📑 4. Summary Dashboard</button>
+      <button id="nav-explore" class="active" onclick="switchPage('explore')">✨ 1. Explore 10 Cities</button>
+      <button id="nav-planner" onclick="switchPage('planner')">📍 2. Custom Planner</button>
+      <button id="nav-budget" onclick="switchPage('budget')">💰 3. Activity Budget</button>
+      <button id="nav-summary" onclick="switchPage('summary')">📑 4. Master Briefing</button>
     </nav>
   </header>
 
-  <!-- Step-By-Step Guidance Banner -->
-  <div class="instructions-banner no-print">
-    <div class="instructions-header">
-      <span style="font-size: 24px;">🚀</span>
-      <h3>How To Build Your Trip Itinerary</h3>
+  <!-- PERSONALIZED USER SELECTION BAR -->
+  <div class="person-bar">
+    <div class="person-welcome">
+      <h2>Welcome to Your Personal Night Planner</h2>
+      <p>Hand-curated cozy locations with glowing nightscapes & vibrant evening vibes.</p>
     </div>
-    <div class="steps-grid">
-      <div class="step-card-mini">
-        <div class="step-num">1</div>
-        <div class="step-info">
-          <h4>Explore Target</h4>
-          <p>Pick a preset destination card below or type any custom location into the bar.</p>
+    <div class="selector-controls">
+      <div class="custom-select-group">
+        <label>Pick Destination Spot</label>
+        <select id="user-location-dropdown" onchange="onDropdownSelect(this.value)">
+          <!-- Populated via JavaScript -->
+        </select>
+      </div>
+      <div class="custom-select-group">
+        <label>Your Target Visit Date</label>
+        <input type="date" id="user-trip-date" onchange="updateTripDate(this.value)">
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 1: EXPLORE 10 COZY NIGHTLIGHT LOCATIONS -->
+  <div id="page-explore" class="page active">
+    <div class="panel" style="border-left: 6px solid var(--glow-amber);">
+      <h2 style="font-weight: 900; color: #fff;">10 Iconic Cozy & Glowing Night Locations</h2>
+      <p style="color: var(--text-muted); font-size: 13px;">Click any cozy destination card below or use the top menu to lock in your trip.</p>
+    </div>
+
+    <div class="grid-cards" id="cards-container">
+      <!-- 10 Location Cards Rendered dynamically -->
+    </div>
+  </div>
+
+  <!-- PAGE 2: CUSTOM PLANNER & NEARBY RECOMMENDATIONS -->
+  <div id="page-planner" class="page">
+    <div class="grid-2col">
+      <!-- Left Column: Recommended Dining & Evening Activities -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Cozy Eats & Evening Spots</h2>
+          <span style="font-size: 11px; color: var(--glow-amber); font-weight: 900;">RECOMMENDED</span>
+        </div>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Curated warmly-lit izakayas, illuminated bistros, and glowing viewpoints.</p>
+        
+        <div id="recommendations-container">
+          <!-- Dinning and Evening Recommendations rendered dynamically -->
         </div>
       </div>
-      <div class="step-card-mini">
-        <div class="step-num">2</div>
-        <div class="step-info">
-          <h4>Schedule Stops</h4>
-          <p>Add precise dates, times, and activities to compile your daily calendar.</p>
+
+      <!-- Right Column: Nearby Places & Personal Itinerary Additions -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Nearby Spots & Side Trip Gems</h2>
+          <span style="font-size: 11px; color: var(--glow-cyan); font-weight: 900;">NEARBY (<span id="active-city-name">--</span>)</span>
         </div>
-      </div>
-      <div class="step-card-mini">
-        <div class="step-num">3</div>
-        <div class="step-info">
-          <h4>Set Budget</h4>
-          <p>Configure category baselines and add custom expenses to track finances.</p>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Other walkable cozy spots near your primary location.</p>
+
+        <div id="nearby-container">
+          <!-- Nearby spots rendered dynamically -->
         </div>
-      </div>
-      <div class="step-card-mini">
-        <div class="step-num">4</div>
-        <div class="step-info">
-          <h4>Export Briefing</h4>
-          <p>Review the full master summary and print or save as a PDF report anytime.</p>
+
+        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--card-border);">
+          <button class="btn btn-amber" style="width: 100%; justify-content: center;" onclick="switchPage('budget')">Proceed To Activity Budget Allocator &rarr;</button>
         </div>
       </div>
     </div>
   </div>
 
-  <main>
+  <!-- PAGE 3: ACTIVITY BUDGET ALLOCATOR -->
+  <div id="page-budget" class="page">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Per-Activity Budget & Expense Allocator</h2>
+        <span style="font-size: 12px; color: var(--glow-green); font-weight: 900;" id="total-budget-indicator">Total Spend: $0</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Adjust sliders to customize your planned allocation for each selected activity.</p>
 
-    <!-- PAGE 1: EXPLORE -->
-    <section id="page-home" class="page active">
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search or inject a new custom destination target..." onkeypress="if(event.key==='Enter') doSearch()">
-        <button class="btn btn-blue" onclick="doSearch()">+ Add Location</button>
+      <div id="budget-items-container">
+        <!-- Sliders rendered here -->
       </div>
 
-      <div class="grid" id="destinations-grid"></div>
-
-      <div class="selection-dock" id="dock">
-        <div>
-          <span style="font-size: 11px; color: var(--text-muted); display: block; text-transform:uppercase; letter-spacing:1px; font-weight:800;">Target Selected</span>
-          <strong id="dock-title" style="font-size: 22px; color: #fff;">None</strong>
-        </div>
-        <button class="btn btn-green" onclick="proceedToPlan()">Lock In & Proceed to Calendar &rarr;</button>
+      <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
+        <button class="btn btn-green" onclick="switchPage('summary')">View Final Expedition Summary &rarr;</button>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <!-- PAGE 2: CALENDAR PLAN -->
-    <section id="page-plan" class="page">
-      <div class="panel" style="margin-bottom: 24px; border-left: 6px solid var(--electric-blue);">
-        <h2 style="color: var(--electric-blue); font-size: 22px; font-weight: 900;">📍 Selected Target: <span id="banner-title" style="color: #fff;">None</span></h2>
-        <p id="banner-desc" style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Choose dates and time slots to structure your daily expedition calendar.</p>
+  <!-- PAGE 4: MASTER SUMMARY DASHBOARD -->
+  <div id="page-summary" class="page">
+    <div class="panel" style="text-align: center; border-color: var(--glow-amber);">
+      <span style="font-size: 11px; font-weight: 900; color: var(--glow-amber); letter-spacing: 1px; text-transform: uppercase;">Expedition Ready</span>
+      <h1 style="font-size: 28px; font-weight: 900; color: #fff; margin-top: 4px;">Master Nighttime Briefing</h1>
+      <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;" id="summary-date-line">Target Visit Date: Not set</p>
+    </div>
+
+    <div class="grid-2col" style="margin-bottom: 24px;">
+      <div class="stat-badge">
+        <span>Selected Main Spot</span>
+        <h3 id="summary-city-display">None</h3>
       </div>
-
-      <div class="layout-two-col">
-        <!-- Add Event Form -->
-        <div class="panel">
-          <h2 style="margin-bottom: 20px; font-size: 20px; font-weight: 900; color: var(--vivid-green);">+ Schedule Activity</h2>
-          
-          <div class="field">
-            <label>Specific Target Date</label>
-            <input type="date" id="stop-date">
-          </div>
-
-          <div class="field">
-            <label>Time Block</label>
-            <input type="time" id="stop-time" value="09:00">
-          </div>
-
-          <div class="field">
-            <label>Location / Activity Name</label>
-            <input type="text" id="stop-name" placeholder="e.g., Summit Hike or Dinner Reservation">
-          </div>
-
-          <button class="btn btn-green" style="width:100%;" onclick="addStop()">+ Commit To Schedule</button>
-        </div>
-
-        <!-- Rendered Calendar Schedule -->
-        <div class="panel">
-          <div id="itinerary-display"></div>
-          <div style="margin-top:20px; display:flex; justify-content:flex-end;">
-            <button class="btn btn-purple" onclick="showPage('budget')">Configure Budget & Custom Expenses &rarr;</button>
-          </div>
-        </div>
+      <div class="stat-badge">
+        <span>Calculated Total Allocation</span>
+        <h3 id="summary-cost-display" style="color: var(--glow-green);">$0</h3>
       </div>
-    </section>
+    </div>
 
-    <!-- PAGE 3: BUDGET & CUSTOM EXPENSES -->
-    <section id="page-budget" class="page">
-      <div class="layout-two-col">
-        <!-- Left Column: Category Adjustments & Add Custom Items -->
-        <div>
-          <div class="panel" style="margin-bottom:24px;">
-            <h2 style="color: var(--neon-purple); font-size: 20px; font-weight: 900; margin-bottom: 16px;">Primary Expense Categories</h2>
-            
-            <div class="accordion">
-              <div class="accordion-header" onclick="toggleAccordion('acc-base')">
-                <span>Core Allocations (Flight, Stay, Transit)</span>
-                <span id="acc-base-arrow">▼</span>
-              </div>
-              <div class="accordion-content" id="acc-base">
-                <div class="field">
-                  <label>Transit / Flights ($)</label>
-                  <input type="number" id="cost-flights" value="450" oninput="updateBudget()">
-                </div>
-                <div class="field">
-                  <label>Lodging / Hotel ($)</label>
-                  <input type="number" id="cost-hotel" value="600" oninput="updateBudget()">
-                </div>
-                <div class="field">
-                  <label>Food & Dining ($)</label>
-                  <input type="number" id="cost-food" value="300" oninput="updateBudget()">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Add Custom Item Accordion -->
-          <div class="panel">
-            <h2 style="color: var(--electric-blue); font-size: 20px; font-weight: 900; margin-bottom: 16px;">Add Custom Expense Item</h2>
-            <div class="field">
-              <label>Item Description</label>
-              <input type="text" id="custom-name" placeholder="e.g., Scuba Gear Rental or Museum Pass">
-            </div>
-            <div class="field">
-              <label>Amount ($)</label>
-              <input type="number" id="custom-amount" placeholder="50">
-            </div>
-            <button class="btn btn-blue" style="width:100%;" onclick="addCustomExpense()">+ Add Custom Expense</button>
-          </div>
-        </div>
-
-        <!-- Right Column: Live Expense Summary & Breakdown -->
-        <div class="panel">
-          <h2 style="color: var(--vivid-green); font-size: 22px; font-weight: 900; margin-bottom: 16px;">Financial Breakdown</h2>
-          
-          <div style="background:#030712; padding:20px; border-radius:14px; border:2px solid var(--vivid-green); margin-bottom:20px;">
-            <span style="font-size:12px; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Grand Total Spend</span>
-            <h1 id="total-budget-display" style="font-size:42px; color:var(--vivid-green); font-weight:900; margin-top:4px;">$0</h1>
-          </div>
-
-          <h3 style="font-size:16px; color:var(--neon-yellow); margin-bottom:12px;">Custom Expense Ledger</h3>
-          <div id="custom-expenses-list"></div>
-
-          <div style="margin-top:28px; display:flex; justify-content:flex-end;">
-            <button class="btn btn-pink" onclick="showPage('summary')">View Final Master Summary &rarr;</button>
-          </div>
-        </div>
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Saved Activities & Cozy Dining Stops</h2>
       </div>
-    </section>
+      <div id="summary-activities-list"></div>
+    </div>
 
-    <!-- PAGE 4: SUMMARY DASHBOARD -->
-    <section id="page-summary" class="page">
-      <div class="panel" style="margin-bottom:24px; text-align:center;">
-        <span class="badge badge-purple" style="margin-bottom:12px; display:inline-block;">Master Briefing Loaded</span>
-        <h1 style="font-size:32px; font-weight:900; color:#fff;">Expedition Overview & Analytics</h1>
-        <p style="color:var(--text-muted); margin-top:8px;">Review all compiled targets, calendar stops, and budget metrics below.</p>
-      </div>
+    <div style="display: flex; justify-content: center; gap: 16px; margin-bottom: 40px;">
+      <button class="btn btn-amber" onclick="window.print()">🖨️ Print / Save PDF Report</button>
+    </div>
+  </div>
 
-      <div class="layout-two-col" style="margin-bottom:24px;">
-        <div class="panel">
-          <h3 style="color:var(--electric-blue); font-size:18px; margin-bottom:12px;">Selected Destination</h3>
-          <div id="summary-destination-card"></div>
-        </div>
-
-        <div class="panel">
-          <h3 style="color:var(--vivid-green); font-size:18px; margin-bottom:12px;">Financial Snapshot</h3>
-          <div id="summary-budget-breakdown"></div>
-        </div>
-      </div>
-
-      <div class="panel" style="margin-bottom:24px;">
-        <h3 style="color:var(--neon-yellow); font-size:18px; margin-bottom:16px;">Scheduled Itinerary Timeline</h3>
-        <div id="summary-calendar-view"></div>
-      </div>
-
-      <div style="display:flex; justify-content:center; gap:16px; margin-bottom:40px;">
-        <button class="btn btn-yellow" onclick="generatePDFPrint()">🖨️ Export / Print PDF Briefing</button>
-      </div>
-    </section>
-
-  </main>
 </div>
 
-<!-- =========================================================================
-     JAVASCRIPT LOGIC
-     ========================================================================= -->
+<!-- JAVASCRIPT LOGIC ENGINE -->
 <script>
-  // Initial Data State
-  let destinations = [
-    { id: 'tokyo', name: 'Tokyo, Japan', desc: 'Neon skyscrapers, historic temples, and world-class culinary experiences.', img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80', flights: 850, hotel: 700, food: 400 },
-    { id: 'reykjavik', name: 'Reykjavik, Iceland', desc: 'Volcanic landscapes, geothermal lagoons, and glowing aurora borealis.', img: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=600&q=80', flights: 650, hotel: 800, food: 350 },
-    { id: 'swiss', name: 'Swiss Alps, Switzerland', desc: 'Majestic alpine peaks, crystal-clear lakes, and scenic mountain trains.', img: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=600&q=80', flights: 900, hotel: 1100, food: 500 },
-    { id: 'cairo', name: 'Cairo, Egypt', desc: 'Ancient pyramids, bustling bazaars, and timeless Nile River cruises.', img: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=600&q=80', flights: 750, hotel: 450, food: 250 }
+  // 10 EXCLUSIVE, BIG, COZY, NIGHTLIGHT-HEAVY LOCATIONS
+  const CITIES = [
+    {
+      id: 'tokyo-omoide',
+      name: 'Shinjuku Omoide Yokocho, Tokyo',
+      country: 'Japan',
+      tag: '🏮 Red Lantern Alleys',
+      img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=700&q=80',
+      desc: 'Narrow retro alleyways crammed with tiny cozy izakayas glowing under red paper lanterns and warm grill smoke.',
+      eats: [
+        { id: 'e1', name: 'Torien Yakitori Bar', desc: 'Smoky skewers under warm vintage lanterns.', defaultBudget: 45 },
+        { id: 'e2', name: 'Tsubame Soba Nook', desc: 'A tiny 6-seat nocturnal noodle counter.', defaultBudget: 20 }
+      ],
+      activities: [
+        { id: 'a1', name: 'Golden Gai Jazz Bar Crawl', desc: 'Explore cozy micro-bars with warm ambient lighting.', defaultBudget: 60 },
+        { id: 'a2', name: 'Tokyo Metropolitan Night Deck', desc: 'Panoramic glowing skyline view.', defaultBudget: 15 }
+      ],
+      nearby: [
+        { name: 'Kabukicho Neon Gateway', dist: '0.3 miles away', desc: 'Iconic neon illuminated streetscape.' },
+        { name: 'Hanazono Shrine Night Lanterns', dist: '0.5 miles away', desc: 'Peaceful glowing shinto sanctuary.' }
+      ]
+    },
+    {
+      id: 'paris-montmartre',
+      name: 'Montmartre & Le Consulat, Paris',
+      country: 'France',
+      tag: '🍷 Warm Cobblestone Glow',
+      img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=700&q=80',
+      desc: 'Winding cobblestone hilltops, romantic yellow café window lights, street musicians, and moonlit Sacré-Cœur views.',
+      eats: [
+        { id: 'e3', name: 'Le Consulat Café', desc: 'Historic bistro illuminated under soft golden corner lamps.', defaultBudget: 65 },
+        { id: 'e4', name: 'La Maison Rose', desc: 'Cozy romantic bistro tucked in a lit alley.', defaultBudget: 80 }
+      ],
+      activities: [
+        { id: 'a3', name: 'Moonlit Sacré-Cœur Steps', desc: 'Acoustic guitar and sparkling city vistas.', defaultBudget: 10 },
+        { id: 'a4', name: 'Lapin Agile Cabaret', desc: 'Intimate candlelit songhouse experience.', defaultBudget: 55 }
+      ],
+      nearby: [
+        { name: 'Place du Tertre Artist Square', dist: '0.1 miles away', desc: 'Easel painters under glowing streetlamps.' },
+        { name: 'Moulin Rouge Exterior Glow', dist: '0.4 miles away', desc: 'Iconic red windmill illuminated at night.' }
+      ]
+    },
+    {
+      id: 'prague-oldtown',
+      name: 'Charles Bridge & Old Town, Prague',
+      country: 'Czechia',
+      tag: '🏰 Gas-lit Fairytale',
+      img: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=700&q=80',
+      desc: 'Gothic towers backlit by soft amber street lamps, mist over the Vltava river, and warm cellar taverns.',
+      eats: [
+        { id: 'e5', name: 'U Tlusté Myši Tavern', desc: 'Candlelit medieval cellar pub with craft lager.', defaultBudget: 35 },
+        { id: 'e6', name: 'Grand Café Prague', desc: 'Warm chandeliers and hot spiced wine.', defaultBudget: 25 }
+      ],
+      activities: [
+        { id: 'a5', name: 'Gas-Lamp Charles Bridge Walk', desc: 'Atmospheric night stroll surrounded by statues.', defaultBudget: 0 },
+        { id: 'a6', name: 'Old Town Astronomical Clock', desc: 'Illuminated gothic square gathering.', defaultBudget: 15 }
+      ],
+      nearby: [
+        { name: 'Kampa Island Watermills', dist: '0.2 miles away', desc: 'Quiet illuminated canal side paths.' },
+        { name: 'Prague Castle Night Overlook', dist: '0.6 miles away', desc: 'Glowing fortress atop the hilltop.' }
+      ]
+    },
+    {
+      id: 'kyoto-gion',
+      name: 'Gion & Pontocho Alley, Kyoto',
+      country: 'Japan',
+      tag: '🏮 Wooden Lantern Magic',
+      img: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=700&q=80',
+      desc: 'Traditional dark wood machiya townhouses reflecting soft paper lantern lights along narrow stone riverways.',
+      eats: [
+        { id: 'e7', name: 'Pontocho Kamo River Dining', desc: 'Riverside wooden balcony dining lit by lanterns.', defaultBudget: 90 },
+        { id: 'e8', name: 'Gion Matcha Nook', desc: 'Cozy late-night tea & dessert house.', defaultBudget: 18 }
+      ],
+      activities: [
+        { id: 'a7', name: 'Shirakawa Canal Night Walk', desc: 'Willow trees over illuminated waters.', defaultBudget: 0 },
+        { id: 'a8', name: 'Yasaka Shrine Lantern Walk', desc: 'Hundreds of glowing white lanterns.', defaultBudget: 5 }
+      ],
+      nearby: [
+        { name: 'Hanamikoji Street', dist: '0.2 miles away', desc: 'Preserved historic wooden streetscapes.' },
+        { name: 'Kamo Riverbank Stroll', dist: '0.1 miles away', desc: 'Peaceful seating along glowing waters.' }
+      ]
+    },
+    {
+      id: 'santorini-oia',
+      name: 'Oia Village Nightscape, Santorini',
+      country: 'Greece',
+      tag: '✨ Cliffside Pool Glows',
+      img: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=700&q=80',
+      desc: 'White Aegean cliff dwellings sparkling with turquoise pool lights, warm golden tavernas, and twilight sea views.',
+      eats: [
+        { id: 'e9', name: 'Kastro Oia Restaurant', desc: 'Cliff-edge seafood bistro with golden lanterns.', defaultBudget: 110 },
+        { id: 'e10', name: 'Melitini Tapas Nook', desc: 'Cozy Greek tapas on a rooftop balcony.', defaultBudget: 50 }
+      ],
+      activities: [
+        { id: 'a9', name: 'Caldera Twilight Promenade', desc: 'Winding paths through glowing blue-domed alleys.', defaultBudget: 0 },
+        { id: 'a10', name: 'Ammoudi Bay Night Stairs', desc: 'Descending lit paths to ocean tavernas.', defaultBudget: 15 }
+      ],
+      nearby: [
+        { name: 'Oia Castle Ruins Viewpoint', dist: '0.2 miles away', desc: 'Panoramic night ocean horizon.' },
+        { name: 'Panagia Platsani Church', dist: '0.1 miles away', desc: 'Illuminated central village square.' }
+      ]
+    },
+    {
+      id: 'venice-canals',
+      name: 'Rialto & St. Mark\'s Canals, Venice',
+      country: 'Italy',
+      tag: '🚣 Water Refraction Lights',
+      img: 'https://images.unsplash.com/photo-1514890547357-a9ee288728e0?auto=format&fit=crop&w=700&q=80',
+      desc: 'Quiet mist-covered canals reflecting golden street lights on historic marble palaces and peaceful gondola docks.',
+      eats: [
+        { id: 'e11', name: 'Osteria al Squero', desc: 'Canalside wine bar with cicchetti finger foods.', defaultBudget: 30 },
+        { id: 'e12', name: 'Ristorante da Ivo', desc: 'Intimate candlelit Venetian seafood nook.', defaultBudget: 120 }
+      ],
+      activities: [
+        { id: 'a11', name: 'Night Gondola Canal Ride', desc: 'Glide through silent illuminated waterways.', defaultBudget: 90 },
+        { id: 'a12', name: 'Piazza San Marco Orchestras', desc: 'Classical quartets under café arches.', defaultBudget: 25 }
+      ],
+      nearby: [
+        { name: 'Rialto Bridge Glow', dist: '0.3 miles away', desc: 'Arching stone bridge overlooking lit waters.' },
+        { name: 'Bridge of Sighs at Night', dist: '0.4 miles away', desc: 'Romantic lit canal crossing.' }
+      ]
+    },
+    {
+      id: 'budapest-danube',
+      name: 'Parliament & Danube River, Budapest',
+      country: 'Hungary',
+      tag: '🏛️ Amber Golden Palaces',
+      img: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=700&q=80',
+      desc: 'The colossal Hungarian Parliament glowing like pure gold over the dark Danube alongside cozy ruin bar garden lights.',
+      eats: [
+        { id: 'e13', name: 'Mazel Tov Garden', desc: 'Fairylight covered courtyard with warm Mediterranean dishes.', defaultBudget: 45 },
+        { id: 'e14', name: 'Doblo Wine Bar', desc: 'Brick cellars with candle tables and acoustic jazz.', defaultBudget: 35 }
+      ],
+      activities: [
+        { id: 'a13', name: 'Danube Golden Night Cruise', desc: 'Sailing past illuminated palaces.', defaultBudget: 35 },
+        { id: 'a14', name: 'Szimpla Kert Ruin Pub Walk', desc: 'ECLECTIC cozy neon and vintage lamps.', defaultBudget: 20 }
+      ],
+      nearby: [
+        { name: 'Chain Bridge Night Lights', dist: '0.4 miles away', desc: 'Suspension bridge guarded by lit lions.' },
+        { name: 'Fisherman’s Bastion Vistas', dist: '0.8 miles away', desc: 'Fairy-tale fairytale turrets overlooking the city.' }
+      ]
+    },
+    {
+      id: 'edinburgh-royalmile',
+      name: 'Royal Mile & Victoria St, Edinburgh',
+      country: 'Scotland',
+      tag: '🥃 Warm Amber Pub Glows',
+      img: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=700&q=80',
+      desc: 'Curved cobblestone streets lined with colorful brightly lit shopfronts, stone closes, and fireside scotch pubs.',
+      eats: [
+        { id: 'e15', name: 'The Bow Bar', desc: 'Fireside cozy pub with mahogany bars and warm ales.', defaultBudget: 25 },
+        { id: 'e16', name: 'Devil’s Advocate', desc: 'Candlelit pump house hidden down a stone close.', defaultBudget: 60 }
+      ],
+      activities: [
+        { id: 'a15', name: 'Underground Vaults Ghost Tour', desc: 'Flickering torchlit historic subterranean walk.', defaultBudget: 30 },
+        { id: 'a16', name: 'Calton Hill Sunset to Night', desc: 'Watch city lights turn on across the Edinburgh skyline.', defaultBudget: 0 }
+      ],
+      nearby: [
+        { name: 'Victoria Street Curves', dist: '0.1 miles away', desc: 'Multi-tiered brightly lit shop facades.' },
+        { name: 'Edinburgh Castle Floodlights', dist: '0.3 miles away', desc: 'Dramatic volcanic rock fortress.' }
+      ]
+    },
+    {
+      id: 'nyc-greenwich',
+      name: 'Greenwich Village & DUMBO, NYC',
+      country: 'USA',
+      tag: '🎷 Brownstone & Bridge Lights',
+      img: 'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=700&q=80',
+      desc: 'Tree-lined brownstone blocks with warm stoop lamps, cozy basement jazz clubs, and waterfront skyline views.',
+      eats: [
+        { id: 'e17', name: 'Minetta Tavern', desc: 'Classic plush red booths and warm vintage neon.', defaultBudget: 85 },
+        { id: 'e18', name: 'Joe’s Pizza Night Counter', desc: 'Quick iconic lit slice corner.', defaultBudget: 12 }
+      ],
+      activities: [
+        { id: 'a17', name: 'Village Vanguard Jazz', desc: 'Legendary cozy basement music venue.', defaultBudget: 50 },
+        { id: 'a18', name: 'Brooklyn Bridge Night Walk', desc: 'Stroll above twinkling harbor lights.', defaultBudget: 0 }
+      ],
+      nearby: [
+        { name: 'Washington Square Arch', dist: '0.2 miles away', desc: 'Illuminated marble monument & performers.' },
+        { name: 'DUMBO Waterfront Pier', dist: '1.2 miles away', desc: 'Manhattan skyline glowing over the river.' }
+      ]
+    },
+    {
+      id: 'seville-santa-cruz',
+      name: 'Barrio Santa Cruz, Seville',
+      country: 'Spain',
+      tag: '💃 Orange Blossom Courtyards',
+      img: 'https://images.unsplash.com/photo-1509817247965-697131f8947c?auto=format&fit=crop&w=700&q=80',
+      desc: 'Narrow whitewashed alleys, orange tree courtyards lit by wrought-iron lanterns, and intimate flamenco bars.',
+      eats: [
+        { id: 'e19', name: 'Las Teresas Tapas Bar', desc: 'Hanging hams, warm wood tables, and local sherry.', defaultBudget: 30 },
+        { id: 'e20', name: 'Bar El Comercio', desc: 'Churros and hot chocolate under warm lamps.', defaultBudget: 15 }
+      ],
+      activities: [
+        { id: 'a19', name: 'Casa del Flamenco Night Show', desc: 'Intimate courtyard acoustic music & dance.', defaultBudget: 40 },
+        { id: 'a20', name: 'Seville Cathedral Illumination', desc: 'Gothic spire lit against the night sky.', defaultBudget: 0 }
+      ],
+      nearby: [
+        { name: 'Plaza de Doña Elvira', dist: '0.1 miles away', desc: 'Quiet square scented with orange trees.' },
+        { name: 'Real Alcázar Outer Walls', dist: '0.2 miles away', desc: 'Moorish fortress walls illuminated.' }
+      ]
+    }
   ];
 
-  let selectedPlace = null;
-  let itineraryStops = [];
-  let customExpenses = [];
+  // APPLICATION STATE
+  let selectedCity = CITIES[0];
+  let userTripDate = '2026-10-15';
+  let activityBudgets = {};
 
-  // Page Navigation
-  function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    
-    document.getElementById('page-' + pageId).classList.add('active');
-    document.getElementById('nav-' + (pageId === 'home' ? 'home' : pageId)).classList.add('active');
-
-    if (pageId === 'summary') renderSummary();
+  // INITIALIZE APPLICATION
+  function initApp() {
+    populateDropdown();
+    renderCityCards();
+    loadCityData(selectedCity);
+    document.getElementById('user-trip-date').value = userTripDate;
   }
 
-  // Render Destination Cards
-  function renderCards(filterText = '') {
-    const grid = document.getElementById('destinations-grid');
-    grid.innerHTML = '';
-    
-    const filtered = destinations.filter(d => d.name.toLowerCase().includes(filterText.toLowerCase()));
-    
-    filtered.forEach(d => {
-      const isSelected = selectedPlace && selectedPlace.id === d.id;
-      const card = document.createElement('div');
-      card.className = `card ${isSelected ? 'selected' : ''} reveal`;
-      card.onclick = () => selectCard(d);
+  // POPULATE DROPDOWN SELECTOR
+  function populateDropdown() {
+    const dropdown = document.getElementById('user-location-dropdown');
+    dropdown.innerHTML = CITIES.map(c => `
+      <option value="${c.id}">${c.name}</option>
+    `).join('');
+  }
 
-      card.innerHTML = `
+  // RENDER 10 LOCATION CARDS FOR PAGE 1
+  function renderCityCards() {
+    const container = document.getElementById('cards-container');
+    container.innerHTML = CITIES.map(c => `
+      <div class="card ${c.id === selectedCity.id ? 'active-target' : ''}" onclick="selectCityById('${c.id}')">
         <div class="card-img-wrapper">
-          <img src="${d.img}" alt="${d.name}">
+          <img src="${c.img}" alt="${c.name}">
+          <div class="card-tag">${c.tag}</div>
         </div>
-        <div class="card-body">
+        <div class="card-content">
           <div>
-            <h3 style="font-size:20px; font-weight:800; color:#fff;">${d.name}</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin-top:6px; line-height:1.4;">${d.desc}</p>
+            <h3>${c.name}</h3>
+            <p>${c.desc}</p>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
-            <span class="badge badge-purple">Est. $${d.flights + d.hotel + d.food}</span>
-            <span style="font-size:12px; font-weight:800; color:${isSelected ? 'var(--vivid-green)' : 'var(--electric-blue)'}">
-              ${isSelected ? '✓ Selected' : 'Select Target →'}
-            </span>
-          </div>
+          <button class="btn btn-amber" style="width:100%; justify-content:center;">
+            ${c.id === selectedCity.id ? '✓ Currently Selected' : 'Choose Location'}
+          </button>
         </div>
-      `;
-      grid.appendChild(card);
-    });
-
-    initScrollObserver();
-  }
-
-  function selectCard(place) {
-    selectedPlace = place;
-    document.getElementById('dock-title').innerText = place.name;
-    document.getElementById('dock').classList.add('active');
-
-    document.getElementById('banner-title').innerText = place.name;
-    document.getElementById('cost-flights').value = place.flights;
-    document.getElementById('cost-hotel').value = place.hotel;
-    document.getElementById('cost-food').value = place.food;
-
-    updateBudget();
-    renderCards(document.getElementById('search-input').value);
-  }
-
-  function doSearch() {
-    const val = document.getElementById('search-input').value.trim();
-    if (!val) return;
-
-    const exists = destinations.find(d => d.name.toLowerCase() === val.toLowerCase());
-    if (!exists) {
-      const newPlace = {
-        id: 'custom-' + Date.now(),
-        name: val,
-        desc: 'Custom injected target destination.',
-        img: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80',
-        flights: 500,
-        hotel: 500,
-        food: 300
-      };
-      destinations.unshift(newPlace);
-      selectCard(newPlace);
-    }
-    renderCards(val);
-  }
-
-  function proceedToPlan() {
-    showPage('plan');
-  }
-
-  // Calendar Itinerary
-  function addStop() {
-    const date = document.getElementById('stop-date').value;
-    const time = document.getElementById('stop-time').value;
-    const name = document.getElementById('stop-name').value.trim();
-
-    if (!date || !name) {
-      alert('Please fill out both the date and location/activity name.');
-      return;
-    }
-
-    itineraryStops.push({ id: Date.now(), date, time, name });
-    document.getElementById('stop-name').value = '';
-    renderItinerary();
-  }
-
-  function deleteStop(id) {
-    itineraryStops = itineraryStops.filter(s => s.id !== id);
-    renderItinerary();
-  }
-
-  function renderItinerary() {
-    const display = document.getElementById('itinerary-display');
-    if (itineraryStops.length === 0) {
-      display.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">No scheduled activities yet. Use the form on the left to add stops.</p>`;
-      return;
-    }
-
-    itineraryStops.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
-
-    display.innerHTML = `<h3 style="color:var(--neon-yellow); font-size:18px; margin-bottom:16px;">Scheduled Timeline (${itineraryStops.length})</h3>`;
-    
-    itineraryStops.forEach(stop => {
-      const item = document.createElement('div');
-      item.className = 'stop-item new-stop-anim';
-      item.innerHTML = `
-        <div>
-          <span style="font-size:11px; color:var(--electric-blue); font-weight:800; text-transform:uppercase;">${stop.date} @ ${stop.time}</span>
-          <h4 style="font-size:16px; color:#fff; font-weight:800; margin-top:2px;">${stop.name}</h4>
-        </div>
-        <button onclick="deleteStop(${stop.id})" style="background:transparent; border:none; color:var(--vivid-red); font-size:18px; cursor:pointer;">✕</button>
-      `;
-      display.appendChild(item);
-    });
-  }
-
-  // Budget & Custom Expenses
-  function toggleAccordion(id) {
-    const content = document.getElementById(id);
-    const arrow = document.getElementById(id + '-arrow');
-    if (content.classList.contains('open')) {
-      content.classList.remove('open');
-      arrow.innerText = '▼';
-    } else {
-      content.classList.add('open');
-      arrow.innerText = '▲';
-    }
-  }
-
-  function addCustomExpense() {
-    const name = document.getElementById('custom-name').value.trim();
-    const amount = parseFloat(document.getElementById('custom-amount').value);
-
-    if (!name || isNaN(amount) || amount <= 0) {
-      alert('Please enter a valid expense name and positive amount.');
-      return;
-    }
-
-    customExpenses.push({ id: Date.now(), name, amount });
-    document.getElementById('custom-name').value = '';
-    document.getElementById('custom-amount').value = '';
-
-    updateBudget();
-  }
-
-  function deleteCustomExpense(id) {
-    customExpenses = customExpenses.filter(e => e.id !== id);
-    updateBudget();
-  }
-
-  function updateBudget() {
-    const flights = parseFloat(document.getElementById('cost-flights').value) || 0;
-    const hotel = parseFloat(document.getElementById('cost-hotel').value) || 0;
-    const food = parseFloat(document.getElementById('cost-food').value) || 0;
-
-    const customTotal = customExpenses.reduce((sum, e) => sum + e.amount, 0);
-    const grandTotal = flights + hotel + food + customTotal;
-
-    document.getElementById('total-budget-display').innerText = `$${grandTotal.toLocaleString()}`;
-
-    const list = document.getElementById('custom-expenses-list');
-    if (customExpenses.length === 0) {
-      list.innerHTML = `<p style="color:var(--text-muted); font-size:13px;">No custom expense items added yet.</p>`;
-    } else {
-      list.innerHTML = '';
-      customExpenses.forEach(exp => {
-        const row = document.createElement('div');
-        row.className = 'custom-expense-row';
-        row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft); margin-bottom:8px;';
-        row.innerHTML = `
-          <div>
-            <strong style="color:#fff; font-size:14px;">${exp.name}</strong>
-          </div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span style="color:var(--vivid-green); font-weight:800;">+$${exp.amount.toLocaleString()}</span>
-            <button onclick="deleteCustomExpense(${exp.id})" style="background:transparent; border:none; color:var(--vivid-red); cursor:pointer; font-weight:800;">✕</button>
-          </div>
-        `;
-        list.appendChild(row);
-      });
-    }
-  }
-
-  // Summary Dashboard Rendering
-  function renderSummary() {
-    const destCard = document.getElementById('summary-destination-card');
-    if (selectedPlace) {
-      destCard.innerHTML = `
-        <div style="display:flex; gap:16px; align-items:center;">
-          <img src="${selectedPlace.img}" style="width:90px; height:90px; border-radius:14px; object-fit:cover; border:2px solid var(--vivid-green);">
-          <div>
-            <h2 style="color:#fff; font-size:22px;">${selectedPlace.name}</h2>
-            <p style="color:var(--text-muted); font-size:13px; margin-top:4px;">${selectedPlace.desc}</p>
-          </div>
-        </div>
-      `;
-    } else {
-      destCard.innerHTML = `<p style="color:var(--text-muted);">No target location selected yet.</p>`;
-    }
-
-    const budgetBreakdown = document.getElementById('summary-budget-breakdown');
-    const flights = parseFloat(document.getElementById('cost-flights').value) || 0;
-    const hotel = parseFloat(document.getElementById('cost-hotel').value) || 0;
-    const food = parseFloat(document.getElementById('cost-food').value) || 0;
-    const customTotal = customExpenses.reduce((sum, e) => sum + e.amount, 0);
-    const grandTotal = flights + hotel + food + customTotal;
-
-    budgetBreakdown.innerHTML = `
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-        <div style="background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft);"><span style="color:var(--text-muted); font-size:11px;">TRANSIT</span><p style="color:#fff; font-weight:800; font-size:18px;">$${flights}</p></div>
-        <div style="background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft);"><span style="color:var(--text-muted); font-size:11px;">LODGING</span><p style="color:#fff; font-weight:800; font-size:18px;">$${hotel}</p></div>
-        <div style="background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft);"><span style="color:var(--text-muted); font-size:11px;">FOOD</span><p style="color:#fff; font-weight:800; font-size:18px;">$${food}</p></div>
-        <div style="background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft);"><span style="color:var(--text-muted); font-size:11px;">CUSTOM</span><p style="color:#fff; font-weight:800; font-size:18px;">$${customTotal}</p></div>
       </div>
-      <div style="margin-top:12px; text-align:right;"><strong style="font-size:20px; color:var(--vivid-green);">TOTAL: $${grandTotal.toLocaleString()}</strong></div>
+    `).join('');
+  }
+
+  // SELECT CITY HANDLERS
+  function selectCityById(id) {
+    selectedCity = CITIES.find(c => c.id === id);
+    document.getElementById('user-location-dropdown').value = id;
+    loadCityData(selectedCity);
+    renderCityCards();
+  }
+
+  function onDropdownSelect(id) {
+    selectCityById(id);
+  }
+
+  function updateTripDate(val) {
+    userTripDate = val;
+    updateSummary();
+  }
+
+  // LOAD CITY DATA INTO PLANNER & BUDGET MODULES
+  function loadCityData(city) {
+    document.getElementById('active-city-name').innerText = city.name;
+    
+    // Initialize default budget map for this city's eats and activities
+    city.eats.forEach(e => { if(!activityBudgets[e.id]) activityBudgets[e.id] = e.defaultBudget; });
+    city.activities.forEach(a => { if(!activityBudgets[a.id]) activityBudgets[a.id] = a.defaultBudget; });
+
+    renderRecommendations(city);
+    renderNearby(city);
+    renderBudgetControls(city);
+    updateSummary();
+  }
+
+  // RENDER RECOMMENDATIONS (EATS & ACTIVITIES)
+  function renderRecommendations(city) {
+    const container = document.getElementById('recommendations-container');
+    
+    let html = `<h4 style="color:var(--glow-amber); font-size:13px; text-transform:uppercase; margin-bottom:10px;">🍽️ Cozy Eats & Drinks</h4>`;
+    html += city.eats.map(e => `
+      <div class="rec-item">
+        <div class="rec-item-title">
+          <span>${e.name}</span>
+          <span style="color:var(--glow-green); font-size:13px;">$${activityBudgets[e.id]}</span>
+        </div>
+        <div class="rec-item-desc">${e.desc}</div>
+      </div>
+    `).join('');
+
+    html += `<h4 style="color:var(--glow-cyan); font-size:13px; text-transform:uppercase; margin-top:18px; margin-bottom:10px;">🌙 Evening Activities</h4>`;
+    html += city.activities.map(a => `
+      <div class="rec-item" style="border-left-color: var(--glow-cyan);">
+        <div class="rec-item-title">
+          <span>${a.name}</span>
+          <span style="color:var(--glow-green); font-size:13px;">$${activityBudgets[a.id]}</span>
+        </div>
+        <div class="rec-item-desc">${a.desc}</div>
+      </div>
+    `).join('');
+
+    container.innerHTML = html;
+  }
+
+  // RENDER NEARBY SPOTS
+  function renderNearby(city) {
+    const container = document.getElementById('nearby-container');
+    container.innerHTML = city.nearby.map(n => `
+      <div class="rec-item" style="border-left-color: var(--glow-pink);">
+        <div class="rec-item-title">
+          <span>${n.name}</span>
+          <span style="color:var(--glow-pink); font-size:11px;">${n.dist}</span>
+        </div>
+        <div class="rec-item-desc">${n.desc}</div>
+      </div>
+    `).join('');
+  }
+
+  // RENDER BUDGET SLIDERS
+  function renderBudgetControls(city) {
+    const container = document.getElementById('budget-items-container');
+    
+    const allItems = [...city.eats, ...city.activities];
+    
+    container.innerHTML = allItems.map(item => `
+      <div class="rec-item" style="border-left-color: var(--glow-amber);">
+        <div class="rec-item-title">
+          <span>${item.name}</span>
+          <span class="budget-val" id="val-display-${item.id}">$${activityBudgets[item.id]}</span>
+        </div>
+        <p style="font-size:12px; color:var(--text-muted); margin-top:2px;">${item.desc}</p>
+        
+        <div class="budget-control">
+          <label>Allocate Cost:</label>
+          <input type="range" min="0" max="250" step="5" value="${activityBudgets[item.id]}" oninput="updateItemBudget('${item.id}', this.value)">
+        </div>
+      </div>
+    `).join('');
+
+    calculateTotalBudget();
+  }
+
+  function updateItemBudget(id, val) {
+    activityBudgets[id] = parseInt(val);
+    document.getElementById(`val-display-${id}`).innerText = `$${val}`;
+    calculateTotalBudget();
+    renderRecommendations(selectedCity);
+  }
+
+  function calculateTotalBudget() {
+    const allItems = [...selectedCity.eats, ...selectedCity.activities];
+    const total = allItems.reduce((sum, item) => sum + (activityBudgets[item.id] || 0), 0);
+    
+    document.getElementById('total-budget-indicator').innerText = `Total Allocated Spend: $${total}`;
+    return total;
+  }
+
+  // UPDATE MASTER SUMMARY PAGE
+  function updateSummary() {
+    document.getElementById('summary-city-display').innerText = selectedCity.name;
+    document.getElementById('summary-date-line').innerText = `Target Scheduled Visit: ${userTripDate || 'Not selected'}`;
+    
+    const total = calculateTotalBudget();
+    document.getElementById('summary-cost-display').innerText = `$${total}`;
+
+    const list = document.getElementById('summary-activities-list');
+    const allItems = [...selectedCity.eats, ...selectedCity.activities];
+    
+    list.innerHTML = allItems.map(item => `
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#090d1a; padding:12px 16px; border-radius:10px; border:1px solid var(--card-border); margin-bottom:8px;">
+        <div>
+          <strong style="color:#fff; font-size:14px;">${item.name}</strong>
+          <p style="font-size:12px; color:var(--text-muted);">${item.desc}</p>
+        </div>
+        <span style="color:var(--glow-green); font-weight:900; font-size:16px;">$${activityBudgets[item.id]}</span>
+      </div>
+    `).join('');
+
+    // Prepare printable elements
+    document.getElementById('print-destination-details').innerHTML = `
+      <h3>Destination: ${selectedCity.name} (${selectedCity.country})</h3>
+      <p><strong>Scheduled Visit Date:</strong> ${userTripDate}</p>
+      <p><em>${selectedCity.desc}</em></p>
     `;
 
-    const calendarView = document.getElementById('summary-calendar-view');
-    if (itineraryStops.length === 0) {
-      calendarView.innerHTML = `<p style="color:var(--text-muted);">No scheduled stops found.</p>`;
-    } else {
-      calendarView.innerHTML = itineraryStops.map(s => `
-        <div style="background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft); margin-bottom:8px; display:flex; justify-content:space-between;">
-          <strong style="color:#fff;">${s.name}</strong>
-          <span style="color:var(--electric-blue); font-weight:800;">${s.date} @ ${s.time}</span>
-        </div>
-      `).join('');
-    }
-  }
-
-  // Generate Print Briefing
-  function generatePDFPrint() {
-    document.getElementById('print-summary-content').innerHTML = selectedPlace 
-      ? `<p><strong>Target:</strong> ${selectedPlace.name}</p><p>${selectedPlace.desc}</p>`
-      : `<p>No destination selected.</p>`;
-
-    document.getElementById('print-itinerary-content').innerHTML = itineraryStops.length > 0
-      ? `<table><tr><th>Date</th><th>Time</th><th>Activity</th></tr>${itineraryStops.map(s => `<tr><td>${s.date}</td><td>${s.time}</td><td>${s.name}</td></tr>`).join('')}</table>`
-      : `<p>No itinerary activities scheduled.</p>`;
-
-    const flights = parseFloat(document.getElementById('cost-flights').value) || 0;
-    const hotel = parseFloat(document.getElementById('cost-hotel').value) || 0;
-    const food = parseFloat(document.getElementById('cost-food').value) || 0;
-    const customTotal = customExpenses.reduce((sum, e) => sum + e.amount, 0);
-
-    document.getElementById('print-budget-content').innerHTML = `
+    document.getElementById('print-activities-list').innerHTML = `
+      <h4>Activities & Dining Planned</h4>
       <table>
-        <tr><th>Category</th><th>Amount</th></tr>
-        <tr><td>Transit / Flights</td><td>$${flights}</td></tr>
-        <tr><td>Lodging</td><td>$${hotel}</td></tr>
-        <tr><td>Food & Dining</td><td>$${food}</td></tr>
-        <tr><td>Custom Expense Total</td><td>$${customTotal}</td></tr>
-        <tr><th>Grand Total</th><th>$${flights + hotel + food + customTotal}</th></th>
+        <tr><th>Activity / Venue</th><th>Category</th><th>Allocated Budget</th></tr>
+        ${selectedCity.eats.map(e => `<tr><td>${e.name}</td><td>Cozy Eats</td><td>$${activityBudgets[e.id]}</td></tr>`).join('')}
+        ${selectedCity.activities.map(a => `<tr><td>${a.name}</td><td>Night Activity</td><td>$${activityBudgets[a.id]}</td></tr>`).join('')}
       </table>
     `;
 
-    window.print();
+    document.getElementById('print-budget-summary').innerHTML = `
+      <h3 style="margin-top:15px;">Total Budget Allocation: $${total}</h3>
+    `;
   }
 
-  // Scroll Observer for Animations
-  function initScrollObserver() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-        }
-      });
-    }, { threshold: 0.1 });
+  // PAGE NAVIGATION SWITCHER
+  function switchPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.getElementById(`page-${pageId}`).classList.add('active');
+    document.getElementById(`nav-${pageId}`).classList.add('active');
+
+    if (pageId === 'summary') updateSummary();
   }
 
-  // Initialization
-  window.addEventListener('DOMContentLoaded', () => {
-    renderCards();
-    renderItinerary();
-    updateBudget();
-  });
+  // RUN APP ON LOAD
+  window.addEventListener('DOMContentLoaded', initApp);
 </script>
 
 </body>
