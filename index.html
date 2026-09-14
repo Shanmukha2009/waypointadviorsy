@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LuminaJourneys — Minimalist Night Travel Planner</title>
+<title>WAY POINT ADVISOR — Minimalist Travel Planner</title>
 
 <!-- Print Styles -->
 <style media="print">
@@ -46,7 +46,7 @@
     padding: 0 20px;
   }
 
-  /* Minimal Header & Nav */
+  /* Header & 5-Tab Navigation */
   header {
     border-bottom: 1px solid var(--panel-border);
     padding: 20px 0;
@@ -64,29 +64,31 @@
   .logo {
     font-size: 20px;
     font-weight: 700;
-    letter-spacing: -0.5px;
+    letter-spacing: 0.5px;
     color: #fff;
     display: flex;
     align-items: center;
     gap: 8px;
+    text-transform: uppercase;
   }
 
   .logo span { color: var(--accent); }
 
   nav {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     background: var(--panel);
     padding: 4px;
     border-radius: var(--radius);
     border: 1px solid var(--panel-border);
+    flex-wrap: wrap;
   }
 
   nav button {
     background: transparent;
     color: var(--text-sub);
     border: none;
-    padding: 8px 16px;
+    padding: 8px 14px;
     border-radius: 8px;
     font-size: 13px;
     font-weight: 600;
@@ -101,7 +103,7 @@
     color: #000;
   }
 
-  /* Control Strip (Location & Date Dropdown) */
+  /* Control Strip */
   .control-strip {
     background: var(--panel);
     border: 1px solid var(--panel-border);
@@ -129,7 +131,7 @@
     letter-spacing: 0.5px;
   }
 
-  select, input[type="date"] {
+  select, input[type="date"], input[type="text"] {
     background: #05070a;
     border: 1px solid var(--panel-border);
     color: var(--text);
@@ -140,7 +142,7 @@
     outline: none;
   }
 
-  select:focus, input[type="date"]:focus {
+  select:focus, input[type="date"]:focus, input[type="text"]:focus {
     border-color: var(--accent);
   }
 
@@ -198,13 +200,7 @@
     color: var(--text-sub);
   }
 
-  /* Section Layouts & Panels */
-  .grid-2col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
+  /* Panels & Rows */
   .panel {
     background: var(--panel);
     border: 1px solid var(--panel-border);
@@ -223,7 +219,6 @@
     align-items: center;
   }
 
-  /* Items & Budget Sliders */
   .item-row {
     background: #07090e;
     border: 1px solid var(--panel-border);
@@ -289,78 +284,82 @@
   .btn:hover { opacity: 0.9; }
 
   .print-only { display: none; }
-
-  @media (max-width: 700px) {
-    .grid-2col { grid-template-columns: 1fr; }
-    .control-strip { flex-direction: column; align-items: stretch; }
-  }
 </style>
 </head>
 <body>
 
 <!-- Printable Summary Page -->
 <div class="print-only">
-  <h1 id="p-title">LuminaJourneys Briefing</h1>
+  <h1 id="p-title">WAY POINT ADVISOR Briefing</h1>
   <p id="p-date"></p>
   <div id="p-content" style="margin-top: 20px;"></div>
 </div>
 
 <div class="container no-print">
 
-  <!-- Header & Navigation -->
+  <!-- Header & 5 Navigation Tabs -->
   <header>
     <div class="nav-bar">
       <div class="logo">
-        <span>🌙</span> LuminaJourneys
+        <span>📍</span> WAY POINT ADVISOR
       </div>
       <nav>
         <button id="nav-explore" class="active" onclick="showPage('explore')">1. Explore</button>
-        <button id="nav-planner" onclick="showPage('planner')">2. Planner</button>
-        <button id="nav-budget" onclick="showPage('budget')">3. Budget</button>
-        <button id="nav-summary" onclick="showPage('summary')">4. Briefing</button>
+        <button id="nav-planner" onclick="showPage('planner')">2. Planning</button>
+        <button id="nav-nearby" onclick="showPage('nearby')">3. Nearby</button>
+        <button id="nav-budget" onclick="showPage('budget')">4. Budgeting</button>
+        <button id="nav-summary" onclick="showPage('summary')">5. Summary</button>
       </nav>
     </div>
   </header>
 
-  <!-- Location & Date Picker Bar -->
+  <!-- Location & Date Control Strip -->
   <div class="control-strip">
     <div class="control-group">
       <label>Destination:</label>
       <select id="location-select" onchange="selectCityById(this.value)">
-        <!-- Populated by JS -->
+        <!-- Populated dynamically -->
       </select>
     </div>
     <div class="control-group">
-      <label>Date:</label>
+      <label>Trip Date:</label>
       <input type="date" id="trip-date" onchange="setDate(this.value)">
     </div>
   </div>
 
-  <!-- PAGE 1: EXPLORE CARDS -->
+  <!-- PAGE 1: EXPLORE -->
   <div id="page-explore" class="page active">
-    <div class="grid-cards" id="cards-grid">
-      <!-- Cards rendered here -->
-    </div>
+    <div class="grid-cards" id="cards-grid"></div>
   </div>
 
-  <!-- PAGE 2: PLANNER & NEARBY -->
+  <!-- PAGE 2: PLANNING -->
   <div id="page-planner" class="page">
-    <div class="grid-2col">
-      <div class="panel">
-        <div class="panel-title">Eats & Night Activities</div>
-        <div id="recs-container"></div>
-      </div>
-      <div class="panel">
-        <div class="panel-title">Nearby Spots</div>
-        <div id="nearby-container"></div>
-        <div style="margin-top: 16px;">
-          <button class="btn" style="width: 100%; text-align: center;" onclick="showPage('budget')">Adjust Budget →</button>
-        </div>
+    <div class="panel">
+      <div class="panel-title">Planned Dining & Night Activities</div>
+      <div id="recs-container"></div>
+      <div style="text-align: right; margin-top: 16px;">
+        <button class="btn" onclick="showPage('nearby')">View Nearby Spots →</button>
       </div>
     </div>
   </div>
 
-  <!-- PAGE 3: BUDGET SLIDERS -->
+  <!-- PAGE 3: NEARBY ACTIVITIES SEARCH -->
+  <div id="page-nearby" class="page">
+    <div class="panel">
+      <div class="panel-title">
+        <span>Spots Near <span id="nearby-city-title">Destination</span></span>
+      </div>
+      <div style="margin-bottom: 16px;">
+        <input type="text" id="nearby-search" placeholder="Search nearby spots..." oninput="filterNearby(this.value)" style="width: 100%;">
+      </div>
+      <div id="nearby-container"></div>
+      <div style="text-align: right; margin-top: 16px;">
+        <button class="btn" onclick="showPage('budget')">Go to Budgeting →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: BUDGETING -->
   <div id="page-budget" class="page">
     <div class="panel">
       <div class="panel-title">
@@ -374,7 +373,7 @@
     </div>
   </div>
 
-  <!-- PAGE 4: SUMMARY DASHBOARD -->
+  <!-- PAGE 5: SUMMARY -->
   <div id="page-summary" class="page">
     <div class="panel">
       <div class="panel-title">
@@ -401,7 +400,6 @@
 
 <!-- JavaScript Logic -->
 <script>
-  // 10 Cities with verified high-reliability image links
   const CITIES = [
     {
       id: 'tokyo',
@@ -419,14 +417,15 @@
       ],
       nearby: [
         { name: 'Kabukicho Gateway', desc: 'Neon illuminated archway.' },
-        { name: 'Hanazono Shrine', desc: 'Quiet lantern-lit grounds.' }
+        { name: 'Hanazono Shrine', desc: 'Quiet lantern-lit grounds.' },
+        { name: 'Omoide Yokocho', desc: 'Historic atmospheric alleyway.' }
       ]
     },
     {
       id: 'paris',
       name: 'Paris (Montmartre)',
       country: 'France',
-      img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&auto=format&fit=crop&w=600&q=80',
+      img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&auto=format&fit=crop&q=80',
       desc: 'Cobblestone streets, warm café lights, and hilltop city vistas.',
       eats: [
         { id: 'p1', name: 'Le Consulat Bistro', desc: 'Classic French dining.', cost: 60 },
@@ -438,7 +437,8 @@
       ],
       nearby: [
         { name: 'Place du Tertre', desc: 'Evening art square.' },
-        { name: 'Moulin Rouge Exterior', desc: 'Lit red windmill.' }
+        { name: 'Moulin Rouge Exterior', desc: 'Lit red windmill.' },
+        { name: 'Rue de l’Abreuvoir', desc: 'Scenic nighttime street.' }
       ]
     },
     {
@@ -457,7 +457,8 @@
       ],
       nearby: [
         { name: 'Kampa Island', desc: 'Quiet canalside paths.' },
-        { name: 'Prague Castle Overlook', desc: 'Glowing hilltop fortress.' }
+        { name: 'Prague Castle Overlook', desc: 'Glowing hilltop fortress.' },
+        { name: 'Jewish Quarter Lanes', desc: 'Historic cobblestone paths.' }
       ]
     },
     {
@@ -476,7 +477,8 @@
       ],
       nearby: [
         { name: 'Hanamikoji Street', desc: 'Historic wooden street.' },
-        { name: 'Kamo Riverbank', desc: 'Peaceful seating spots.' }
+        { name: 'Kamo Riverbank', desc: 'Peaceful seating spots.' },
+        { name: 'Kennin-ji Temple Gates', desc: 'Quiet nighttime illuminated grounds.' }
       ]
     },
     {
@@ -495,7 +497,8 @@
       ],
       nearby: [
         { name: 'Oia Castle Point', desc: 'Night horizon views.' },
-        { name: 'Panagia Church Square', desc: 'Illuminated village square.' }
+        { name: 'Panagia Church Square', desc: 'Illuminated village square.' },
+        { name: 'Windmill Lookout', desc: 'Quiet scenic corner.' }
       ]
     },
     {
@@ -514,7 +517,8 @@
       ],
       nearby: [
         { name: 'Rialto Bridge', desc: 'Iconic lit stone arch.' },
-        { name: 'Bridge of Sighs', desc: 'Romantic canal crossing.' }
+        { name: 'Bridge of Sighs', desc: 'Romantic canal crossing.' },
+        { name: 'Accademia Bridge', desc: 'Grand Canal panorama.' }
       ]
     },
     {
@@ -533,7 +537,8 @@
       ],
       nearby: [
         { name: 'Chain Bridge', desc: 'Lit suspension bridge.' },
-        { name: 'Fisherman’s Bastion', desc: 'Lookout towers above city.' }
+        { name: 'Fisherman’s Bastion', desc: 'Lookout towers above city.' },
+        { name: 'Buda Castle Steps', desc: 'Panoramic river view.' }
       ]
     },
     {
@@ -552,7 +557,8 @@
       ],
       nearby: [
         { name: 'Victoria Street', desc: 'Curved illuminated shops.' },
-        { name: 'Edinburgh Castle', desc: 'Floodlit hilltop fortress.' }
+        { name: 'Edinburgh Castle', desc: 'Floodlit hilltop fortress.' },
+        { name: 'Grassmarket', desc: 'Historic street with views.' }
       ]
     },
     {
@@ -571,14 +577,14 @@
       ],
       nearby: [
         { name: 'Washington Square Arch', desc: 'Lit marble landmark.' },
-        { name: 'DUMBO Waterfront', desc: 'Manhattan night view.' }
+        { name: 'DUMBO Waterfront', desc: 'Manhattan night view.' },
+        { name: 'High Line Park South', desc: 'Quiet elevated path.' }
       ]
     },
     {
       id: 'seville',
       name: 'Seville (Santa Cruz)',
       country: 'Spain',
-      tag: '💃 Orange Blossom',
       img: 'https://images.unsplash.com/photo-1509817247965-697131f8947c?w=600&auto=format&fit=crop&q=80',
       desc: 'Whitewashed alleys, orange tree courtyards, and flamenco bars.',
       eats: [
@@ -591,12 +597,12 @@
       ],
       nearby: [
         { name: 'Plaza Doña Elvira', desc: 'Quiet orange tree square.' },
-        { name: 'Alcázar Outer Walls', desc: 'Lit Moorish walls.' }
+        { name: 'Alcázar Outer Walls', desc: 'Lit Moorish walls.' },
+        { name: 'Triana Bridge', desc: 'Canal view at night.' }
       ]
     }
   ];
 
-  // App State
   let currentCity = CITIES[0];
   let tripDate = '2026-10-15';
   let budgetMap = {};
@@ -630,13 +636,13 @@
     currentCity = CITIES.find(c => c.id === id);
     document.getElementById('location-select').value = id;
 
-    // Default budgets
     [...currentCity.eats, ...currentCity.activities].forEach(item => {
       if (!(item.id in budgetMap)) budgetMap[item.id] = item.cost;
     });
 
     renderCards();
     renderPlanner();
+    renderNearby();
     renderBudget();
     updateSummary();
   }
@@ -659,9 +665,23 @@
         <div class="item-desc">${i.desc}</div>
       </div>
     `).join('');
+  }
 
-    const nearby = document.getElementById('nearby-container');
-    nearby.innerHTML = currentCity.nearby.map(n => `
+  function renderNearby(filterQuery = '') {
+    document.getElementById('nearby-city-title').innerText = currentCity.name;
+    const container = document.getElementById('nearby-container');
+    
+    let spots = currentCity.nearby;
+    if (filterQuery) {
+      spots = spots.filter(s => s.name.toLowerCase().includes(filterQuery.toLowerCase()) || s.desc.toLowerCase().includes(filterQuery.toLowerCase()));
+    }
+
+    if (spots.length === 0) {
+      container.innerHTML = `<div style="font-size:12px; color:var(--text-sub);">No matching nearby spots found.</div>`;
+      return;
+    }
+
+    container.innerHTML = spots.map(n => `
       <div class="item-row">
         <div class="item-header">
           <span>${n.name}</span>
@@ -669,6 +689,10 @@
         <div class="item-desc">${n.desc}</div>
       </div>
     `).join('');
+  }
+
+  function filterNearby(query) {
+    renderNearby(query);
   }
 
   function renderBudget() {
@@ -725,8 +749,7 @@
       </div>
     `).join('');
 
-    // Printable view content
-    document.getElementById('p-title').innerText = `${currentCity.name} — Briefing`;
+    document.getElementById('p-title').innerText = `WAY POINT ADVISOR — ${currentCity.name} Briefing`;
     document.getElementById('p-date').innerText = `Scheduled Date: ${tripDate}`;
     document.getElementById('p-content').innerHTML = `
       <table>
