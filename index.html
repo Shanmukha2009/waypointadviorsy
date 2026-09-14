@@ -3,15 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAY POINT ADVISOR — Minimalist Travel Planner</title>
+<title>WAY POINT ADVISOR — Travel Planner</title>
 
-<!-- Print Styles -->
+<!-- Print & PDF Export Styles -->
 <style media="print">
-  body { background: #fff !important; color: #000 !important; font-family: sans-serif; }
-  .no-print, nav, button, select, input { display: none !important; }
+  body { background: #fff !important; color: #000 !important; font-family: sans-serif; padding: 20px; }
+  .no-print, nav, button, select, input, .add-form-grid { display: none !important; }
   .print-only { display: block !important; }
-  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-  th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  th, td { border: 1px solid #000; padding: 10px; text-align: left; }
+  th { background-color: #f2f2f2; }
+  h1, p { margin-bottom: 10px; }
 </style>
 
 <!-- App Styles -->
@@ -41,12 +43,12 @@
   }
 
   .container {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 0 20px;
   }
 
-  /* Header & 5-Tab Navigation */
+  /* Header & Step Indicator Nav */
   header {
     border-bottom: 1px solid var(--panel-border);
     padding: 20px 0;
@@ -81,7 +83,6 @@
     padding: 4px;
     border-radius: var(--radius);
     border: 1px solid var(--panel-border);
-    flex-wrap: wrap;
   }
 
   nav button {
@@ -103,27 +104,37 @@
     color: #000;
   }
 
-  /* Control Strip */
-  .control-strip {
+  /* Page Layouts */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Panels & Controls */
+  .panel {
     background: var(--panel);
     border: 1px solid var(--panel-border);
     border-radius: var(--radius);
-    padding: 16px 20px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 24px;
   }
 
-  .control-group {
+  .form-group {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
   }
 
-  .control-group label {
+  .form-group label {
     font-size: 12px;
     font-weight: 600;
     color: var(--text-sub);
@@ -131,29 +142,26 @@
     letter-spacing: 0.5px;
   }
 
-  select, input[type="date"], input[type="text"] {
+  select, input[type="number"], input[type="text"], input[type="date"], input[type="email"] {
     background: #05070a;
     border: 1px solid var(--panel-border);
     color: var(--text);
-    padding: 8px 12px;
+    padding: 10px 14px;
     border-radius: 8px;
     font-family: var(--font);
-    font-size: 13px;
+    font-size: 14px;
     outline: none;
+    width: 100%;
   }
 
-  select:focus, input[type="date"]:focus, input[type="text"]:focus {
+  select:focus, input:focus {
     border-color: var(--accent);
   }
 
-  /* Page Views */
-  .page { display: none; }
-  .page.active { display: block; }
-
-  /* Minimal Cards Grid */
+  /* Cards Grid */
   .grid-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 16px;
   }
 
@@ -171,73 +179,54 @@
     transform: translateY(-2px);
   }
 
-  .card.selected {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent);
-  }
-
-  .card img {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    display: block;
-    background-color: #1a202c;
-  }
-
   .card-body {
     padding: 16px;
   }
 
   .card-body h3 {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: #fff;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
   .card-body p {
     font-size: 12px;
     color: var(--text-sub);
-  }
-
-  /* Panels & Rows */
-  .panel {
-    background: var(--panel);
-    border: 1px solid var(--panel-border);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-
-  .panel-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
     margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 
+  .badge-cost {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  /* List Row Items */
   .item-row {
     background: #07090e;
     border: 1px solid var(--panel-border);
     border-radius: 8px;
-    padding: 12px 14px;
-    margin-bottom: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
   }
 
   .item-header {
     display: flex;
     justify-content: space-between;
-    font-size: 13px;
+    align-items: center;
+    font-size: 14px;
     font-weight: 600;
     color: #fff;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
   .item-desc {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-sub);
   }
 
@@ -245,8 +234,8 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-top: 8px;
-    padding-top: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
     border-top: 1px solid rgba(255,255,255,0.05);
   }
 
@@ -262,17 +251,17 @@
   }
 
   .val-badge {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--accent);
   }
 
-  /* Minimal Buttons */
+  /* Buttons */
   .btn {
     background: var(--accent);
     color: #000;
     border: none;
-    padding: 10px 18px;
+    padding: 10px 20px;
     border-radius: 8px;
     font-size: 13px;
     font-weight: 600;
@@ -281,14 +270,73 @@
     transition: opacity 0.2s;
   }
 
+  .btn-secondary {
+    background: #1e2638;
+    color: var(--text);
+  }
+
   .btn:hover { opacity: 0.9; }
+
+  .btn-danger {
+    background: #e11d48;
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .add-form-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .budget-summary {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #05070a;
+    border-radius: 8px;
+    border: 1px solid var(--panel-border);
+    margin-bottom: 16px;
+  }
+
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  .summary-table th, .summary-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--panel-border);
+    font-size: 13px;
+  }
+
+  .summary-table th {
+    color: var(--text-sub);
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+
+  .action-bar {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
 
   .print-only { display: none; }
 </style>
 </head>
 <body>
 
-<!-- Printable Summary Page -->
+<!-- Printable / PDF Summary Structure -->
 <div class="print-only">
   <h1 id="p-title">WAY POINT ADVISOR Briefing</h1>
   <p id="p-date"></p>
@@ -297,102 +345,149 @@
 
 <div class="container no-print">
 
-  <!-- Header & 5 Navigation Tabs -->
+  <!-- Header & Navigation Tabs -->
   <header>
     <div class="nav-bar">
       <div class="logo">
         <span>📍</span> WAY POINT ADVISOR
       </div>
       <nav>
-        <button id="nav-explore" class="active" onclick="showPage('explore')">1. Explore</button>
-        <button id="nav-planner" onclick="showPage('planner')">2. Planning</button>
-        <button id="nav-nearby" onclick="showPage('nearby')">3. Nearby</button>
-        <button id="nav-budget" onclick="showPage('budget')">4. Budgeting</button>
-        <button id="nav-summary" onclick="showPage('summary')">5. Summary</button>
+        <button id="nav-step1" class="active" onclick="showPage('step1')">1. Setup Trip</button>
+        <button id="nav-step2" onclick="showPage('step2')">2. Nearby Places</button>
+        <button id="nav-step3" onclick="showPage('step3')">3. Planning & Budget</button>
+        <button id="nav-step4" onclick="showPage('step4')">4. Summary & Export</button>
       </nav>
     </div>
   </header>
 
-  <!-- Location & Date Control Strip -->
-  <div class="control-strip">
-    <div class="control-group">
-      <label>Destination:</label>
-      <select id="location-select" onchange="selectCityById(this.value)">
-        <!-- Populated dynamically -->
-      </select>
-    </div>
-    <div class="control-group">
-      <label>Trip Date:</label>
-      <input type="date" id="trip-date" onchange="setDate(this.value)">
-    </div>
-  </div>
-
-  <!-- PAGE 1: EXPLORE -->
-  <div id="page-explore" class="page active">
-    <div class="grid-cards" id="cards-grid"></div>
-  </div>
-
-  <!-- PAGE 2: PLANNING -->
-  <div id="page-planner" class="page">
+  <!-- SCREEN 1: BUDGET & LOCATION SELECTION -->
+  <div id="page-step1" class="page active">
     <div class="panel">
-      <div class="panel-title">Planned Dining & Night Activities</div>
-      <div id="recs-container"></div>
-      <div style="text-align: right; margin-top: 16px;">
-        <button class="btn" onclick="showPage('nearby')">View Nearby Spots →</button>
+      <div class="panel-title">Step 1: Set Your Trip Preferences</div>
+      <div class="form-group">
+        <label>Total Target Budget ($USD):</label>
+        <input type="number" id="input-budget" value="250" min="0" step="10">
+      </div>
+      <div class="form-group">
+        <label>Destination City:</label>
+        <select id="location-select" onchange="onCitySelectChange(this.value)">
+          <!-- Dynamic options populated by JS -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Trip Date:</label>
+        <input type="date" id="trip-date" value="2026-10-15">
+      </div>
+      <div style="text-align: right; margin-top: 20px;">
+        <button class="btn" onclick="goToStep2()">Find Nearby Places →</button>
       </div>
     </div>
   </div>
 
-  <!-- PAGE 3: NEARBY ACTIVITIES SEARCH -->
-  <div id="page-nearby" class="page">
+  <!-- SCREEN 2: RECOMMENDATIONS & NEARBY SPOTS -->
+  <div id="page-step2" class="page">
     <div class="panel">
       <div class="panel-title">
-        <span>Spots Near <span id="nearby-city-title">Destination</span></span>
+        <span>Recommended Places Near <span id="nearby-city-title" style="color: var(--accent);">City</span></span>
       </div>
-      <div style="margin-bottom: 16px;">
-        <input type="text" id="nearby-search" placeholder="Search nearby spots..." oninput="filterNearby(this.value)" style="width: 100%;">
-      </div>
-      <div id="nearby-container"></div>
-      <div style="text-align: right; margin-top: 16px;">
-        <button class="btn" onclick="showPage('budget')">Go to Budgeting →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- PAGE 4: BUDGETING -->
-  <div id="page-budget" class="page">
-    <div class="panel">
-      <div class="panel-title">
-        <span>Activity Budget Allocator</span>
-        <span id="total-budget" style="color: var(--accent);">$0</span>
-      </div>
-      <div id="budget-container"></div>
-      <div style="text-align: right; margin-top: 16px;">
-        <button class="btn" onclick="showPage('summary')">View Summary →</button>
+      <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 16px;">
+        Click any recommended attraction or dining spot below to add it directly to your itinerary.
+      </p>
+      <div class="grid-cards" id="recommendations-grid"></div>
+      <div style="text-align: right; margin-top: 20px;">
+        <button class="btn" onclick="showPage('step3')">Go to Planning Screen →</button>
       </div>
     </div>
   </div>
 
-  <!-- PAGE 5: SUMMARY -->
-  <div id="page-summary" class="page">
+  <!-- SCREEN 3: PLANNING & BUDGET ALLOCATOR -->
+  <div id="page-step3" class="page">
+    <!-- Add Custom Place Panel -->
     <div class="panel">
-      <div class="panel-title">
-        <span id="sum-city">Selected City</span>
-        <span id="sum-date" style="font-size: 12px; color: var(--text-sub);">Date: --</span>
+      <div class="panel-title">Add Custom Place</div>
+      <div class="add-form-grid">
+        <div>
+          <label style="font-size: 11px; color: var(--text-sub); display:block; margin-bottom: 4px;">Place Name</label>
+          <input type="text" id="custom-name" placeholder="e.g. Local Art Museum">
+        </div>
+        <div>
+          <label style="font-size: 11px; color: var(--text-sub); display:block; margin-bottom: 4px;">Category</label>
+          <select id="custom-category">
+            <option value="Activity">Activity</option>
+            <option value="Dining">Dining</option>
+            <option value="Sight">Sight</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 11px; color: var(--text-sub); display:block; margin-bottom: 4px;">Cost ($)</label>
+          <input type="number" id="custom-cost" value="20" min="0">
+        </div>
+        <div>
+          <button class="btn" onclick="addCustomPlace()">+ Add</button>
+        </div>
       </div>
-      <p style="font-size: 13px; color: var(--text-sub);" id="sum-desc"></p>
     </div>
 
+    <!-- Planned Spots & Dynamic Budget Adjustment -->
     <div class="panel">
       <div class="panel-title">
-        <span>Allocated Itinerary Breakdown</span>
-        <span id="sum-total" style="color: var(--accent);">$0</span>
+        <span>Itinerary & Budget Adjuster</span>
       </div>
-      <div id="sum-list"></div>
-    </div>
 
-    <div style="text-align: center;">
-      <button class="btn" onclick="window.print()">🖨️ Print Briefing</button>
+      <div class="budget-summary">
+        <div>Total Allocated: <span id="allocated-budget" style="color: var(--accent); font-weight:700;">$0</span></div>
+        <div>Target Budget: <span id="target-budget-display" style="font-weight:700;">$0</span></div>
+      </div>
+
+      <div id="planner-items-container"></div>
+
+      <div style="text-align: right; margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <button class="btn btn-secondary" onclick="showPage('step2')">← Add More Places</button>
+        <button class="btn" onclick="showPage('step4')">View Final Summary →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: SUMMARY, EMAIL & PDF EXPORT -->
+  <div id="page-step4" class="page">
+    <div class="panel">
+      <div class="panel-title">
+        <span>Trip Summary & Export</span>
+        <span id="sum-date-display" style="font-size: 13px; color: var(--text-sub);">Date: --</span>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 16px;" id="sum-destination-desc">
+        Review your trip overview below. You can send this itinerary via email or print/save as a PDF briefing.
+      </p>
+
+      <div class="budget-summary">
+        <div>Destination: <span id="sum-city-display" style="color: #fff; font-weight:600;">--</span></div>
+        <div>Total Cost: <span id="sum-total-display" style="color: var(--accent); font-weight:700;">$0</span></div>
+      </div>
+
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Place Name</th>
+            <th>Category</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody id="summary-table-body">
+          <!-- Dynamic rows -->
+        </tbody>
+      </table>
+
+      <!-- Email Input Field -->
+      <div class="form-group" style="margin-top: 24px;">
+        <label>Recipient Email Address:</label>
+        <input type="email" id="email-address" placeholder="e.g. traveler@example.com">
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-secondary" onclick="emailItinerary()">✉️ Email Itinerary</button>
+        <button class="btn" onclick="downloadPDF()">📄 Download PDF Briefing</button>
+      </div>
     </div>
   </div>
 
@@ -405,359 +500,282 @@
       id: 'tokyo',
       name: 'Tokyo (Shinjuku)',
       country: 'Japan',
-      img: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=600&auto=format&fit=crop&q=80',
       desc: 'Lantern-lit alleys, cozy izakayas, and glowing retro nightscapes.',
-      eats: [
-        { id: 't1', name: 'Torien Yakitori', desc: 'Smoky skewers under lanterns.', cost: 40 },
-        { id: 't2', name: 'Noodle Nook', desc: 'Late-night ramen counter.', cost: 20 }
-      ],
-      activities: [
-        { id: 't3', name: 'Golden Gai Bar Crawl', desc: 'Cozy micro-bars.', cost: 50 },
-        { id: 't4', name: 'Metropolitan Deck', desc: 'City night view.', cost: 15 }
-      ],
-      nearby: [
-        { name: 'Kabukicho Gateway', desc: 'Neon illuminated archway.' },
-        { name: 'Hanazono Shrine', desc: 'Quiet lantern-lit grounds.' },
-        { name: 'Omoide Yokocho', desc: 'Historic atmospheric alleyway.' }
+      places: [
+        { id: 't1', name: 'Torien Yakitori', desc: 'Smoky skewers under lanterns.', cost: 40, category: 'Dining' },
+        { id: 't2', name: 'Noodle Nook', desc: 'Late-night ramen counter.', cost: 20, category: 'Dining' },
+        { id: 't3', name: 'Golden Gai Bar Crawl', desc: 'Cozy micro-bars tour.', cost: 50, category: 'Activity' },
+        { id: 't4', name: 'Metropolitan Deck', desc: 'City night view overview.', cost: 15, category: 'Sight' },
+        { id: 't5', name: 'Hanazono Shrine', desc: 'Quiet lantern-lit shrine grounds.', cost: 0, category: 'Sight' }
       ]
     },
     {
       id: 'paris',
       name: 'Paris (Montmartre)',
       country: 'France',
-      img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&auto=format&fit=crop&q=80',
       desc: 'Cobblestone streets, warm café lights, and hilltop city vistas.',
-      eats: [
-        { id: 'p1', name: 'Le Consulat Bistro', desc: 'Classic French dining.', cost: 60 },
-        { id: 'p2', name: 'La Maison Rose', desc: 'Cozy alley café.', cost: 45 }
-      ],
-      activities: [
-        { id: 'p3', name: 'Sacré-Cœur Steps', desc: 'Night music and skyline.', cost: 0 },
-        { id: 'p4', name: 'Lapin Agile Cabaret', desc: 'Intimate song house.', cost: 50 }
-      ],
-      nearby: [
-        { name: 'Place du Tertre', desc: 'Evening art square.' },
-        { name: 'Moulin Rouge Exterior', desc: 'Lit red windmill.' },
-        { name: 'Rue de l’Abreuvoir', desc: 'Scenic nighttime street.' }
+      places: [
+        { id: 'p1', name: 'Le Consulat Bistro', desc: 'Classic French bistro dining.', cost: 60, category: 'Dining' },
+        { id: 'p2', name: 'La Maison Rose', desc: 'Cozy alleyway café.', cost: 45, category: 'Dining' },
+        { id: 'p3', name: 'Sacré-Cœur Steps', desc: 'Night music and city panorama.', cost: 0, category: 'Sight' },
+        { id: 'p4', name: 'Lapin Agile Cabaret', desc: 'Intimate historic song house.', cost: 50, category: 'Activity' },
+        { id: 'p5', name: 'Place du Tertre', desc: 'Evening open-air art square.', cost: 10, category: 'Sight' }
       ]
     },
     {
       id: 'prague',
       name: 'Prague (Old Town)',
       country: 'Czechia',
-      img: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=600&auto=format&fit=crop&q=80',
       desc: 'Gas-lit bridges, medieval towers, and warm cellar pubs.',
-      eats: [
-        { id: 'pr1', name: 'Medieval Cellar Pub', desc: 'Candlelit craft lager tavern.', cost: 30 },
-        { id: 'pr2', name: 'Old Town Café', desc: 'Warm cider and sweets.', cost: 20 }
-      ],
-      activities: [
-        { id: 'pr3', name: 'Charles Bridge Walk', desc: 'Atmospheric night stroll.', cost: 0 },
-        { id: 'pr4', name: 'Astronomical Clock', desc: 'Gothic illuminated square.', cost: 10 }
-      ],
-      nearby: [
-        { name: 'Kampa Island', desc: 'Quiet canalside paths.' },
-        { name: 'Prague Castle Overlook', desc: 'Glowing hilltop fortress.' },
-        { name: 'Jewish Quarter Lanes', desc: 'Historic cobblestone paths.' }
+      places: [
+        { id: 'pr1', name: 'Medieval Cellar Pub', desc: 'Candlelit craft lager tavern.', cost: 30, category: 'Dining' },
+        { id: 'pr2', name: 'Old Town Café', desc: 'Warm cider and local sweets.', cost: 20, category: 'Dining' },
+        { id: 'pr3', name: 'Charles Bridge Walk', desc: 'Atmospheric night stroll.', cost: 0, category: 'Sight' },
+        { id: 'pr4', name: 'Astronomical Clock', desc: 'Gothic illuminated square.', cost: 10, category: 'Sight' },
+        { id: 'pr5', name: 'Kampa Island Canal Walk', desc: 'Peaceful riverside paths.', cost: 0, category: 'Sight' }
       ]
     },
     {
       id: 'kyoto',
       name: 'Kyoto (Gion Alley)',
       country: 'Japan',
-      img: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&auto=format&fit=crop&q=80',
       desc: 'Wooden machiya townhouses reflecting soft paper lanterns.',
-      eats: [
-        { id: 'k1', name: 'Pontocho Riverside', desc: 'Balcony dining over canals.', cost: 70 },
-        { id: 'k2', name: 'Gion Tea House', desc: 'Matcha and late sweets.', cost: 18 }
-      ],
-      activities: [
-        { id: 'k3', name: 'Shirakawa Canal Walk', desc: 'Willow trees and lanterns.', cost: 0 },
-        { id: 'k4', name: 'Yasaka Shrine Walk', desc: 'Hundreds of lit lanterns.', cost: 5 }
-      ],
-      nearby: [
-        { name: 'Hanamikoji Street', desc: 'Historic wooden street.' },
-        { name: 'Kamo Riverbank', desc: 'Peaceful seating spots.' },
-        { name: 'Kennin-ji Temple Gates', desc: 'Quiet nighttime illuminated grounds.' }
-      ]
-    },
-    {
-      id: 'santorini',
-      name: 'Santorini (Oia Cliff)',
-      country: 'Greece',
-      img: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&auto=format&fit=crop&q=80',
-      desc: 'White cliff dwellings glowing above dark turquoise ocean waters.',
-      eats: [
-        { id: 's1', name: 'Cliff Seafood Tavern', desc: 'Oceanfront candlelit dining.', cost: 85 },
-        { id: 's2', name: 'Rooftop Tapas Nook', desc: 'Greek wine & small plates.', cost: 40 }
-      ],
-      activities: [
-        { id: 's3', name: 'Caldera Promenade', desc: 'Winding paths through village lights.', cost: 0 },
-        { id: 's4', name: 'Ammoudi Bay Stairs', desc: 'Lit walk down to harbor.', cost: 10 }
-      ],
-      nearby: [
-        { name: 'Oia Castle Point', desc: 'Night horizon views.' },
-        { name: 'Panagia Church Square', desc: 'Illuminated village square.' },
-        { name: 'Windmill Lookout', desc: 'Quiet scenic corner.' }
-      ]
-    },
-    {
-      id: 'venice',
-      name: 'Venice (Rialto Canals)',
-      country: 'Italy',
-      img: 'https://images.unsplash.com/photo-1514890547357-a9ee288728e0?w=600&auto=format&fit=crop&q=80',
-      desc: 'Quiet mist-covered waterways reflecting golden street lamps.',
-      eats: [
-        { id: 'v1', name: 'Canalside Wine Bar', desc: 'Cicchetti and local wines.', cost: 30 },
-        { id: 'v2', name: 'Venetian Ristorante', desc: 'Seafood by candlelight.', cost: 90 }
-      ],
-      activities: [
-        { id: 'v3', name: 'Night Gondola Ride', desc: 'Glide through silent canals.', cost: 80 },
-        { id: 'v4', name: 'San Marco Square', desc: 'Live quartets under arches.', cost: 20 }
-      ],
-      nearby: [
-        { name: 'Rialto Bridge', desc: 'Iconic lit stone arch.' },
-        { name: 'Bridge of Sighs', desc: 'Romantic canal crossing.' },
-        { name: 'Accademia Bridge', desc: 'Grand Canal panorama.' }
-      ]
-    },
-    {
-      id: 'budapest',
-      name: 'Budapest (Danube River)',
-      country: 'Hungary',
-      img: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600&auto=format&fit=crop&q=80',
-      desc: 'Golden-lit Parliament building and cozy courtyard ruin bars.',
-      eats: [
-        { id: 'b1', name: 'Garden Courtyard Bistro', desc: 'Dining under fairy lights.', cost: 40 },
-        { id: 'b2', name: 'Cellar Wine Bar', desc: 'Cozy brick lounge.', cost: 30 }
-      ],
-      activities: [
-        { id: 'b3', name: 'Danube Night Cruise', desc: 'Sailing past illuminated palaces.', cost: 30 },
-        { id: 'b4', name: 'Ruin Pub Tour', desc: 'Eclectic lamps and drinks.', cost: 20 }
-      ],
-      nearby: [
-        { name: 'Chain Bridge', desc: 'Lit suspension bridge.' },
-        { name: 'Fisherman’s Bastion', desc: 'Lookout towers above city.' },
-        { name: 'Buda Castle Steps', desc: 'Panoramic river view.' }
-      ]
-    },
-    {
-      id: 'edinburgh',
-      name: 'Edinburgh (Royal Mile)',
-      country: 'Scotland',
-      img: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=600&auto=format&fit=crop&q=80',
-      desc: 'Cobblestone streets, brightly lit shopfronts, and fireside pubs.',
-      eats: [
-        { id: 'ed1', name: 'Fireside Pub', desc: 'Warm ales and comfort food.', cost: 25 },
-        { id: 'ed2', name: 'Hidden Close Lounge', desc: 'Whisky tasting by candlelight.', cost: 50 }
-      ],
-      activities: [
-        { id: 'ed3', name: 'Subterranean Vault Tour', desc: 'Torchlit historic walk.', cost: 25 },
-        { id: 'ed4', name: 'Calton Hill Lookout', desc: 'City night sky views.', cost: 0 }
-      ],
-      nearby: [
-        { name: 'Victoria Street', desc: 'Curved illuminated shops.' },
-        { name: 'Edinburgh Castle', desc: 'Floodlit hilltop fortress.' },
-        { name: 'Grassmarket', desc: 'Historic street with views.' }
+      places: [
+        { id: 'k1', name: 'Pontocho Riverside', desc: 'Balcony dining over canals.', cost: 70, category: 'Dining' },
+        { id: 'k2', name: 'Gion Tea House', desc: 'Matcha and traditional late sweets.', cost: 18, category: 'Dining' },
+        { id: 'k3', name: 'Shirakawa Canal Walk', desc: 'Willow trees and lantern paths.', cost: 0, category: 'Sight' },
+        { id: 'k4', name: 'Yasaka Shrine Stroll', desc: 'Hundreds of lit lanterns.', cost: 5, category: 'Sight' }
       ]
     },
     {
       id: 'nyc',
       name: 'New York (Greenwich)',
       country: 'USA',
-      img: 'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=600&auto=format&fit=crop&q=80',
       desc: 'Tree-lined brownstone blocks, stoop lamps, and basement jazz.',
-      eats: [
-        { id: 'n1', name: 'Village Tavern', desc: 'Classic booths & warm lights.', cost: 70 },
-        { id: 'n2', name: 'Corner Slice Shop', desc: 'Late night pizza counter.', cost: 10 }
-      ],
-      activities: [
-        { id: 'n3', name: 'Basement Jazz Club', desc: 'Live music in cozy spot.', cost: 40 },
-        { id: 'n4', name: 'Brooklyn Bridge Walk', desc: 'Skyline view over harbor.', cost: 0 }
-      ],
-      nearby: [
-        { name: 'Washington Square Arch', desc: 'Lit marble landmark.' },
-        { name: 'DUMBO Waterfront', desc: 'Manhattan night view.' },
-        { name: 'High Line Park South', desc: 'Quiet elevated path.' }
-      ]
-    },
-    {
-      id: 'seville',
-      name: 'Seville (Santa Cruz)',
-      country: 'Spain',
-      img: 'https://images.unsplash.com/photo-1509817247965-697131f8947c?w=600&auto=format&fit=crop&q=80',
-      desc: 'Whitewashed alleys, orange tree courtyards, and flamenco bars.',
-      eats: [
-        { id: 'se1', name: 'Traditional Tapas Bar', desc: 'Sherry and small plates.', cost: 25 },
-        { id: 'se2', name: 'Churros & Chocolate', desc: 'Warm late night dessert.', cost: 12 }
-      ],
-      activities: [
-        { id: 'se3', name: 'Courtyard Flamenco', desc: 'Intimate acoustic dance.', cost: 35 },
-        { id: 'se4', name: 'Cathedral Walk', desc: 'Illuminated gothic spire.', cost: 0 }
-      ],
-      nearby: [
-        { name: 'Plaza Doña Elvira', desc: 'Quiet orange tree square.' },
-        { name: 'Alcázar Outer Walls', desc: 'Lit Moorish walls.' },
-        { name: 'Triana Bridge', desc: 'Canal view at night.' }
+      places: [
+        { id: 'n1', name: 'Village Tavern', desc: 'Classic booths & warm lights.', cost: 70, category: 'Dining' },
+        { id: 'n2', name: 'Corner Slice Shop', desc: 'Late night pizza counter.', cost: 10, category: 'Dining' },
+        { id: 'n3', name: 'Basement Jazz Club', desc: 'Live music in intimate spot.', cost: 40, category: 'Activity' },
+        { id: 'n4', name: 'Brooklyn Bridge Walk', desc: 'Skyline views over harbor.', cost: 0, category: 'Sight' }
       ]
     }
   ];
 
   let currentCity = CITIES[0];
-  let tripDate = '2026-10-15';
-  let budgetMap = {};
+  let targetBudget = 250;
+  let plannedPlaces = [];
 
   function init() {
-    populateSelect();
-    renderCards();
-    document.getElementById('trip-date').value = tripDate;
+    populateCitySelect();
     selectCityById(currentCity.id);
   }
 
-  function populateSelect() {
+  function populateCitySelect() {
     const sel = document.getElementById('location-select');
     sel.innerHTML = CITIES.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   }
 
-  function renderCards() {
-    const grid = document.getElementById('cards-grid');
-    grid.innerHTML = CITIES.map(c => `
-      <div class="card ${c.id === currentCity.id ? 'selected' : ''}" onclick="selectCityById('${c.id}')">
-        <img src="${c.img}" alt="${c.name}" loading="lazy">
-        <div class="card-body">
-          <h3>${c.name}</h3>
-          <p>${c.desc}</p>
-        </div>
-      </div>
-    `).join('');
+  function onCitySelectChange(cityId) {
+    selectCityById(cityId);
   }
 
   function selectCityById(id) {
     currentCity = CITIES.find(c => c.id === id);
-    document.getElementById('location-select').value = id;
-
-    [...currentCity.eats, ...currentCity.activities].forEach(item => {
-      if (!(item.id in budgetMap)) budgetMap[item.id] = item.cost;
-    });
-
-    renderCards();
-    renderPlanner();
-    renderNearby();
-    renderBudget();
-    updateSummary();
+    plannedPlaces = JSON.parse(JSON.stringify(currentCity.places.slice(0, 3)));
+    renderStep2();
+    renderStep3();
+    renderStep4();
   }
 
-  function setDate(val) {
-    tripDate = val;
-    updateSummary();
+  function goToStep2() {
+    targetBudget = parseFloat(document.getElementById('input-budget').value) || 0;
+    renderStep2();
+    showPage('step2');
   }
 
-  function renderPlanner() {
-    const recs = document.getElementById('recs-container');
-    const items = [...currentCity.eats, ...currentCity.activities];
-    
-    recs.innerHTML = items.map(i => `
-      <div class="item-row">
-        <div class="item-header">
-          <span>${i.name}</span>
-          <span class="val-badge">$${budgetMap[i.id]}</span>
-        </div>
-        <div class="item-desc">${i.desc}</div>
-      </div>
-    `).join('');
-  }
-
-  function renderNearby(filterQuery = '') {
+  function renderStep2() {
     document.getElementById('nearby-city-title').innerText = currentCity.name;
-    const container = document.getElementById('nearby-container');
+    const grid = document.getElementById('recommendations-grid');
     
-    let spots = currentCity.nearby;
-    if (filterQuery) {
-      spots = spots.filter(s => s.name.toLowerCase().includes(filterQuery.toLowerCase()) || s.desc.toLowerCase().includes(filterQuery.toLowerCase()));
+    grid.innerHTML = currentCity.places.map(place => {
+      const isAdded = plannedPlaces.some(p => p.id === place.id);
+      return `
+        <div class="card" onclick="togglePlaceFromRec('${place.id}')">
+          <div class="card-body">
+            <h3>${place.name}</h3>
+            <p>${place.desc}</p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="badge-cost">$${place.cost}</span>
+              <span style="font-size:12px; color:${isAdded ? 'var(--accent)' : 'var(--text-sub)'}">
+                ${isAdded ? '✓ Selected' : '+ Add Place'}
+              </span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function togglePlaceFromRec(placeId) {
+    const existsIndex = plannedPlaces.findIndex(p => p.id === placeId);
+    if (existsIndex > -1) {
+      plannedPlaces.splice(existsIndex, 1);
+    } else {
+      const orig = currentCity.places.find(p => p.id === placeId);
+      if (orig) plannedPlaces.push(JSON.parse(JSON.stringify(orig)));
+    }
+    renderStep2();
+    renderStep3();
+    renderStep4();
+  }
+
+  function addCustomPlace() {
+    const nameInput = document.getElementById('custom-name');
+    const costInput = document.getElementById('custom-cost');
+    const categoryInput = document.getElementById('custom-category');
+
+    const name = nameInput.value.trim();
+    const cost = parseFloat(costInput.value) || 0;
+    const category = categoryInput.value;
+
+    if (!name) return;
+
+    const newPlace = {
+      id: 'custom-' + Date.now(),
+      name: name,
+      desc: `User added ${category.toLowerCase()}`,
+      cost: cost,
+      category: category
+    };
+
+    plannedPlaces.push(newPlace);
+    nameInput.value = '';
+    renderStep3();
+    renderStep4();
+  }
+
+  function removePlace(id) {
+    plannedPlaces = plannedPlaces.filter(p => p.id !== id);
+    renderStep2();
+    renderStep3();
+    renderStep4();
+  }
+
+  function updatePlaceCost(id, val) {
+    const item = plannedPlaces.find(p => p.id === id);
+    if (item) {
+      item.cost = parseInt(val) || 0;
+      document.getElementById(`badge-${id}`).innerText = `$${item.cost}`;
+      calculateTotalBudget();
+      renderStep4();
+    }
+  }
+
+  function calculateTotalBudget() {
+    const total = plannedPlaces.reduce((sum, item) => sum + item.cost, 0);
+    document.getElementById('allocated-budget').innerText = `$${total}`;
+    document.getElementById('target-budget-display').innerText = `$${targetBudget}`;
+
+    const allocElem = document.getElementById('allocated-budget');
+    if (total > targetBudget) {
+      allocElem.style.color = '#ef4444';
+    } else {
+      allocElem.style.color = 'var(--accent)';
     }
 
-    if (spots.length === 0) {
-      container.innerHTML = `<div style="font-size:12px; color:var(--text-sub);">No matching nearby spots found.</div>`;
-      return;
-    }
-
-    container.innerHTML = spots.map(n => `
-      <div class="item-row">
-        <div class="item-header">
-          <span>${n.name}</span>
-        </div>
-        <div class="item-desc">${n.desc}</div>
-      </div>
-    `).join('');
-  }
-
-  function filterNearby(query) {
-    renderNearby(query);
-  }
-
-  function renderBudget() {
-    const container = document.getElementById('budget-container');
-    const items = [...currentCity.eats, ...currentCity.activities];
-
-    container.innerHTML = items.map(i => `
-      <div class="item-row">
-        <div class="item-header">
-          <span>${i.name}</span>
-          <span class="val-badge" id="badge-${i.id}">$${budgetMap[i.id]}</span>
-        </div>
-        <div class="slider-row">
-          <label>Budget:</label>
-          <input type="range" min="0" max="200" step="5" value="${budgetMap[i.id]}" oninput="updateCost('${i.id}', this.value)">
-        </div>
-      </div>
-    `).join('');
-
-    calcTotal();
-  }
-
-  function updateCost(id, val) {
-    budgetMap[id] = parseInt(val);
-    document.getElementById(`badge-${id}`).innerText = `$${val}`;
-    calcTotal();
-    renderPlanner();
-    updateSummary();
-  }
-
-  function calcTotal() {
-    const items = [...currentCity.eats, ...currentCity.activities];
-    const total = items.reduce((sum, i) => sum + (budgetMap[i.id] || 0), 0);
-    document.getElementById('total-budget').innerText = `$${total}`;
+    updatePrintSummary(total);
     return total;
   }
 
-  function updateSummary() {
-    document.getElementById('sum-city').innerText = currentCity.name;
-    document.getElementById('sum-date').innerText = `Date: ${tripDate || 'Not set'}`;
-    document.getElementById('sum-desc').innerText = currentCity.desc;
+  function renderStep3() {
+    const container = document.getElementById('planner-items-container');
 
-    const total = calcTotal();
-    document.getElementById('sum-total').innerText = `$${total}`;
+    if (plannedPlaces.length === 0) {
+      container.innerHTML = `<div style="font-size:13px; color:var(--text-sub); text-align:center; padding: 20px;">No places added yet. Select places from Step 2 or add a custom place above.</div>`;
+      calculateTotalBudget();
+      return;
+    }
 
-    const items = [...currentCity.eats, ...currentCity.activities];
-    document.getElementById('sum-list').innerHTML = items.map(i => `
-      <div class="item-row" style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-size:13px; font-weight:600; color:#fff;">${i.name}</div>
-          <div style="font-size:11px; color:var(--text-sub);">${i.desc}</div>
+    container.innerHTML = plannedPlaces.map(item => `
+      <div class="item-row">
+        <div class="item-header">
+          <span>${item.name} <small style="font-size:11px; color:var(--text-sub); font-weight:normal;">(${item.category || 'Spot'})</small></span>
+          <div>
+            <span class="val-badge" id="badge-${item.id}">$${item.cost}</span>
+            <button class="btn-danger" style="margin-left:8px;" onclick="removePlace('${item.id}')">Remove</button>
+          </div>
         </div>
-        <div class="val-badge">$${budgetMap[i.id]}</div>
+        <div class="item-desc">${item.desc}</div>
+        <div class="slider-row">
+          <label>Adjust Cost Allocation:</label>
+          <input type="range" min="0" max="250" step="5" value="${item.cost}" oninput="updatePlaceCost('${item.id}', this.value)">
+        </div>
       </div>
     `).join('');
 
+    calculateTotalBudget();
+  }
+
+  function renderStep4() {
+    const tripDate = document.getElementById('trip-date').value;
+    const total = plannedPlaces.reduce((sum, item) => sum + item.cost, 0);
+
+    document.getElementById('sum-city-display').innerText = currentCity.name;
+    document.getElementById('sum-date-display').innerText = `Date: ${tripDate}`;
+    document.getElementById('sum-total-display').innerText = `$${total}`;
+
+    const tableBody = document.getElementById('summary-table-body');
+    if (plannedPlaces.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--text-sub);">No places selected.</td></tr>`;
+      return;
+    }
+
+    tableBody.innerHTML = plannedPlaces.map(p => `
+      <tr>
+        <td><strong>${p.name}</strong><br><small style="color:var(--text-sub);">${p.desc}</small></td>
+        <td>${p.category || 'Spot'}</td>
+        <td style="color:var(--accent); font-weight:600;">$${p.cost}</td>
+      </tr>
+    `).join('');
+  }
+
+  function updatePrintSummary(total) {
+    const tripDate = document.getElementById('trip-date').value;
     document.getElementById('p-title').innerText = `WAY POINT ADVISOR — ${currentCity.name} Briefing`;
-    document.getElementById('p-date').innerText = `Scheduled Date: ${tripDate}`;
+    document.getElementById('p-date').innerText = `Scheduled Date: ${tripDate} | Target Budget: $${targetBudget}`;
+    
     document.getElementById('p-content').innerHTML = `
       <table>
-        <tr><th>Activity / Venue</th><th>Allocated Budget</th></tr>
-        ${items.map(i => `<tr><td>${i.name}</td><td>$${budgetMap[i.id]}</td></tr>`).join('')}
-        <tr><th>Total Budget</th><th>$${total}</th></tr>
+        <tr><th>Selected Place</th><th>Category</th><th>Allocated Cost</th></tr>
+        ${plannedPlaces.map(p => `<tr><td>${p.name}</td><td>${p.category || 'Spot'}</td><td>$${p.cost}</td></tr>`).join('')}
+        <tr><th colspan="2">Total Allocated</th><th>$${total}</th></tr>
       </table>
     `;
+  }
+
+  function emailItinerary() {
+    const email = document.getElementById('email-address').value.trim();
+    const tripDate = document.getElementById('trip-date').value;
+    const total = plannedPlaces.reduce((sum, item) => sum + item.cost, 0);
+
+    let bodyText = `WAY POINT ADVISOR - Travel Itinerary\n\n`;
+    bodyText += `Destination: ${currentCity.name}\n`;
+    bodyText += `Trip Date: ${tripDate}\n`;
+    bodyText += `Total Allocated Cost: $${total}\n\n`;
+    bodyText += `Planned Places:\n`;
+
+    plannedPlaces.forEach((p, idx) => {
+      bodyText += `${idx + 1}. ${p.name} (${p.category || 'Spot'}) - $${p.cost}\n`;
+    });
+
+    const subject = encodeURIComponent(`Travel Itinerary: ${currentCity.name}`);
+    const body = encodeURIComponent(bodyText);
+
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+  }
+
+  function downloadPDF() {
+    window.print();
   }
 
   function showPage(pageId) {
@@ -766,6 +784,10 @@
 
     document.getElementById(`page-${pageId}`).classList.add('active');
     document.getElementById(`nav-${pageId}`).classList.add('active');
+
+    if (pageId === 'step4') {
+      renderStep4();
+    }
   }
 
   window.addEventListener('DOMContentLoaded', init);
