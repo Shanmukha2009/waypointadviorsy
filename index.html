@@ -1,403 +1,1175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ultimate High-Energy Instructions</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waypoint Ultimate — Travel Engine & Expedition Suite</title>
+
+<!--
+  ===========================================================================
+  WHAT IS THIS FILE?
+  ===========================================================================
+  This is a high-energy, vibrant, hyper-animated single-page web app.
+  It includes interactive trip planning across 4 primary modules:
+    1. Explore  - Choose or inject custom destinations with step-by-step guidance
+    2. Calendar - Schedule activities with precise date and time slots
+    3. Budget   - Monitor baseline & custom expense items in real-time
+    4. Summary  - Master briefing, analytics, and instant print/export suite
+  ===========================================================================
+-->
+
+<!-- =========================================================================
+     PRINTABLE STYLESHEET
+     ========================================================================= -->
+<style media="print">
+  body { background: #fff !important; color: #000 !important; font-size: 12pt !important; }
+  .app, header, nav, .btn, .selection-dock, .search-bar, .no-print, .instructions-banner { display: none !important; }
+  .print-only { display: block !important; }
+  .print-page { page-break-after: always; padding: 20px; }
+  h1 { color: #0284c7 !important; font-size: 24pt; border-bottom: 2px solid #0284c7; padding-bottom: 8px; }
+  h2 { color: #10b981 !important; font-size: 18pt; margin-top: 20px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+  th { background-color: #f1f5f9; }
+</style>
+
+<!-- =========================================================================
+     APP STYLES (Ultra-Colorful, Animated & Vibrant High-Contrast Visuals)
+     ========================================================================= -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap');
+
+  :root {
+    --bg-dark: #030712;
+    --card-bg: rgba(15, 23, 42, 0.88);
+    --border-soft: rgba(255, 255, 255, 0.22);
+
+    --vivid-green: #00ff87;
+    --green-glow: rgba(0, 255, 135, 0.5);
+
+    --electric-blue: #00d2ff;
+    --blue-glow: rgba(0, 210, 255, 0.5);
+
+    --vivid-red: #ff0055;
+    --red-glow: rgba(255, 0, 85, 0.5);
+
+    --neon-purple: #a855f7;
+    --purple-glow: rgba(168, 85, 247, 0.5);
+
+    --neon-orange: #ff9900;
+    --orange-glow: rgba(255, 153, 0, 0.5);
+
+    --neon-pink: #ff007f;
+    --pink-glow: rgba(255, 0, 127, 0.5);
+
+    --neon-yellow: #fff700;
+    --yellow-glow: rgba(255, 247, 0, 0.5);
+
+    --neon-teal: #00ffd5;
+    --teal-glow: rgba(0, 255, 213, 0.5);
+
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --line: #1e293b;
+    --radius: 20px;
+    --font: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  html { scroll-behavior: smooth; }
   
-  <!-- Google Fonts & Font Awesome Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  body {
+    background: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image: 
+      radial-gradient(circle at 10% 10%, rgba(0, 210, 255, 0.25) 0%, transparent 40%),
+      radial-gradient(circle at 90% 15%, rgba(255, 0, 127, 0.25) 0%, transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(255, 153, 0, 0.22) 0%, transparent 45%),
+      radial-gradient(circle at 15% 85%, rgba(0, 255, 135, 0.22) 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.2) 0%, transparent 60%);
+    background-attachment: fixed;
+    background-size: 200% 200%;
+    animation: bgDrift 18s ease-in-out infinite alternate;
+  }
 
-  <style>
-    /* ==========================================================================
-       1. GLOBAL RESET & ANIMATED GRADIENT BACKGROUND
-       ========================================================================== */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Outfit', sans-serif;
-    }
+  @keyframes bgDrift {
+    0%   { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 50% 50%; }
+    50%  { background-position: 20% 15%, 80% 25%, 85% 75%, 15% 85%, 55% 45%; }
+    100% { background-position: 0% 100%, 100% 0%, 0% 0%, 100% 100%, 50% 50%; }
+  }
 
-    body {
-      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-      background-size: 400% 400%;
-      animation: gradientBG 12s ease infinite;
-      color: #fff;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+  .print-only { display: none; }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-    /* Floating ambient background particles */
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      z-index: 0;
-      opacity: 0.6;
-      animation: float 8s ease-in-out infinite alternate;
-      pointer-events: none;
-    }
-    .orb-1 { width: 300px; height: 300px; background: #ff007f; top: 10%; left: 5%; }
-    .orb-2 { width: 400px; height: 400px; background: #00f0ff; bottom: 10%; right: 5%; animation-delay: -4s; }
+  /* Header & Navigation Styling */
+  header {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border: 2px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 18px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 16px;
+    z-index: 100;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 30px rgba(0, 210, 255, 0.35);
+  }
 
-    @keyframes float {
-      0% { transform: translateY(0px) rotate(0deg); }
-      100% { transform: translateY(-40px) rotate(20deg); }
-    }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
 
-    /* ==========================================================================
-       2. HEADER & HERO SECTION
-       ========================================================================== */
-    header {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 80px 20px 40px;
-    }
+  .brand-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--vivid-green), var(--electric-blue), var(--neon-purple), var(--neon-pink), var(--neon-orange));
+    background-size: 300% 300%;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 25px var(--green-glow);
+    animation: pulseGlow 3s infinite alternate, gradientShift 5s ease infinite;
+  }
 
-    .hero-badge {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(10px);
-      padding: 10px 24px;
-      border-radius: 50px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 0.9rem;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-      border: 2px solid rgba(255, 255, 255, 0.4);
-      animation: pulseBadge 2s infinite alternate;
-    }
+  @keyframes pulseGlow {
+    0% { box-shadow: 0 0 20px var(--green-glow), 0 0 40px var(--teal-glow); transform: scale(1); }
+    50% { box-shadow: 0 0 35px var(--pink-glow), 0 0 60px var(--purple-glow); transform: scale(1.05); }
+    100% { box-shadow: 0 0 30px var(--orange-glow), 0 0 50px var(--yellow-glow); transform: scale(1); }
+  }
 
-    @keyframes pulseBadge {
-      0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
-      100% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 255, 255, 0.9); }
-    }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-    h1.hero-title {
-      font-size: 4rem;
-      font-weight: 900;
-      margin: 20px 0;
-      text-transform: uppercase;
-      text-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      line-height: 1.1;
-    }
+  .brand h1 {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    background: linear-gradient(to right, var(--vivid-green), var(--electric-blue), var(--neon-purple), var(--neon-pink), var(--neon-yellow));
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 4s ease infinite;
+  }
 
-    .hero-title span {
-      background: linear-gradient(to right, #ffe600, #ff007f);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
-      animation: textWobble 3s ease-in-out infinite;
-    }
+  nav {
+    display: flex;
+    gap: 8px;
+    background: #030712;
+    padding: 8px;
+    border-radius: 16px;
+    border: 1px solid var(--border-soft);
+  }
 
-    @keyframes textWobble {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-5px) rotate(1deg); }
-    }
+  nav button {
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
 
-    p.hero-subtitle {
-      font-size: 1.4rem;
-      max-width: 650px;
-      margin: 0 auto;
-      opacity: 0.95;
-      font-weight: 600;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
+  nav button:hover {
+    color: var(--neon-yellow);
+    transform: translateY(-2px);
+  }
 
-    /* ==========================================================================
-       3. MAIN STEP-BY-STEP CONTAINER
-       ========================================================================== */
-    .container {
-      position: relative;
-      z-index: 2;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 40px 20px 100px;
-    }
+  nav button.active {
+    color: #fff;
+    background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple), var(--neon-pink));
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+    box-shadow: 0 0 25px var(--blue-glow);
+  }
 
-    .step-card {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 30px;
-      padding: 40px;
-      margin-bottom: 50px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      align-items: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+  /* Vibrant How-To Banner */
+  .instructions-banner {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(0, 210, 255, 0.25), rgba(0, 255, 135, 0.25));
+    border: 2px solid var(--neon-purple);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-top: 24px;
+    box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
+    position: relative;
+    overflow: hidden;
+    animation: borderGlow 4s ease-in-out infinite alternate;
+  }
 
-    .step-card:hover {
-      transform: translateY(-12px) scale(1.02);
-      border-color: #ffe600;
-      box-shadow: 0 30px 60px rgba(255, 230, 0, 0.4);
-    }
+  @keyframes borderGlow {
+    0% { border-color: var(--neon-purple); box-shadow: 0 0 20px var(--purple-glow); }
+    50% { border-color: var(--electric-blue); box-shadow: 0 0 25px var(--blue-glow); }
+    100% { border-color: var(--vivid-green); box-shadow: 0 0 20px var(--green-glow); }
+  }
 
-    /* Alternating visual layout for variety */
-    .step-card:nth-child(even) {
-      direction: rtl;
-    }
-    .step-card:nth-child(even) .step-text-content {
-      direction: ltr;
-    }
+  .instructions-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
 
-    /* ==========================================================================
-       4. STEP TEXT & INSTRUCTION STYLING
-       ========================================================================== */
-    .step-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #ffe600, #ff5e00);
-      color: #000;
-      font-weight: 900;
-      font-size: 1.8rem;
-      border-radius: 50%;
-      margin-bottom: 20px;
-      box-shadow: 0 0 20px rgba(255, 230, 0, 0.6);
-    }
+  .instructions-header h3 {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--neon-yellow);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
 
-    .step-text-content h2 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 15px;
-      text-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
 
-    .step-text-content p {
-      font-size: 1.15rem;
-      line-height: 1.6;
-      margin-bottom: 20px;
-      opacity: 0.95;
-    }
+  .step-card-mini {
+    background: rgba(3, 7, 18, 0.7);
+    border: 1px solid var(--border-soft);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: all 0.3s ease;
+  }
 
-    .instruction-list {
-      list-style: none;
-    }
+  .step-card-mini:hover {
+    transform: translateY(-4px) scale(1.02);
+    border-color: var(--neon-pink);
+    box-shadow: 0 8px 25px var(--pink-glow);
+  }
 
-    .instruction-list li {
-      position: relative;
-      padding-left: 35px;
-      margin-bottom: 12px;
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
+  .step-num {
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-orange));
+    color: #fff;
+    font-weight: 900;
+    font-size: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px var(--pink-glow);
+  }
 
-    .instruction-list li i {
-      position: absolute;
-      left: 0;
-      top: 3px;
-      color: #00f0ff;
-      font-size: 1.3rem;
-      filter: drop-shadow(0 0 5px #00f0ff);
-    }
+  .step-info h4 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+  }
 
-    /* ==========================================================================
-       5. HIGH-IMPACT PICTURE HOVER EFFECTS
-       ========================================================================== */
-    .step-image-wrapper {
-      position: relative;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-      border: 3px solid rgba(255, 255, 255, 0.5);
-    }
+  .step-info p {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
 
-    .step-image-wrapper img {
-      width: 100%;
-      height: 320px;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.6s ease, filter 0.6s ease;
-    }
+  /* Pages and Layouts */
+  main { flex: 1; margin-top: 24px; }
 
-    .step-card:hover .step-image-wrapper img {
-      transform: scale(1.15) rotate(1deg);
-      filter: brightness(1.1);
-    }
+  .page { display: none; }
 
-    .image-overlay-icon {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(5px);
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffe600;
-      font-size: 2rem;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+  .page.active {
+    display: block;
+    animation: fadeInSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 
-    .step-card:hover .image-overlay-icon {
-      transform: translate(-50%, -50%) scale(1);
-    }
+  @keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
 
-    /* ==========================================================================
-       6. OVER-THE-TOP CTA BUTTON
-       ========================================================================== */
-    .cta-container {
-      text-align: center;
-      margin-top: 60px;
-    }
+  .layout-two-col {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 24px;
+  }
 
-    .btn-overkill {
-      position: relative;
-      display: inline-block;
-      padding: 25px 60px;
-      font-size: 1.6rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: #000;
-      background: linear-gradient(90deg, #ffe600, #00f0ff, #ff007f, #ffe600);
-      background-size: 300% 300%;
-      border: none;
-      border-radius: 60px;
-      cursor: pointer;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.8);
-      animation: glowGradient 4s ease infinite;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+  .panel {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    border: 2px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    position: relative;
+    transition: border-color 0.3s ease;
+  }
 
-    .btn-overkill:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 60px rgba(255, 0, 127, 1);
-    }
+  .panel:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+  }
 
-    .btn-overkill:active {
-      transform: scale(0.98);
-    }
+  /* Scroll Reveal System */
+  .reveal {
+    opacity: 0;
+    transform: translateY(36px) scale(0.97);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 
-    @keyframes glowGradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+  /* Hyper-Vibrant Buttons */
+  .btn {
+    padding: 14px 26px;
+    border-radius: 14px;
+    border: none;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
 
-    /* Responsive Design for Mobile Devices */
-    @media (max-width: 768px) {
-      .step-card {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        padding: 25px;
-      }
-      .step-card:nth-child(even) {
-        direction: ltr;
-      }
-      h1.hero-title {
-        font-size: 2.8rem;
-      }
-    }
-  </style>
+  .btn-green  { background: linear-gradient(135deg, var(--vivid-green), var(--neon-teal));   color: #000; box-shadow: 0 4px 25px var(--green-glow); }
+  .btn-blue   { background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple)); color: #000; box-shadow: 0 4px 25px var(--blue-glow); }
+  .btn-purple { background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));    color: #fff; box-shadow: 0 4px 25px var(--purple-glow); }
+  .btn-pink   { background: linear-gradient(135deg, var(--neon-pink), var(--vivid-red));      color: #fff; box-shadow: 0 4px 25px var(--pink-glow); }
+  .btn-red    { background: linear-gradient(135deg, var(--vivid-red), var(--neon-orange));    color: #fff; box-shadow: 0 4px 25px var(--red-glow); }
+  .btn-yellow { background: linear-gradient(135deg, var(--neon-yellow), var(--neon-orange)); color: #000; box-shadow: 0 4px 25px var(--yellow-glow); }
+
+  .btn:hover {
+    transform: translateY(-4px) scale(1.04);
+    filter: brightness(1.25);
+  }
+
+  .btn:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+
+  /* Cards with Integrated Pictures & Visual Enhancements */
+  .search-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    background: var(--card-bg);
+    padding: 10px 10px 10px 20px;
+    border-radius: 18px;
+    border: 2px solid var(--border-soft);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 16px;
+    font-weight: 600;
+    outline: none;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 2px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 0;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-img-wrapper {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+  }
+
+  .card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease, filter 0.6s ease;
+  }
+
+  .card:hover .card-img-wrapper img {
+    transform: scale(1.15) rotate(1deg);
+    filter: brightness(1.1);
+  }
+
+  .card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(90deg, var(--electric-blue), var(--neon-purple), var(--neon-pink), var(--neon-orange), var(--vivid-green));
+    background-size: 300% 100%;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+  }
+
+  .card:hover {
+    border-color: var(--electric-blue);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 210, 255, 0.3);
+  }
+
+  .card:hover::before { opacity: 1; animation: gradientShift 2s linear infinite; }
+
+  .card.selected {
+    border-color: var(--vivid-green);
+    background: rgba(0, 255, 135, 0.1);
+    box-shadow: 0 0 35px var(--green-glow);
+  }
+  .card.selected::before { opacity: 1; background: var(--vivid-green); }
+
+  /* Selection Dock Bar */
+  .selection-dock {
+    position: sticky;
+    bottom: 20px;
+    margin-top: 28px;
+    background: rgba(3, 7, 18, 0.95);
+    backdrop-filter: blur(20px);
+    border: 3px solid var(--vivid-green);
+    box-shadow: 0 10px 50px var(--green-glow);
+    border-radius: var(--radius);
+    padding: 18px 28px;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 90;
+  }
+
+  .selection-dock.active { display: flex; animation: dockPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+  @keyframes dockPop {
+    from { opacity: 0; transform: translateY(30px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Form Fields */
+  .field { margin-bottom: 18px; }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 900;
+    color: var(--electric-blue);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: #030712;
+    border: 2px solid var(--border-soft);
+    color: var(--text-main);
+    padding: 14px;
+    border-radius: 12px;
+    outline: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+  }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--electric-blue);
+    box-shadow: 0 0 15px var(--blue-glow);
+  }
+
+  /* Accordions */
+  .accordion {
+    background: #030712;
+    border: 2px solid var(--border-soft);
+    border-radius: 14px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .accordion-header {
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.03);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--electric-blue);
+    user-select: none;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .accordion-header:hover { background: rgba(0, 210, 255, 0.15); color: #fff; }
+
+  .accordion-content {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    border-top: 0px solid var(--line);
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.4s ease;
+  }
+
+  .accordion-content.open {
+    padding: 20px;
+    max-height: 600px;
+    border-top: 2px solid var(--line);
+  }
+
+  .badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-purple { background: rgba(168, 85, 247, 0.25); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
+  .badge-green  { background: rgba(0, 255, 135, 0.25);  color: var(--vivid-green); border: 1px solid var(--vivid-green); }
+  .badge-pink   { background: rgba(255, 0, 127, 0.25);   color: var(--neon-pink); border: 1px solid var(--neon-pink); }
+
+  /* Calendar Stop Item Row */
+  .stop-item {
+    background: #030712;
+    border: 2px solid var(--border-soft);
+    border-left: 6px solid var(--electric-blue);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .stop-item:hover {
+    transform: translateX(8px);
+    border-left-color: var(--neon-pink);
+    box-shadow: 0 6px 20px rgba(255, 0, 127, 0.25);
+  }
+
+  .stop-item.new-stop-anim { animation: stopIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+  @keyframes stopIn {
+    from { opacity: 0; transform: translateX(-24px) scale(0.95); }
+    to { opacity: 1; transform: translateX(0) scale(1); }
+  }
+
+  .custom-expense-row { animation: stopIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+  @media(max-width: 850px) {
+    .layout-two-col { grid-template-columns: 1fr; }
+    header { flex-direction: column; gap: 16px; }
+    .steps-grid { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- Background Orbs -->
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+<!-- Printable Briefing -->
+<div class="print-only">
+  <div class="print-page">
+    <h1>Waypoint Expedition Master Briefing</h1>
+    <p>Generated Plan & Budget Itinerary Report</p>
+    
+    <h2>1. Selected Destinations Summary</h2>
+    <div id="print-summary-content"></div>
 
-  <!-- Header Section -->
+    <h2>2. Calendar Scheduled Itinerary</h2>
+    <div id="print-itinerary-content"></div>
+
+    <h2>3. Comprehensive Budget & Custom Expenses</h2>
+    <div id="print-budget-content"></div>
+  </div>
+</div>
+
+<!-- Main Web Application -->
+<div class="app">
+  
   <header>
-    <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Next-Gen Setup Guide</div>
-    <h1 class="hero-title">Master The <span>Process</span></h1>
-    <p class="hero-subtitle">Clear instructions, vibrant steps, and high-octane visual guidance designed to get you results instantly.</p>
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+      </div>
+      <div>
+        <h1>Waypoint Engine</h1>
+        <p style="font-size: 11px; color: var(--neon-yellow); font-weight:800; letter-spacing: 1px;">PRO EXPEDITION PLATFORM</p>
+      </div>
+    </div>
+
+    <nav>
+      <button id="nav-home" class="active" onclick="showPage('home')">🌐 1. Explore</button>
+      <button id="nav-plan" onclick="showPage('plan')">📅 2. Calendar Plan</button>
+      <button id="nav-budget" onclick="showPage('budget')">💎 3. Budget Suite</button>
+      <button id="nav-summary" onclick="showPage('summary')">📑 4. Summary Dashboard</button>
+    </nav>
   </header>
 
-  <!-- Main Instructions Section -->
-  <main class="container">
-
-    <!-- STEP 1 -->
-    <div class="step-card">
-      <div class="step-text-content">
-        <div class="step-badge">01</div>
-        <h2>Initialize Your Workspace</h2>
-        <p>Start strong by setting up your core tools with laser-focused accuracy. Make sure every prerequisite is ready before launching into action.</p>
-        <ul class="instruction-list">
-          <li><i class="fa-solid fa-circle-check"></i> Download and launch the master control suite.</li>
-          <li><i class="fa-solid fa-circle-check"></i> Verify high-speed network connectivity.</li>
-          <li><i class="fa-solid fa-circle-check"></i> Unlock full admin privileges to maximize throughput.</li>
-        </ul>
+  <!-- Step-By-Step Guidance Banner -->
+  <div class="instructions-banner no-print">
+    <div class="instructions-header">
+      <span style="font-size: 24px;">🚀</span>
+      <h3>How To Build Your Trip Itinerary</h3>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card-mini">
+        <div class="step-num">1</div>
+        <div class="step-info">
+          <h4>Explore Target</h4>
+          <p>Pick a preset destination card below or type any custom location into the bar.</p>
+        </div>
       </div>
-      <div class="step-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80" alt="Futuristic Tech Setup">
-        <div class="image-overlay-icon"><i class="fa-solid fa-rocket"></i></div>
+      <div class="step-card-mini">
+        <div class="step-num">2</div>
+        <div class="step-info">
+          <h4>Schedule Stops</h4>
+          <p>Add precise dates, times, and activities to compile your daily calendar.</p>
+        </div>
+      </div>
+      <div class="step-card-mini">
+        <div class="step-num">3</div>
+        <div class="step-info">
+          <h4>Set Budget</h4>
+          <p>Configure category baselines and add custom expenses to track finances.</p>
+        </div>
+      </div>
+      <div class="step-card-mini">
+        <div class="step-num">4</div>
+        <div class="step-info">
+          <h4>Export Briefing</h4>
+          <p>Review the full master summary and print or save as a PDF report anytime.</p>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- STEP 2 -->
-    <div class="step-card">
-      <div class="step-text-content">
-        <div class="step-badge">02</div>
-        <h2>Configure Turbo Parameters</h2>
-        <p>Tune your configuration settings for maximum power. Follow our high-contrast visual cues to ensure flawless execution.</p>
-        <ul class="instruction-list">
-          <li><i class="fa-solid fa-sliders"></i> Navigate to the advanced customization matrix.</li>
-          <li><i class="fa-solid fa-sliders"></i> Toggle performance modes to "Overdrive."</li>
-          <li><i class="fa-solid fa-sliders"></i> Save changes and apply settings instantly.</li>
-        </ul>
-      </div>
-      <div class="step-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80" alt="Cyberpunk Data Matrix">
-        <div class="image-overlay-icon"><i class="fa-solid fa-gears"></i></div>
-      </div>
-    </div>
+  <main>
 
-    <!-- STEP 3 -->
-    <div class="step-card">
-      <div class="step-text-content">
-        <div class="step-badge">03</div>
-        <h2>Execute & Enjoy Results</h2>
-        <p>Hit launch and watch your project come to life in full color. Enjoy ultra-smooth operation and real-time visual feedback.</p>
-        <ul class="instruction-list">
-          <li><i class="fa-solid fa-star"></i> Press the primary execution trigger below.</li>
-          <li><i class="fa-solid fa-star"></i> Monitor progress through live visual updates.</li>
-          <li><i class="fa-solid fa-star"></i> Celebrate your high-powered completion!</li>
-        </ul>
+    <!-- PAGE 1: EXPLORE -->
+    <section id="page-home" class="page active">
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search or inject a new custom destination target..." onkeypress="if(event.key==='Enter') doSearch()">
+        <button class="btn btn-blue" onclick="doSearch()">+ Add Location</button>
       </div>
-      <div class="step-image-wrapper">
-        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80" alt="Neon Glowing Tech Circuit">
-        <div class="image-overlay-icon"><i class="fa-solid fa-trophy"></i></div>
-      </div>
-    </div>
 
-    <!-- Action Callout -->
-    <div class="cta-container">
-      <button class="btn-overkill" onclick="triggerConfetti()">
-        <i class="fa-solid fa-fire"></i> Launch Main Engine Now
-      </button>
-    </div>
+      <div class="grid" id="destinations-grid"></div>
+
+      <div class="selection-dock" id="dock">
+        <div>
+          <span style="font-size: 11px; color: var(--text-muted); display: block; text-transform:uppercase; letter-spacing:1px; font-weight:800;">Target Selected</span>
+          <strong id="dock-title" style="font-size: 22px; color: #fff;">None</strong>
+        </div>
+        <button class="btn btn-green" onclick="proceedToPlan()">Lock In & Proceed to Calendar &rarr;</button>
+      </div>
+    </section>
+
+    <!-- PAGE 2: CALENDAR PLAN -->
+    <section id="page-plan" class="page">
+      <div class="panel" style="margin-bottom: 24px; border-left: 6px solid var(--electric-blue);">
+        <h2 style="color: var(--electric-blue); font-size: 22px; font-weight: 900;">📍 Selected Target: <span id="banner-title" style="color: #fff;">None</span></h2>
+        <p id="banner-desc" style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Choose dates and time slots to structure your daily expedition calendar.</p>
+      </div>
+
+      <div class="layout-two-col">
+        <!-- Add Event Form -->
+        <div class="panel">
+          <h2 style="margin-bottom: 20px; font-size: 20px; font-weight: 900; color: var(--vivid-green);">+ Schedule Activity</h2>
+          
+          <div class="field">
+            <label>Specific Target Date</label>
+            <input type="date" id="stop-date">
+          </div>
+
+          <div class="field">
+            <label>Time Block</label>
+            <input type="time" id="stop-time" value="09:00">
+          </div>
+
+          <div class="field">
+            <label>Location / Activity Name</label>
+            <input type="text" id="stop-name" placeholder="e.g., Summit Hike or Dinner Reservation">
+          </div>
+
+          <button class="btn btn-green" style="width:100%;" onclick="addStop()">+ Commit To Schedule</button>
+        </div>
+
+        <!-- Rendered Calendar Schedule -->
+        <div class="panel">
+          <div id="itinerary-display"></div>
+          <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+            <button class="btn btn-purple" onclick="showPage('budget')">Configure Budget & Custom Expenses &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 3: BUDGET & CUSTOM EXPENSES -->
+    <section id="page-budget" class="page">
+      <div class="layout-two-col">
+        <!-- Left Column: Category Adjustments & Add Custom Items -->
+        <div>
+          <div class="panel" style="margin-bottom:24px;">
+            <h2 style="color: var(--neon-purple); font-size: 20px; font-weight: 900; margin-bottom: 16px;">Primary Expense Categories</h2>
+            
+            <div class="accordion">
+              <div class="accordion-header" onclick="toggleAccordion('acc-base')">
+                <span>Core Allocations (Flight, Stay, Transit)</span>
+                <span id="acc-base-arrow">▼</span>
+              </div>
+              <div class="accordion-content" id="acc-base">
+                <div class="field">
+                  <label>Transit / Flights ($)</label>
+                  <input type="number" id="cost-flights" value="450" oninput="updateBudget()">
+                </div>
+                <div class="field">
+                  <label>Lodging / Hotel ($)</label>
+                  <input type="number" id="cost-hotel" value="600" oninput="updateBudget()">
+                </div>
+                <div class="field">
+                  <label>Food & Dining ($)</label>
+                  <input type="number" id="cost-food" value="300" oninput="updateBudget()">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Custom Item Accordion -->
+          <div class="panel">
+            <h2 style="color: var(--electric-blue); font-size: 20px; font-weight: 900; margin-bottom: 16px;">Add Custom Expense Item</h2>
+            <div class="field">
+              <label>Item Description</label>
+              <input type="text" id="custom-name" placeholder="e.g., Scuba Gear Rental or Museum Pass">
+            </div>
+            <div class="field">
+              <label>Amount ($)</label>
+              <input type="number" id="custom-amount" placeholder="50">
+            </div>
+            <button class="btn btn-blue" style="width:100%;" onclick="addCustomExpense()">+ Add Custom Expense</button>
+          </div>
+        </div>
+
+        <!-- Right Column: Live Expense Summary & Breakdown -->
+        <div class="panel">
+          <h2 style="color: var(--vivid-green); font-size: 22px; font-weight: 900; margin-bottom: 16px;">Financial Breakdown</h2>
+          
+          <div style="background:#030712; padding:20px; border-radius:14px; border:2px solid var(--vivid-green); margin-bottom:20px;">
+            <span style="font-size:12px; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Grand Total Spend</span>
+            <h1 id="total-budget-display" style="font-size:42px; color:var(--vivid-green); font-weight:900; margin-top:4px;">$0</h1>
+          </div>
+
+          <h3 style="font-size:16px; color:var(--neon-yellow); margin-bottom:12px;">Custom Expense Ledger</h3>
+          <div id="custom-expenses-list"></div>
+
+          <div style="margin-top:28px; display:flex; justify-content:flex-end;">
+            <button class="btn btn-pink" onclick="showPage('summary')">View Final Master Summary &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 4: SUMMARY DASHBOARD -->
+    <section id="page-summary" class="page">
+      <div class="panel" style="margin-bottom:24px; text-align:center;">
+        <span class="badge badge-purple" style="margin-bottom:12px; display:inline-block;">Master Briefing Loaded</span>
+        <h1 style="font-size:32px; font-weight:900; color:#fff;">Expedition Overview & Analytics</h1>
+        <p style="color:var(--text-muted); margin-top:8px;">Review all compiled targets, calendar stops, and budget metrics below.</p>
+      </div>
+
+      <div class="layout-two-col" style="margin-bottom:24px;">
+        <div class="panel">
+          <h3 style="color:var(--electric-blue); font-size:18px; margin-bottom:12px;">Selected Destination</h3>
+          <div id="summary-destination-card"></div>
+        </div>
+
+        <div class="panel">
+          <h3 style="color:var(--vivid-green); font-size:18px; margin-bottom:12px;">Financial Snapshot</h3>
+          <div id="summary-budget-breakdown"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:24px;">
+        <h3 style="color:var(--neon-yellow); font-size:18px; margin-bottom:16px;">Scheduled Itinerary Timeline</h3>
+        <div id="summary-calendar-view"></div>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:16px; margin-bottom:40px;">
+        <button class="btn btn-yellow" onclick="generatePDFPrint()">🖨️ Export / Print PDF Briefing</button>
+      </div>
+    </section>
 
   </main>
+</div>
 
-  <script>
-    function triggerConfetti() {
-      alert("🚀 ENGINE LAUNCHED! Enjoy the ultimate vibrant experience!");
+<!-- =========================================================================
+     JAVASCRIPT LOGIC
+     ========================================================================= -->
+<script>
+  // Initial Data State
+  let destinations = [
+    { id: 'tokyo', name: 'Tokyo, Japan', desc: 'Neon skyscrapers, historic temples, and world-class culinary experiences.', img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80', flights: 850, hotel: 700, food: 400 },
+    { id: 'reykjavik', name: 'Reykjavik, Iceland', desc: 'Volcanic landscapes, geothermal lagoons, and glowing aurora borealis.', img: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=600&q=80', flights: 650, hotel: 800, food: 350 },
+    { id: 'swiss', name: 'Swiss Alps, Switzerland', desc: 'Majestic alpine peaks, crystal-clear lakes, and scenic mountain trains.', img: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=600&q=80', flights: 900, hotel: 1100, food: 500 },
+    { id: 'cairo', name: 'Cairo, Egypt', desc: 'Ancient pyramids, bustling bazaars, and timeless Nile River cruises.', img: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=600&q=80', flights: 750, hotel: 450, food: 250 }
+  ];
+
+  let selectedPlace = null;
+  let itineraryStops = [];
+  let customExpenses = [];
+
+  // Page Navigation
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById('page-' + pageId).classList.add('active');
+    document.getElementById('nav-' + (pageId === 'home' ? 'home' : pageId)).classList.add('active');
+
+    if (pageId === 'summary') renderSummary();
+  }
+
+  // Render Destination Cards
+  function renderCards(filterText = '') {
+    const grid = document.getElementById('destinations-grid');
+    grid.innerHTML = '';
+    
+    const filtered = destinations.filter(d => d.name.toLowerCase().includes(filterText.toLowerCase()));
+    
+    filtered.forEach(d => {
+      const isSelected = selectedPlace && selectedPlace.id === d.id;
+      const card = document.createElement('div');
+      card.className = `card ${isSelected ? 'selected' : ''} reveal`;
+      card.onclick = () => selectCard(d);
+
+      card.innerHTML = `
+        <div class="card-img-wrapper">
+          <img src="${d.img}" alt="${d.name}">
+        </div>
+        <div class="card-body">
+          <div>
+            <h3 style="font-size:20px; font-weight:800; color:#fff;">${d.name}</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-top:6px; line-height:1.4;">${d.desc}</p>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+            <span class="badge badge-purple">Est. $${d.flights + d.hotel + d.food}</span>
+            <span style="font-size:12px; font-weight:800; color:${isSelected ? 'var(--vivid-green)' : 'var(--electric-blue)'}">
+              ${isSelected ? '✓ Selected' : 'Select Target →'}
+            </span>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    initScrollObserver();
+  }
+
+  function selectCard(place) {
+    selectedPlace = place;
+    document.getElementById('dock-title').innerText = place.name;
+    document.getElementById('dock').classList.add('active');
+
+    document.getElementById('banner-title').innerText = place.name;
+    document.getElementById('cost-flights').value = place.flights;
+    document.getElementById('cost-hotel').value = place.hotel;
+    document.getElementById('cost-food').value = place.food;
+
+    updateBudget();
+    renderCards(document.getElementById('search-input').value);
+  }
+
+  function doSearch() {
+    const val = document.getElementById('search-input').value.trim();
+    if (!val) return;
+
+    const exists = destinations.find(d => d.name.toLowerCase() === val.toLowerCase());
+    if (!exists) {
+      const newPlace = {
+        id: 'custom-' + Date.now(),
+        name: val,
+        desc: 'Custom injected target destination.',
+        img: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80',
+        flights: 500,
+        hotel: 500,
+        food: 300
+      };
+      destinations.unshift(newPlace);
+      selectCard(newPlace);
     }
-  </script>
+    renderCards(val);
+  }
+
+  function proceedToPlan() {
+    showPage('plan');
+  }
+
+  // Calendar Itinerary
+  function addStop() {
+    const date = document.getElementById('stop-date').value;
+    const time = document.getElementById('stop-time').value;
+    const name = document.getElementById('stop-name').value.trim();
+
+    if (!date || !name) {
+      alert('Please fill out both the date and location/activity name.');
+      return;
+    }
+
+    itineraryStops.push({ id: Date.now(), date, time, name });
+    document.getElementById('stop-name').value = '';
+    renderItinerary();
+  }
+
+  function deleteStop(id) {
+    itineraryStops = itineraryStops.filter(s => s.id !== id);
+    renderItinerary();
+  }
+
+  function renderItinerary() {
+    const display = document.getElementById('itinerary-display');
+    if (itineraryStops.length === 0) {
+      display.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">No scheduled activities yet. Use the form on the left to add stops.</p>`;
+      return;
+    }
+
+    itineraryStops.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+
+    display.innerHTML = `<h3 style="color:var(--neon-yellow); font-size:18px; margin-bottom:16px;">Scheduled Timeline (${itineraryStops.length})</h3>`;
+    
+    itineraryStops.forEach(stop => {
+      const item = document.createElement('div');
+      item.className = 'stop-item new-stop-anim';
+      item.innerHTML = `
+        <div>
+          <span style="font-size:11px; color:var(--electric-blue); font-weight:800; text-transform:uppercase;">${stop.date} @ ${stop.time}</span>
+          <h4 style="font-size:16px; color:#fff; font-weight:800; margin-top:2px;">${stop.name}</h4>
+        </div>
+        <button onclick="deleteStop(${stop.id})" style="background:transparent; border:none; color:var(--vivid-red); font-size:18px; cursor:pointer;">✕</button>
+      `;
+      display.appendChild(item);
+    });
+  }
+
+  // Budget & Custom Expenses
+  function toggleAccordion(id) {
+    const content = document.getElementById(id);
+    const arrow = document.getElementById(id + '-arrow');
+    if (content.classList.contains('open')) {
+      content.classList.remove('open');
+      arrow.innerText = '▼';
+    } else {
+      content.classList.add('open');
+      arrow.innerText = '▲';
+    }
+  }
+
+  function addCustomExpense() {
+    const name = document.getElementById('custom-name').value.trim();
+    const amount = parseFloat(document.getElementById('custom-amount').value);
+
+    if (!name || isNaN(amount) || amount <= 0) {
+      alert('Please enter a valid expense name and positive amount.');
+      return;
+    }
+
+    customExpenses.push({ id: Date.now(), name, amount });
+    document.getElementById('custom-name').value = '';
+    document.getElementById('custom-amount').value = '';
+
+    updateBudget();
+  }
+
+  function deleteCustomExpense(id) {
+    customExpenses = customExpenses.filter(e => e.id !== id);
+    updateBudget();
+  }
+
+  function updateBudget() {
+    const flights = parseFloat(document.getElementById('cost-flights').value) || 0;
+    const hotel = parseFloat(document.getElementById('cost-hotel').value) || 0;
+    const food = parseFloat(document.getElementById('cost-food').value) || 0;
+
+    const customTotal = customExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const grandTotal = flights + hotel + food + customTotal;
+
+    document.getElementById('total-budget-display').innerText = `$${grandTotal.toLocaleString()}`;
+
+    const list = document.getElementById('custom-expenses-list');
+    if (customExpenses.length === 0) {
+      list.innerHTML = `<p style="color:var(--text-muted); font-size:13px;">No custom expense items added yet.</p>`;
+    } else {
+      list.innerHTML = '';
+      customExpenses.forEach(exp => {
+        const row = document.createElement('div');
+        row.className = 'custom-expense-row';
+        row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft); margin-bottom:8px;';
+        row.innerHTML = `
+          <div>
+            <strong style="color:#fff; font-size:14px;">${exp.name}</strong>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="color:var(--vivid-green); font-weight:800;">+$${exp.amount.toLocaleString()}</span>
+            <button onclick="deleteCustomExpense(${exp.id})" style="background:transparent; border:none; color:var(--vivid-red); cursor:pointer; font-weight:800;">✕</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+  }
+
+  // Summary Dashboard Rendering
+  function renderSummary() {
+    const destCard = document.getElementById('summary-destination-card');
+    if (selectedPlace) {
+      destCard.innerHTML = `
+        <div style="display:flex; gap:16px; align-items:center;">
+          <img src="${selectedPlace.img}" style="width:90px; height:90px; border-radius:14px; object-fit:cover; border:2px solid var(--vivid-green);">
+          <div>
+            <h2 style="color:#fff; font-size:22px;">${selectedPlace.name}</h2>
+            <p style="color:var(--text-muted); font-size:13px; margin-top:4px;">${selectedPlace.desc}</p>
+          </div>
+        </div>
+      `;
+    } else {
+      destCard.innerHTML = `<p style="color:var(--text-muted);">No target location selected yet.</p>`;
+    }
+
+    const budgetBreakdown = document.getElementById('summary-budget-breakdown');
+    const flights = parseFloat(document.getElementById('cost-flights').value) || 0;
+    const hotel = parseFloat(document.getElementById('cost-hotel').value) || 0;
+    const food = parseFloat(document.getElementById('cost-food').value) || 0;
+    const customTotal = customExpenses.reduce((sum, e) => sum + e.amount, 0);
+    const grandTotal = flights + hotel + food + customTotal;
+
+    budgetBreakdown.innerHTML = `
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div style="background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft);"><span style="color:var(--text-muted); font-size:11px;">TRANSIT</span><p style="color:#fff; font-weight:800; font-size:18px;">$${flights}</p></div>
+        <div style="background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft);"><span style="color:var(--text-muted); font-size:11px;">LODGING</span><p style="color:#fff; font-weight:800; font-size:18px;">$${hotel}</p></div>
+        <div style="background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft);"><span style="color:var(--text-muted); font-size:11px;">FOOD</span><p style="color:#fff; font-weight:800; font-size:18px;">$${food}</p></div>
+        <div style="background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft);"><span style="color:var(--text-muted); font-size:11px;">CUSTOM</span><p style="color:#fff; font-weight:800; font-size:18px;">$${customTotal}</p></div>
+      </div>
+      <div style="margin-top:12px; text-align:right;"><strong style="font-size:20px; color:var(--vivid-green);">TOTAL: $${grandTotal.toLocaleString()}</strong></div>
+    `;
+
+    const calendarView = document.getElementById('summary-calendar-view');
+    if (itineraryStops.length === 0) {
+      calendarView.innerHTML = `<p style="color:var(--text-muted);">No scheduled stops found.</p>`;
+    } else {
+      calendarView.innerHTML = itineraryStops.map(s => `
+        <div style="background:#030712; padding:12px; border-radius:10px; border:1px solid var(--border-soft); margin-bottom:8px; display:flex; justify-content:space-between;">
+          <strong style="color:#fff;">${s.name}</strong>
+          <span style="color:var(--electric-blue); font-weight:800;">${s.date} @ ${s.time}</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  // Generate Print Briefing
+  function generatePDFPrint() {
+    document.getElementById('print-summary-content').innerHTML = selectedPlace 
+      ? `<p><strong>Target:</strong> ${selectedPlace.name}</p><p>${selectedPlace.desc}</p>`
+      : `<p>No destination selected.</p>`;
+
+    document.getElementById('print-itinerary-content').innerHTML = itineraryStops.length > 0
+      ? `<table><tr><th>Date</th><th>Time</th><th>Activity</th></tr>${itineraryStops.map(s => `<tr><td>${s.date}</td><td>${s.time}</td><td>${s.name}</td></tr>`).join('')}</table>`
+      : `<p>No itinerary activities scheduled.</p>`;
+
+    const flights = parseFloat(document.getElementById('cost-flights').value) || 0;
+    const hotel = parseFloat(document.getElementById('cost-hotel').value) || 0;
+    const food = parseFloat(document.getElementById('cost-food').value) || 0;
+    const customTotal = customExpenses.reduce((sum, e) => sum + e.amount, 0);
+
+    document.getElementById('print-budget-content').innerHTML = `
+      <table>
+        <tr><th>Category</th><th>Amount</th></tr>
+        <tr><td>Transit / Flights</td><td>$${flights}</td></tr>
+        <tr><td>Lodging</td><td>$${hotel}</td></tr>
+        <tr><td>Food & Dining</td><td>$${food}</td></tr>
+        <tr><td>Custom Expense Total</td><td>$${customTotal}</td></tr>
+        <tr><th>Grand Total</th><th>$${flights + hotel + food + customTotal}</th></th>
+      </table>
+    `;
+
+    window.print();
+  }
+
+  // Scroll Observer for Animations
+  function initScrollObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
+
+  // Initialization
+  window.addEventListener('DOMContentLoaded', () => {
+    renderCards();
+    renderItinerary();
+    updateBudget();
+  });
+</script>
 
 </body>
 </html>
