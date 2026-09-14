@@ -522,8 +522,9 @@
           <button class="btn-home" onclick="showPage('step1')">🏠 Home</button>
         </div>
         <div class="form-group">
-          <label>Total Budget Goal ($USD):</label>
-          <input type="number" id="input-budget" value="1500" min="0" step="50">
+          <label>Total Budget Goal:</label>
+          <input type="number" id="input-budget" value="1500" min="0" step="50" onchange="updateStep1BudgetDisplay()">
+          <span id="home-budget-display" style="font-size: 14px; font-weight: 700; color: var(--accent); margin-top: 4px;"></span>
         </div>
         <div class="form-group">
           <label>Select Destination:</label>
@@ -595,7 +596,7 @@
             </select>
           </div>
           <div>
-            <label style="font-size: 13px; color: var(--text-sub); display:block; margin-bottom: 6px; font-weight: 800;">Cost ($)</label>
+            <label style="font-size: 13px; color: var(--text-sub); display:block; margin-bottom: 6px; font-weight: 800;">Cost (USD $)</label>
             <input type="number" id="custom-cost" value="100" min="0">
           </div>
           <div>
@@ -604,8 +605,8 @@
         </div>
 
         <div class="budget-summary">
-          <div>Total Allocated: <span id="allocated-budget" style="color: var(--accent); font-weight:900;">$0</span></div>
-          <div>Target Budget Goal: <span id="target-budget-display" style="font-weight:900;">$0</span></div>
+          <div>Total Allocated: <span id="allocated-budget" style="color: var(--accent); font-weight:900;">0</span></div>
+          <div>Target Budget Goal: <span id="target-budget-display" style="font-weight:900;">0</span></div>
         </div>
 
         <!-- Planner Items Scrollable Container -->
@@ -633,7 +634,7 @@
 
         <div class="budget-summary">
           <div>Destination: <span id="sum-city-display" style="color: #0f172a; font-weight:900;">--</span></div>
-          <div>Total Cost: <span id="sum-total-display" style="color: var(--accent); font-weight:900;">$0</span></div>
+          <div>Total Cost: <span id="sum-total-display" style="color: var(--accent); font-weight:900;">0</span></div>
         </div>
 
         <div class="scroll-container">
@@ -675,6 +676,9 @@
       id: 'machu-picchu',
       name: 'Machu Picchu (Peru)',
       country: 'Peru',
+      currencySymbol: 'S/',
+      currencyCode: 'PEN',
+      rateToUSD: 3.75, // 1 USD = 3.75 PEN
       places: [
         { id: 'mp1', name: 'Machu Picchu Citadel Pass', desc: 'Main historic access to the ancient Inca ruins.', cost: 150, category: 'Sight' },
         { id: 'mp2', name: 'Huayna Picchu Peak Trek', desc: 'Steep stairs to the iconic overlook summit.', cost: 75, category: 'Activity' },
@@ -692,6 +696,9 @@
       id: 'petra',
       name: 'Petra Ancient City (Jordan)',
       country: 'Jordan',
+      currencySymbol: 'JOD',
+      currencyCode: 'JOD',
+      rateToUSD: 0.71, // 1 USD = 0.71 JOD
       places: [
         { id: 'p1', name: 'The Treasury (Al-Khazneh)', desc: 'Iconic rock-cut carved temple face.', cost: 120, category: 'Sight' },
         { id: 'p2', name: 'Petra By Night Experience', desc: '1,500 candles illuminating the canyon.', cost: 35, category: 'Nightlife' },
@@ -708,6 +715,9 @@
       id: 'colosseum',
       name: 'The Colosseum (Rome, Italy)',
       country: 'Italy',
+      currencySymbol: '€',
+      currencyCode: 'EUR',
+      rateToUSD: 0.92, // 1 USD = 0.92 EUR
       places: [
         { id: 'c1', name: 'Colosseum Arena Floor & Underground', desc: 'Exclusive access to gladiator chambers.', cost: 75, category: 'Sight' },
         { id: 'c2', name: 'Roman Forum & Palatine Hill', desc: 'Walk the heart of ancient imperial Rome.', cost: 35, category: 'Sight' },
@@ -724,6 +734,9 @@
       id: 'chichen-itza',
       name: 'Chichen Itza (Yucatan, Mexico)',
       country: 'Mexico',
+      currencySymbol: 'Mex$',
+      currencyCode: 'MXN',
+      rateToUSD: 18.0, // 1 USD = 18 MXN
       places: [
         { id: 'ci1', name: 'El Castillo Pyramid Tour', desc: 'Central astronomical Mayan pyramid temple.', cost: 45, category: 'Sight' },
         { id: 'ci2', name: 'Sacred Cenote Ik Kil Swim', desc: 'Dip into open-sky natural cavern water.', cost: 25, category: 'Activity' },
@@ -739,6 +752,9 @@
       id: 'taj-mahal',
       name: 'Taj Mahal (Agra, India)',
       country: 'India',
+      currencySymbol: '₹',
+      currencyCode: 'INR',
+      rateToUSD: 83.5, // 1 USD = 83.5 INR
       places: [
         { id: 'tm1', name: 'Taj Mahal Sunrise Ticket', desc: 'Iconic white marble mausoleum at dawn.', cost: 35, category: 'Sight' },
         { id: 'tm2', name: 'Agra Fort Guided Walk', desc: 'Red sandstone royal Mughal palace complex.', cost: 25, category: 'Sight' },
@@ -754,6 +770,9 @@
       id: 'great-wall',
       name: 'Great Wall of China (Beijing)',
       country: 'China',
+      currencySymbol: '¥',
+      currencyCode: 'CNY',
+      rateToUSD: 7.2, // 1 USD = 7.2 CNY
       places: [
         { id: 'gw1', name: 'Mutianyu Great Wall Cable Car', desc: 'Ride up and toboggan down wall slopes.', cost: 85, category: 'Activity' },
         { id: 'gw2', name: 'Jiankou Wild Wall Hike', desc: 'Rugged un-restored mountain trek.', cost: 60, category: 'Activity' },
@@ -769,6 +788,9 @@
       id: 'christ-redeemer',
       name: 'Christ the Redeemer (Rio, Brazil)',
       country: 'Brazil',
+      currencySymbol: 'R$',
+      currencyCode: 'BRL',
+      rateToUSD: 5.5, // 1 USD = 5.5 BRL
       places: [
         { id: 'cr1', name: 'Corcovado Cog Train Ride', desc: 'Scenic train through Tijuca forest to statue.', cost: 45, category: 'Sight' },
         { id: 'cr2', name: 'Sugarloaf Mountain Cable Car', desc: '360 degree harbor & city skyline view.', cost: 55, category: 'Sight' },
@@ -784,6 +806,9 @@
       id: 'nyc',
       name: 'New York City (Manhattan)',
       country: 'USA',
+      currencySymbol: '$',
+      currencyCode: 'USD',
+      rateToUSD: 1.0,
       places: [
         { id: 'n1', name: 'Broadway Musical Ticket', desc: 'Prime seating for top Times Square show.', cost: 160, category: 'Activity' },
         { id: 'n2', name: 'Empire State Observatory', desc: '86th floor open-air observation deck.', cost: 48, category: 'Sight' },
@@ -801,6 +826,9 @@
       id: 'grand-canyon',
       name: 'Grand Canyon (Arizona)',
       country: 'USA',
+      currencySymbol: '$',
+      currencyCode: 'USD',
+      rateToUSD: 1.0,
       places: [
         { id: 'gc1', name: 'South Rim Helicopter Flight', desc: 'Soar over Dragon Corridor and Kaibab forest.', cost: 260, category: 'Activity' },
         { id: 'gc2', name: 'Bright Angel Trail Hike', desc: 'Descend into canyon along scenic rock cliffs.', cost: 0, category: 'Activity' },
@@ -820,9 +848,19 @@
   let plannedPlaces = [];
   let currentCategoryFilter = 'All';
 
+  // Helper function to format price with local currency and ($USD) side-by-side
+  function formatPrice(costUSD) {
+    if (currentCity.currencyCode === 'USD') {
+      return `$${costUSD} USD`;
+    }
+    const localVal = Math.round(costUSD * currentCity.rateToUSD);
+    return `${currentCity.currencySymbol} ${localVal.toLocaleString()} ($${costUSD} USD)`;
+  }
+
   function init() {
     populateCitySelect();
     selectCityById(currentCity.id);
+    updateStep1BudgetDisplay();
   }
 
   function populateCitySelect() {
@@ -834,9 +872,15 @@
     selectCityById(cityId);
   }
 
+  function updateStep1BudgetDisplay() {
+    targetBudget = parseFloat(document.getElementById('input-budget').value) || 0;
+    document.getElementById('home-budget-display').innerText = `Equivalent: ${formatPrice(targetBudget)}`;
+  }
+
   function selectCityById(id) {
     currentCity = CITIES.find(c => c.id === id);
     plannedPlaces = JSON.parse(JSON.stringify(currentCity.places.slice(0, 4)));
+    updateStep1BudgetDisplay();
     renderStep2();
     renderStep3();
     renderStep4();
@@ -874,7 +918,7 @@
           </div>
           <div class="card-footer">
             <span class="badge-category">${place.category}</span>
-            <span class="badge-cost">$${place.cost}</span>
+            <span class="badge-cost">${formatPrice(place.cost)}</span>
           </div>
           <div style="font-size:13px; font-weight:800; color:${isAdded ? 'var(--accent)' : 'var(--text-sub)'}; margin-top:12px;">
             ${isAdded ? '✓ Added to Itinerary' : '+ Click to Select'}
@@ -933,7 +977,7 @@
     const item = plannedPlaces.find(p => p.id === id);
     if (item) {
       item.cost = parseInt(val) || 0;
-      document.getElementById(`badge-${id}`).innerText = `$${item.cost}`;
+      document.getElementById(`badge-${id}`).innerText = formatPrice(item.cost);
       calculateTotalBudget();
       renderStep4();
     }
@@ -941,8 +985,8 @@
 
   function calculateTotalBudget() {
     const total = plannedPlaces.reduce((sum, item) => sum + item.cost, 0);
-    document.getElementById('allocated-budget').innerText = `$${total}`;
-    document.getElementById('target-budget-display').innerText = `$${targetBudget}`;
+    document.getElementById('allocated-budget').innerText = formatPrice(total);
+    document.getElementById('target-budget-display').innerText = formatPrice(targetBudget);
 
     const allocElem = document.getElementById('allocated-budget');
     if (total > targetBudget) {
@@ -969,13 +1013,13 @@
         <div class="item-header">
           <span>${item.name} <small style="font-size:13px; color:var(--text-sub); font-weight:600;">(${item.category || 'Spot'})</small></span>
           <div>
-            <span class="val-badge" id="badge-${item.id}">$${item.cost}</span>
+            <span class="val-badge" id="badge-${item.id}">${formatPrice(item.cost)}</span>
             <button class="btn-danger" style="margin-left:12px;" onclick="removePlace('${item.id}')">Remove</button>
           </div>
         </div>
         <div class="item-desc">${item.desc}</div>
         <div class="slider-row">
-          <label>Adjust Cost Allocation:</label>
+          <label>Adjust Cost Allocation ($USD):</label>
           <input type="range" min="0" max="600" step="5" value="${item.cost}" oninput="updatePlaceCost('${item.id}', this.value)">
         </div>
       </div>
@@ -985,11 +1029,10 @@
   }
 
   function renderStep4() {
-    const tripDate = document.getElementById('trip-date').value;
     const total = plannedPlaces.reduce((sum, item) => sum + item.cost, 0);
 
     document.getElementById('sum-city-display').innerText = currentCity.name;
-    document.getElementById('sum-total-display').innerText = `$${total}`;
+    document.getElementById('sum-total-display').innerText = formatPrice(total);
 
     const tableBody = document.getElementById('summary-table-body');
     if (plannedPlaces.length === 0) {
@@ -1001,7 +1044,7 @@
       <tr>
         <td><strong>${p.name}</strong><br><small style="color:var(--text-sub); font-size:13px;">${p.desc}</small></td>
         <td><span class="badge-category">${p.category || 'Spot'}</span></td>
-        <td style="color:var(--accent); font-weight:900; font-size:16px;">$${p.cost}</td>
+        <td style="color:var(--accent); font-weight:900; font-size:16px;">${formatPrice(p.cost)}</td>
       </tr>
     `).join('');
   }
@@ -1009,13 +1052,13 @@
   function updatePrintSummary(total) {
     const tripDate = document.getElementById('trip-date').value;
     document.getElementById('p-title').innerText = `WAY POINT ADVISOR — ${currentCity.name} Briefing`;
-    document.getElementById('p-date').innerText = `Scheduled Date: ${tripDate} | Budget Goal: $${targetBudget}`;
+    document.getElementById('p-date').innerText = `Scheduled Date: ${tripDate} | Budget Goal: ${formatPrice(targetBudget)}`;
     
     document.getElementById('p-content').innerHTML = `
       <table>
         <tr><th>Spot Name</th><th>Category</th><th>Cost</th></tr>
-        ${plannedPlaces.map(p => `<tr><td>${p.name}</td><td>${p.category || 'Spot'}</td><td>$${p.cost}</td></tr>`).join('')}
-        <tr><th colspan="2">Total Allocated Cost</th><th>$${total}</th></tr>
+        ${plannedPlaces.map(p => `<tr><td>${p.name}</td><td>${p.category || 'Spot'}</td><td>${formatPrice(p.cost)}</td></tr>`).join('')}
+        <tr><th colspan="2">Total Allocated Cost</th><th>${formatPrice(total)}</th></tr>
       </table>
     `;
   }
@@ -1028,11 +1071,11 @@
     let bodyText = `WAY POINT ADVISOR - Travel Itinerary\n\n`;
     bodyText += `Destination: ${currentCity.name}\n`;
     bodyText += `Trip Date: ${tripDate}\n`;
-    bodyText += `Total Cost: $${total}\n\n`;
+    bodyText += `Total Cost: ${formatPrice(total)}\n\n`;
     bodyText += `Selected Spots:\n`;
 
     plannedPlaces.forEach((p, idx) => {
-      bodyText += `${idx + 1}. ${p.name} (${p.category || 'Spot'}) - $${p.cost}\n`;
+      bodyText += `${idx + 1}. ${p.name} (${p.category || 'Spot'}) - ${formatPrice(p.cost)}\n`;
     });
 
     const subject = encodeURIComponent(`WayPoint Travel Briefing: ${currentCity.name}`);
