@@ -8,7 +8,7 @@
 <!-- Print & PDF Export Styles -->
 <style media="print">
   body { background: #fff !important; color: #000 !important; font-family: sans-serif; padding: 20px; }
-  .no-print, nav, button, select, input, .add-form-grid, .submission-guide { display: none !important; }
+  .no-print, nav, button, select, input, .add-form-grid { display: none !important; }
   .print-only { display: block !important; }
   table { width: 100%; border-collapse: collapse; margin-top: 15px; }
   th, td { border: 1px solid #000; padding: 10px; text-align: left; }
@@ -435,39 +435,6 @@
   }
 
   .print-only { display: none; }
-
-  /* Canvas Submission Text Area Container */
-  .submission-guide {
-    margin-top: 60px;
-    background: rgba(15, 23, 42, 0.95);
-    border: 2px solid var(--secondary-accent);
-    border-radius: var(--radius);
-    padding: 30px;
-    color: var(--text);
-  }
-
-  .submission-guide h2 {
-    color: var(--accent);
-    margin-bottom: 15px;
-    font-size: 22px;
-  }
-
-  .submission-guide h3 {
-    color: var(--secondary-accent);
-    margin-top: 20px;
-    margin-bottom: 8px;
-    font-size: 16px;
-  }
-
-  .submission-box {
-    background: rgba(3, 7, 18, 0.9);
-    border: 1px solid var(--panel-border);
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 13px;
-    color: var(--text-sub);
-    white-space: pre-wrap;
-  }
 </style>
 </head>
 <body>
@@ -509,7 +476,7 @@
         <input type="number" id="input-budget" value="1000" min="0" step="50">
       </div>
       <div class="form-group">
-        <label>Select Destination (Includes Individual 7 Wonders):</label>
+        <label>Select Destination:</label>
         <select id="location-select" onchange="onCitySelectChange(this.value)">
           <!-- Populated by JS -->
         </select>
@@ -645,35 +612,6 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- CANVAS SUBMISSION GUIDE (FOR PARTS 2 - 5) -->
-  <div class="submission-guide">
-    <h2>📋 Canvas Text Entry Submission Helper</h2>
-    <p style="margin-bottom: 15px; font-size: 14px; color: var(--text-sub);">
-      Copy and paste the text below directly into Canvas for your assignment submission.
-    </p>
-
-    <h3>1. Project Name</h3>
-    <div class="submission-box">WayPoint Advisor — Dynamic Travel & Budget Planner</div>
-
-    <h3>2. Problem and Audience (3–5 sentences)</h3>
-    <div class="submission-box">Planning trips across major world landmarks and managing travel expenses can be overwhelming and difficult to track visually. WayPoint Advisor solves this problem by providing travelers with interactive destination guides, custom itinerary creation, and real-time budget adjustments. The target audience includes vacationers, students, and budget-conscious travelers who need an intuitive tool to explore world destinations while keeping their spending under control.</div>
-
-    <h3>3. Features</h3>
-    <div class="submission-box">Feature 1: Dynamic Category Filtering & Selection — Allows users to filter attractions by Sights, Dining, Nightlife, Shopping, and Activities across cities and individual Wonders of the World, instantly adding or removing spots from their personal itinerary.
-
-Feature 2: Interactive Real-Time Budget Adjuster — Calculates total costs live, alerts users when they exceed their budget, provides sliders to dynamically adjust item allocations, and exports customized trip briefings via Email or PDF.</div>
-
-    <h3>4. AI Usage (Step-by-step, at least 5 sentences)</h3>
-    <div class="submission-box">1. Initial Idea: I started with a basic idea for a simple travel destination list with static text.
-2. AI Prompting: I requested AI assistance to generate full attraction lists for each individual Wonder of the World and major cities like New York and Grand Canyon.
-3. Feature Implementation: AI suggested adding interactive range sliders so users could adjust individual spot costs dynamically.
-4. AI Suggestion Modification: The AI initially grouped all 7 Wonders together into a single option; I modified this suggestion and had the AI separate each wonder into its own distinct, individual destination selection with dedicated navigation.
-5. Improvement Iteration: I instructed the AI to add dedicated Home buttons to every single screen header and footer so users could seamlessly restart their setup from anywhere.</div>
-
-    <h3>5. Reflection (3–5 sentences)</h3>
-    <div class="submission-box">The best feature of my project is the live budget calculation tool, which updates total spending instantly as users move cost sliders and add custom locations. The most challenging part was ensuring that selected spots remained saved in state while navigating across multiple pages and applying category filters. If I had more time, I would integrate real Google Maps API location previews and weather forecast integration for each spot.</div>
   </div>
 
 </div>
