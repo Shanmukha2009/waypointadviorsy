@@ -21,12 +21,13 @@
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
   :root {
-    --bg: #06080d;
-    --panel: rgba(15, 23, 42, 0.75);
-    --panel-border: rgba(255, 255, 255, 0.08);
+    --bg: #030712;
+    --panel: rgba(17, 24, 39, 0.75);
+    --panel-border: rgba(255, 255, 255, 0.12);
     --accent: #38bdf8;
-    --accent-glow: rgba(56, 189, 248, 0.25);
-    --secondary-accent: #818cf8;
+    --accent-glow: rgba(56, 189, 248, 0.35);
+    --secondary-accent: #a855f7;
+    --secondary-glow: rgba(168, 85, 247, 0.35);
     --text: #f8fafc;
     --text-sub: #94a3b8;
     --radius: 16px;
@@ -38,8 +39,8 @@
   body {
     background-color: var(--bg);
     background-image: 
-      radial-gradient(at 10% 10%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
-      radial-gradient(at 90% 90%, rgba(129, 140, 248, 0.08) 0px, transparent 50%);
+      radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.15) 0px, transparent 40%),
+      radial-gradient(at 85% 85%, rgba(168, 85, 247, 0.15) 0px, transparent 40%);
     background-attachment: fixed;
     color: var(--text);
     font-family: var(--font);
@@ -48,7 +49,7 @@
   }
 
   .container {
-    max-width: 1000px;
+    max-width: 1050px;
     margin: 0 auto;
     padding: 0 20px;
   }
@@ -70,7 +71,7 @@
   }
 
   .logo {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
     letter-spacing: -0.5px;
     color: #fff;
@@ -78,6 +79,12 @@
     align-items: center;
     gap: 10px;
     text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .logo:hover {
+    transform: scale(1.02);
   }
 
   .logo span {
@@ -89,7 +96,7 @@
   nav {
     display: flex;
     gap: 6px;
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(15, 23, 42, 0.8);
     padding: 6px;
     border-radius: var(--radius);
     border: 1px solid var(--panel-border);
@@ -99,10 +106,10 @@
     background: transparent;
     color: var(--text-sub);
     border: none;
-    padding: 10px 16px;
+    padding: 10px 18px;
     border-radius: 10px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.25s ease;
   }
@@ -112,8 +119,7 @@
   nav button.active {
     background: linear-gradient(135deg, var(--accent), var(--secondary-accent));
     color: #000;
-    box-shadow: 0 4px 15px var(--accent-glow);
-    font-weight: 700;
+    box-shadow: 0 4px 20px var(--accent-glow);
   }
 
   /* Page Layouts */
@@ -123,18 +129,18 @@
   /* Glassmorphism Panels */
   .panel {
     background: var(--panel);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--panel-border);
     border-radius: var(--radius);
     padding: 28px;
     margin-bottom: 24px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   }
 
   .panel-title {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 20px;
+    font-weight: 800;
     color: #fff;
     margin-bottom: 20px;
     display: flex;
@@ -158,16 +164,16 @@
   }
 
   select, input[type="number"], input[type="text"], input[type="date"], input[type="email"] {
-    background: rgba(5, 8, 15, 0.8);
+    background: rgba(3, 7, 18, 0.85);
     border: 1px solid var(--panel-border);
     color: var(--text);
-    padding: 12px 16px;
-    border-radius: 10px;
+    padding: 14px 18px;
+    border-radius: 12px;
     font-family: var(--font);
     font-size: 14px;
     outline: none;
     width: 100%;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: all 0.2s ease;
   }
 
   select:focus, input:focus {
@@ -184,13 +190,13 @@
   }
 
   .filter-btn {
-    background: rgba(15, 23, 42, 0.5);
+    background: rgba(15, 23, 42, 0.6);
     border: 1px solid var(--panel-border);
     color: var(--text-sub);
-    padding: 6px 14px;
+    padding: 8px 16px;
     border-radius: 20px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
   }
@@ -204,36 +210,39 @@
   /* Cards Grid */
   .grid-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 20px;
   }
 
   .card {
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(15, 23, 42, 0.65);
     border: 1px solid var(--panel-border);
     border-radius: var(--radius);
-    padding: 20px;
+    padding: 22px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: relative;
+    overflow: hidden;
   }
 
   .card:hover {
     border-color: var(--accent);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5), 0 0 25px var(--accent-glow);
   }
 
   .card.selected {
     border-color: var(--accent);
-    background: rgba(56, 189, 248, 0.08);
+    background: rgba(56, 189, 248, 0.12);
+    box-shadow: 0 0 20px var(--accent-glow);
   }
 
   .card h3 {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 17px;
+    font-weight: 800;
     color: #fff;
     margin-bottom: 8px;
   }
@@ -241,7 +250,7 @@
   .card p {
     font-size: 13px;
     color: var(--text-sub);
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     line-height: 1.4;
   }
 
@@ -254,7 +263,7 @@
 
   .badge-category {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
     color: var(--secondary-accent);
     letter-spacing: 0.5px;
@@ -264,32 +273,32 @@
     display: inline-block;
     background: var(--accent-glow);
     color: var(--accent);
-    font-weight: 700;
+    font-weight: 800;
     font-size: 13px;
-    padding: 4px 10px;
+    padding: 6px 12px;
     border-radius: 8px;
-    border: 1px solid rgba(56, 189, 248, 0.3);
+    border: 1px solid rgba(56, 189, 248, 0.4);
   }
 
   /* Item Rows */
   .item-row {
-    background: rgba(5, 8, 15, 0.7);
+    background: rgba(3, 7, 18, 0.8);
     border: 1px solid var(--panel-border);
     border-radius: 12px;
-    padding: 16px;
+    padding: 18px;
     margin-bottom: 14px;
     transition: border-color 0.2s;
   }
 
   .item-row:hover {
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.25);
   }
 
   .item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: #fff;
     margin-bottom: 6px;
@@ -304,9 +313,9 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .slider-row label {
@@ -322,8 +331,8 @@
   }
 
   .val-badge {
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 15px;
+    font-weight: 800;
     color: var(--accent);
   }
 
@@ -332,18 +341,18 @@
     background: linear-gradient(135deg, var(--accent), var(--secondary-accent));
     color: #000;
     border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
+    padding: 14px 28px;
+    border-radius: 12px;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
     display: inline-block;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 15px var(--accent-glow);
+    box-shadow: 0 4px 20px var(--accent-glow);
   }
 
   .btn-secondary {
-    background: rgba(30, 41, 59, 0.8);
+    background: rgba(30, 41, 59, 0.9);
     color: var(--text);
     border: 1px solid var(--panel-border);
     box-shadow: none;
@@ -351,7 +360,7 @@
 
   .btn:hover {
     opacity: 0.95;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   .btn-danger {
@@ -359,7 +368,7 @@
     color: #fff;
     padding: 6px 12px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     border-radius: 8px;
     border: none;
     cursor: pointer;
@@ -375,12 +384,12 @@
   .budget-summary {
     display: flex;
     justify-content: space-between;
-    padding: 16px 20px;
-    background: rgba(5, 8, 15, 0.9);
+    padding: 18px 24px;
+    background: rgba(3, 7, 18, 0.9);
     border-radius: 12px;
     border: 1px solid var(--panel-border);
     margin-bottom: 20px;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .summary-table {
@@ -428,38 +437,39 @@
   <!-- Header & Nav Tabs -->
   <header>
     <div class="nav-bar">
-      <div class="logo">
+      <!-- Click Logo to Return Home -->
+      <div class="logo" onclick="showPage('step1')">
         <span>📍 WayPoint</span> Advisor
       </div>
       <nav>
-        <button id="nav-step1" class="active" onclick="showPage('step1')">1. Preferences</button>
-        <button id="nav-step2" onclick="showPage('step2')">2. Nearby Spots</button>
+        <button id="nav-step1" class="active" onclick="showPage('step1')">🏠 Home</button>
+        <button id="nav-step2" onclick="showPage('step2')">2. Spots</button>
         <button id="nav-step3" onclick="showPage('step3')">3. Planning</button>
         <button id="nav-step4" onclick="showPage('step4')">4. Summary</button>
       </nav>
     </div>
   </header>
 
-  <!-- SCREEN 1: PREFERENCES -->
+  <!-- SCREEN 1: HOME / PREFERENCES -->
   <div id="page-step1" class="page active">
     <div class="panel">
-      <div class="panel-title">Step 1: Define Your Journey</div>
+      <div class="panel-title">Step 1: Set Your Trip Preferences</div>
       <div class="form-group">
-        <label>Target Budget ($USD):</label>
-        <input type="number" id="input-budget" value="500" min="0" step="25">
+        <label>Total Budget Goal ($USD):</label>
+        <input type="number" id="input-budget" value="1000" min="0" step="50">
       </div>
       <div class="form-group">
-        <label>Destination City:</label>
+        <label>Select Destination:</label>
         <select id="location-select" onchange="onCitySelectChange(this.value)">
-          <!-- Dynamic options -->
+          <!-- Dynamic options populated by JS -->
         </select>
       </div>
       <div class="form-group">
         <label>Trip Date:</label>
         <input type="date" id="trip-date" value="2026-10-15">
       </div>
-      <div style="text-align: right; margin-top: 24px;">
-        <button class="btn" onclick="goToStep2()">Explore Nearby Spots →</button>
+      <div style="text-align: right; margin-top: 28px;">
+        <button class="btn" onclick="goToStep2()">Explore Attractions →</button>
       </div>
     </div>
   </div>
@@ -468,23 +478,23 @@
   <div id="page-step2" class="page">
     <div class="panel">
       <div class="panel-title">
-        <span>Attractions Near <span id="nearby-city-title" style="color: var(--accent);">City</span></span>
-        <span id="spot-count-badge" style="font-size: 12px; color: var(--text-sub);">20 Places Available</span>
+        <span>Attractions in <span id="nearby-city-title" style="color: var(--accent);">City</span></span>
+        <span id="spot-count-badge" style="font-size: 13px; color: var(--text-sub);">Locations Available</span>
       </div>
       
       <!-- Filter Bar -->
       <div class="filter-bar">
-        <button class="filter-btn active" onclick="filterCategory('All', this)">All</button>
-        <button class="filter-btn" onclick="filterCategory('Dining', this)">Dining</button>
-        <button class="filter-btn" onclick="filterCategory('Activity', this)">Activities</button>
+        <button class="filter-btn active" onclick="filterCategory('All', this)">All Spots</button>
         <button class="filter-btn" onclick="filterCategory('Sight', this)">Sights</button>
+        <button class="filter-btn" onclick="filterCategory('Activity', this)">Activities</button>
+        <button class="filter-btn" onclick="filterCategory('Dining', this)">Dining</button>
         <button class="filter-btn" onclick="filterCategory('Nightlife', this)">Nightlife</button>
         <button class="filter-btn" onclick="filterCategory('Shopping', this)">Shopping</button>
       </div>
 
       <div class="grid-cards" id="recommendations-grid"></div>
       
-      <div style="text-align: right; margin-top: 24px;">
+      <div style="text-align: right; margin-top: 28px;">
         <button class="btn" onclick="showPage('step3')">Go to Planning Screen →</button>
       </div>
     </div>
@@ -494,28 +504,28 @@
   <div id="page-step3" class="page">
     <!-- Custom Place Panel -->
     <div class="panel">
-      <div class="panel-title">Add Custom Location</div>
+      <div class="panel-title">Add Custom Spot</div>
       <div class="add-form-grid">
         <div>
-          <label style="font-size: 11px; color: var(--text-sub); display:block; margin-bottom: 6px;">Location Name</label>
-          <input type="text" id="custom-name" placeholder="e.g. Secret Rooftop Lounge">
+          <label style="font-size: 11px; color: var(--text-sub); display:block; margin-bottom: 6px;">Spot Name</label>
+          <input type="text" id="custom-name" placeholder="e.g. Helicopter Skyline Tour">
         </div>
         <div>
           <label style="font-size: 11px; color: var(--text-sub); display:block; margin-bottom: 6px;">Category</label>
           <select id="custom-category">
             <option value="Activity">Activity</option>
-            <option value="Dining">Dining</option>
             <option value="Sight">Sight</option>
+            <option value="Dining">Dining</option>
             <option value="Nightlife">Nightlife</option>
             <option value="Shopping">Shopping</option>
           </select>
         </div>
         <div>
           <label style="font-size: 11px; color: var(--text-sub); display:block; margin-bottom: 6px;">Cost ($)</label>
-          <input type="number" id="custom-cost" value="30" min="0">
+          <input type="number" id="custom-cost" value="100" min="0">
         </div>
         <div>
-          <button class="btn" onclick="addCustomPlace()">+ Add Spot</button>
+          <button class="btn" onclick="addCustomPlace()">+ Add</button>
         </div>
       </div>
     </div>
@@ -523,19 +533,19 @@
     <!-- Planner Items -->
     <div class="panel">
       <div class="panel-title">
-        <span>Itinerary & Allocation</span>
+        <span>Itinerary Budget Adjuster</span>
       </div>
 
       <div class="budget-summary">
-        <div>Total Allocated: <span id="allocated-budget" style="color: var(--accent); font-weight:700;">$0</span></div>
-        <div>Target Budget: <span id="target-budget-display" style="font-weight:700;">$0</span></div>
+        <div>Total Allocated: <span id="allocated-budget" style="color: var(--accent); font-weight:800;">$0</span></div>
+        <div>Target Budget Goal: <span id="target-budget-display" style="font-weight:800;">$0</span></div>
       </div>
 
       <div id="planner-items-container"></div>
 
-      <div style="text-align: right; margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
-        <button class="btn btn-secondary" onclick="showPage('step2')">← Add More Spots</button>
-        <button class="btn" onclick="showPage('step4')">View Summary →</button>
+      <div style="text-align: right; margin-top: 28px; display: flex; justify-content: space-between; align-items: center;">
+        <button class="btn btn-secondary" onclick="showPage('step2')">← Select More Spots</button>
+        <button class="btn" onclick="showPage('step4')">View Final Summary →</button>
       </div>
     </div>
   </div>
@@ -549,14 +559,14 @@
       </div>
 
       <div class="budget-summary">
-        <div>Destination: <span id="sum-city-display" style="color: #fff; font-weight:700;">--</span></div>
-        <div>Total Cost: <span id="sum-total-display" style="color: var(--accent); font-weight:700;">$0</span></div>
+        <div>Destination: <span id="sum-city-display" style="color: #fff; font-weight:800;">--</span></div>
+        <div>Total Cost: <span id="sum-total-display" style="color: var(--accent); font-weight:800;">$0</span></div>
       </div>
 
       <table class="summary-table">
         <thead>
           <tr>
-            <th>Location</th>
+            <th>Spot Name</th>
             <th>Category</th>
             <th>Cost</th>
           </tr>
@@ -567,7 +577,7 @@
       <!-- Email Field -->
       <div class="form-group" style="margin-top: 28px;">
         <label>Email Briefing To:</label>
-        <input type="email" id="email-address" placeholder="e.g. explorer@waypoint.com">
+        <input type="email" id="email-address" placeholder="e.g. traveler@waypoint.com">
       </div>
 
       <div class="action-bar">
@@ -583,57 +593,30 @@
 <script>
   const CITIES = [
     {
-      id: 'tokyo',
-      name: 'Tokyo (Shinjuku & Shibuya)',
-      country: 'Japan',
+      id: 'wonders',
+      name: '7 Wonders of the World',
+      country: 'Global',
       places: [
-        { id: 't1', name: 'Torien Yakitori', desc: 'Smoky skewers in lantern-lit alleyways.', cost: 45, category: 'Dining' },
-        { id: 't2', name: 'Ichiran Ramen Counter', desc: 'Classic solo booth tonkotsu ramen.', cost: 18, category: 'Dining' },
-        { id: 't3', name: 'Golden Gai Bar Tour', desc: 'Explore historic micro-bars.', cost: 60, category: 'Nightlife' },
-        { id: 't4', name: 'Tokyo Metropolitan Deck', desc: 'Panoramic city views at night.', cost: 15, category: 'Sight' },
-        { id: 't5', name: 'Hanazono Shrine', desc: 'Peaceful lantern-lit sanctuary.', cost: 0, category: 'Sight' },
-        { id: 't6', name: 'Shibuya Crossing Overlook', desc: 'Iconic street intersection view.', cost: 10, category: 'Sight' },
-        { id: 't7', name: 'Robot Restaurant Experience', desc: 'Neon cabaret and performance.', cost: 85, category: 'Nightlife' },
-        { id: 't8', name: 'Omoide Yokocho Alley', desc: 'Retro dining stalls under street lamps.', cost: 30, category: 'Dining' },
-        { id: 't9', name: 'Meiji Jingu Forest Walk', desc: 'Serene wooded pathway to shrine.', cost: 0, category: 'Sight' },
-        { id: 't10', name: 'Akihabara Retro Arcade', desc: 'Multi-story arcade gaming house.', cost: 25, category: 'Activity' },
-        { id: 't11', name: 'Tsukiji Outer Market Food Tour', desc: 'Fresh sushi & wagyu street skewers.', cost: 50, category: 'Dining' },
-        { id: 't12', name: 'teamLab Planets', desc: 'Immersive digital art exhibition.', cost: 38, category: 'Activity' },
-        { id: 't13', name: 'Harajuku Takeshita Street', desc: 'Vibrant fashion and sweet crepe shops.', cost: 20, category: 'Shopping' },
-        { id: 't14', name: 'Roppongi Hills Sunset Tower', desc: 'Sky deck looking out toward Mt. Fuji.', cost: 22, category: 'Sight' },
-        { id: 't15', name: 'Kabukicho Neon Alley', desc: 'High-energy nightlife quarter.', cost: 40, category: 'Nightlife' },
-        { id: 't16', name: 'Shinjuku Gyoen Gardens', desc: 'Meticulously landscaped tea gardens.', cost: 5, category: 'Sight' },
-        { id: 't17', name: 'Kagurazaka Izakaya Tasting', desc: 'Upscale sake and tapas tasting.', cost: 70, category: 'Dining' },
-        { id: 't18', name: 'Ginza Designer Promenade', desc: 'Premier boutique shopping district.', cost: 100, category: 'Shopping' },
-        { id: 't19', name: 'Senso-ji Night Temple Walk', desc: 'Lit pagoda and historic street walk.', cost: 0, category: 'Sight' },
-        { id: 't20', name: 'Bar High Five Cocktails', desc: 'World-famous precision mixology.', cost: 55, category: 'Nightlife' }
-      ]
-    },
-    {
-      id: 'paris',
-      name: 'Paris (Montmartre & Seine)',
-      country: 'France',
-      places: [
-        { id: 'p1', name: 'Le Consulat Bistro', desc: 'Classic French dining in Montmartre.', cost: 65, category: 'Dining' },
-        { id: 'p2', name: 'La Maison Rose', desc: 'Historic pink café on cobblestone streets.', cost: 40, category: 'Dining' },
-        { id: 'p3', name: 'Sacré-Cœur Sunset Steps', desc: 'Overlooking the cityscape skyline.', cost: 0, category: 'Sight' },
-        { id: 'p4', name: 'Lapin Agile Cabaret', desc: 'Acoustic song house and vintage wine.', cost: 55, category: 'Nightlife' },
-        { id: 'p5', name: 'Place du Tertre Artists', desc: 'Open-air portrait art square.', cost: 15, category: 'Sight' },
-        { id: 'p6', name: 'Louvre Night Museum Tour', desc: 'Illuminated glass pyramid & art.', cost: 22, category: 'Sight' },
-        { id: 'p7', name: 'Seine River Cruise', desc: 'Evening boat ride past Eiffel Tower.', cost: 30, category: 'Activity' },
-        { id: 'p8', name: 'Moulin Rouge Show', desc: 'World-famous French Cancan revue.', cost: 120, category: 'Nightlife' },
-        { id: 'p9', name: 'Le Marais Vintage Shops', desc: 'Boutique shopping and local bakeries.', cost: 50, category: 'Shopping' },
-        { id: 'p10', name: 'Sainte-Chapelle Stained Glass', desc: 'Gothic cathedral with magnificent glass.', cost: 18, category: 'Sight' },
-        { id: 'p11', name: 'Café de Flore', desc: 'Historic literary haunt for coffee & pastry.', cost: 25, category: 'Dining' },
-        { id: 'p12', name: 'Luxembourg Gardens Walk', desc: 'Fountains, statues, and shaded paths.', cost: 0, category: 'Sight' },
-        { id: 'p13', name: 'Catacombs Subterranean Tour', desc: 'Underground historic stone tunnels.', cost: 29, category: 'Activity' },
-        { id: 'p14', name: 'Eiffel Tower Summit Access', desc: 'Panoramas from top of Paris.', cost: 35, category: 'Sight' },
-        { id: 'p15', name: 'Palais Garnier Opera House', desc: 'Grand interior gilded halls.', cost: 16, category: 'Sight' },
-        { id: 'p16', name: 'Canal Saint-Martin Wine Walk', desc: 'Trendy waterfront bars and cafes.', cost: 35, category: 'Nightlife' },
-        { id: 'p17', name: 'L’As du Fallafel', desc: 'Famous street food in Le Marais.', cost: 12, category: 'Dining' },
-        { id: 'p18', name: 'Musée d’Orsay', desc: 'Impressionist art in a former railway station.', cost: 20, category: 'Sight' },
-        { id: 'p19', name: 'Montparnasse Tower Deck', desc: '360-degree city skyline views.', cost: 21, category: 'Sight' },
-        { id: 'p20', name: 'Angelina Hot Chocolate', desc: 'Decadent historic tea room treat.', cost: 22, category: 'Dining' }
+        { id: 'w1', name: 'Machu Picchu Citadel', desc: 'Inca fortress in the Peruvian Andes mountains.', cost: 150, category: 'Sight' },
+        { id: 'w2', name: 'Petra Treasury Experience', desc: 'Ancient rose-red city carved into canyon walls.', cost: 120, category: 'Sight' },
+        { id: 'w3', name: 'Colosseum Underground Tour', desc: 'Historic gladiator arena in Rome.', cost: 65, category: 'Sight' },
+        { id: 'w4', name: 'Chichen Itza Pyramid', desc: 'Mayan temple complex in the Yucatan.', cost: 45, category: 'Sight' },
+        { id: 'w5', name: 'Taj Mahal Sunrise Walk', desc: 'Marble mausoleum on the Yamuna river.', cost: 35, category: 'Sight' },
+        { id: 'w6', name: 'Great Wall of China Trek', desc: 'Hiking Mutianyu section wall towers.', cost: 80, category: 'Activity' },
+        { id: 'w7', name: 'Christ the Redeemer Tram', desc: 'Corcovado mountain summit in Rio.', cost: 40, category: 'Sight' },
+        { id: 'w8', name: 'Inca Trail Day Hike', desc: 'Guided trek through Andean cloud forests.', cost: 200, category: 'Activity' },
+        { id: 'w9', name: 'Petra by Night Light Show', desc: 'Thousands of candles illuminating the Siq.', cost: 35, category: 'Nightlife' },
+        { id: 'w10', name: 'Roman Forum Guided Walk', desc: 'Ancient center of Roman public life.', cost: 30, category: 'Sight' },
+        { id: 'w11', name: 'Sacred Cenote Swim', desc: 'Natural limestone sinkhole near Chichen Itza.', cost: 25, category: 'Activity' },
+        { id: 'w12', name: 'Agra Fort History Tour', desc: 'Red sandstone Mughal imperial residence.', cost: 20, category: 'Sight' },
+        { id: 'w13', name: 'Cable Car to Sugarloaf', desc: 'Rio de Janeiro harbor panoramas.', cost: 50, category: 'Sight' },
+        { id: 'w14', name: 'Cusco Traditional Feast', desc: 'Andean dining with local music.', cost: 60, category: 'Dining' },
+        { id: 'w15', name: 'Bedouin Dinner in Wadi Rum', desc: 'Traditional desert campfire meal.', cost: 55, category: 'Dining' },
+        { id: 'w16', name: 'Trastevere Food Tour', desc: 'Authentic Roman pasta and gelato walk.', cost: 85, category: 'Dining' },
+        { id: 'w17', name: 'Yucatan Street Food Walk', desc: 'Cochinita pibil tacos & fresh juices.', cost: 30, category: 'Dining' },
+        { id: 'w18', name: 'Mughal Culinary Experience', desc: 'Rich curries and tandoori specialties.', cost: 40, category: 'Dining' },
+        { id: 'w19', name: 'Copacabana Beach Club', desc: 'Caipirinhas & live samba music.', cost: 45, category: 'Nightlife' },
+        { id: '20', name: 'Beijing Tea Ceremony', desc: 'Traditional Chinese tea tasting.', cost: 35, category: 'Activity' }
       ]
     },
     {
@@ -641,32 +624,71 @@
       name: 'New York City (Manhattan)',
       country: 'USA',
       places: [
-        { id: 'n1', name: 'Village Tavern Dining', desc: 'Warm mahogany booths and comfort food.', cost: 75, category: 'Dining' },
-        { id: 'n2', name: 'Joe’s Pizza Slice', desc: 'Late night iconic NYC pepperoni slice.', cost: 8, category: 'Dining' },
-        { id: 'n3', name: 'Cellar Jazz Club Tour', desc: 'Live jazz in an intimate basement bar.', cost: 45, category: 'Nightlife' },
-        { id: 'n4', name: 'Brooklyn Bridge Walk', desc: 'Skyline views across East River.', cost: 0, category: 'Sight' },
-        { id: 'n5', name: 'High Line Park Walk', desc: 'Elevated railway urban park garden.', cost: 0, category: 'Sight' },
-        { id: 'n6', name: 'Broadway Musical Ticket', desc: 'Premier theatre district show.', cost: 135, category: 'Activity' },
-        { id: 'n7', name: 'Top of the Rock Deck', desc: 'Panoramas of Empire State & Central Park.', cost: 40, category: 'Sight' },
-        { id: 'n8', name: 'Metropolitan Museum of Art', desc: 'World-class galleries and rooftop views.', cost: 30, category: 'Sight' },
-        { id: 'n9', name: 'Central Park Rowing Boat', desc: 'Gliding past Loeb Boathouse.', cost: 25, category: 'Activity' },
-        { id: 'n10', name: 'SoHo Boutique Shopping', desc: 'Cobblestone streets with designer fashion.', cost: 90, category: 'Shopping' },
-        { id: 'n11', name: 'Katz’s Delicatessen', desc: 'Legendary mile-high pastrami sandwich.', cost: 32, category: 'Dining' },
-        { id: 'n12', name: 'Comedy Cellar Show', desc: 'Famous subterranean comedy venue.', cost: 25, category: 'Nightlife' },
-        { id: 'n13', name: 'Grand Central Terminal', desc: 'Gilded age architecture & whisper arch.', cost: 0, category: 'Sight' },
-        { id: 'n14', name: 'Chelsea Market Food Hall', desc: 'Artisanal bites and local shops.', cost: 35, category: 'Dining' },
-        { id: 'n15', name: 'Summit One Vanderbilt', desc: 'Mirror-lined skydeck exhibition.', cost: 42, category: 'Sight' },
-        { id: 'n16', name: 'DUMBO Waterfront Park', desc: 'Photo spot under Manhattan Bridge.', cost: 0, category: 'Sight' },
-        { id: 'n17', name: 'Speakeasy Cocktail Lounge', desc: 'Hidden door bar behind phone booth.', cost: 50, category: 'Nightlife' },
+        { id: 'n1', name: 'Broadway Show Ticket', desc: 'Premier theatre district performance.', cost: 140, category: 'Activity' },
+        { id: 'n2', name: 'Empire State Building Deck', desc: 'Iconic 86th floor open-air observatory.', cost: 44, category: 'Sight' },
+        { id: 'n3', name: 'Central Park Row Boats', desc: 'Gliding past Loeb Boathouse.', cost: 25, category: 'Activity' },
+        { id: 'n4', name: 'Brooklyn Bridge Walk', desc: 'Panoramas across East River.', cost: 0, category: 'Sight' },
+        { id: 'n5', name: 'High Line Elevated Park', desc: 'Urban rail trail garden walk.', cost: 0, category: 'Sight' },
+        { id: 'n6', name: 'Joe’s Pizza Slice', desc: 'Classic NYC late night pepperoni slice.', cost: 8, category: 'Dining' },
+        { id: 'n7', name: 'Cellar Jazz Club Ticket', desc: 'Live jazz in an intimate Greenwich bar.', cost: 45, category: 'Nightlife' },
+        { id: 'n8', name: 'The Met Museum Access', desc: 'World-class galleries and rooftop views.', cost: 30, category: 'Sight' },
+        { id: 'n9', name: 'SoHo Boutique Shopping', desc: 'Cobblestone streets with designer shops.', cost: 100, category: 'Shopping' },
+        { id: 'n10', name: 'Katz’s Delicatessen', desc: 'Legendary pastrami on rye sandwich.', cost: 32, category: 'Dining' },
+        { id: 'n11', name: 'Summit One Vanderbilt', desc: 'Mirror-lined high altitude skydeck.', cost: 42, category: 'Sight' },
+        { id: 'n12', name: 'Statue of Liberty Ferry', desc: 'Harbor sail past Liberty Island.', cost: 25, category: 'Activity' },
+        { id: 'n13', name: 'Grand Central Terminal Walk', desc: 'Gilded age interior architectural marvel.', cost: 0, category: 'Sight' },
+        { id: 'n14', name: 'Chelsea Market Tastings', desc: 'Artisanal food hall samplers.', cost: 35, category: 'Dining' },
+        { id: 'n15', name: 'Comedy Cellar Show', desc: 'Subterranean comedy club set.', cost: 25, category: 'Nightlife' },
+        { id: 'n16', name: 'DUMBO Waterfront Park', desc: 'Manhattan skyline photo spot.', cost: 0, category: 'Sight' },
+        { id: 'n17', name: 'Speakeasy Cocktail Bar', desc: 'Hidden door craft mixology bar.', cost: 55, category: 'Nightlife' },
         { id: 'n18', name: 'MoMA Modern Art Museum', desc: 'Iconic modern masterpieces.', cost: 28, category: 'Sight' },
-        { id: 'n19', name: 'Statue of Liberty Ferry', desc: 'Harbor sail past Liberty Island.', cost: 24, category: 'Activity' },
-        { id: 'n20', name: 'Fifth Avenue Window Walk', desc: 'Luxury window shopping district.', cost: 0, category: 'Shopping' }
+        { id: 'n19', name: 'Fifth Avenue Shopping Walk', desc: 'Luxury window shopping promenade.', cost: 0, category: 'Shopping' },
+        { id: 'n20', name: 'West Village Tavern Dinner', desc: 'Cozy booths & prime steaks.', cost: 85, category: 'Dining' }
+      ]
+    },
+    {
+      id: 'grand-canyon',
+      name: 'Grand Canyon (Arizona)',
+      country: 'USA',
+      places: [
+        { id: 'gc1', name: 'South Rim Helicopter Tour', desc: 'Soaring over the deepest canyon gorges.', cost: 240, category: 'Activity' },
+        { id: 'gc2', name: 'Bright Angel Trail Hike', desc: 'Descend scenic canyon switchbacks.', cost: 0, category: 'Activity' },
+        { id: 'gc3', name: 'Desert View Watchtower', desc: 'Panoramic vistas & stone architecture.', cost: 10, category: 'Sight' },
+        { id: 'gc4', name: 'Colorado River Rafting', desc: 'Half-day smooth water float trip.', cost: 120, category: 'Activity' },
+        { id: 'gc5', name: 'Grand Canyon Skywalk', desc: 'Glass bridge cantilevered over rim.', cost: 65, category: 'Sight' },
+        { id: 'gc6', name: 'Mather Point Stargazing', desc: 'Pristine dark sky night cosmos.', cost: 0, category: 'Nightlife' },
+        { id: 'gc7', name: 'El Tovar Dining Room', desc: 'Historic lodge rustic steak dinner.', cost: 75, category: 'Dining' },
+        { id: 'gc8', name: 'Hermit Road Bicycle Rental', desc: 'Scenic rim drive cycling.', cost: 40, category: 'Activity' },
+        { id: 'gc9', name: 'Havasu Falls Helicopter', desc: 'Turquoise waterfalls in canyon floor.', cost: 180, category: 'Activity' },
+        { id: 'gc10', name: 'Yavapai Geology Museum', desc: 'Educational exhibits overlooking rim.', cost: 0, category: 'Sight' },
+        { id: 'gc11', name: 'Grand Canyon Railway Express', desc: 'Vintage train trip from Williams.', cost: 85, category: 'Activity' },
+        { id: 'gc12', name: 'Grand Canyon IMAX Theater', desc: 'Giant screen canyon history film.', cost: 16, category: 'Sight' },
+        { id: 'gc13', name: 'Desert View Trading Post', desc: 'Native American crafts & souvenirs.', cost: 35, category: 'Shopping' },
+        { id: 'gc14', name: 'Bright Angel Lodge Tavern', desc: 'Casual saloon barbecue & cold beers.', cost: 30, category: 'Dining' },
+        { id: 'gc15', name: 'Lipan Point Sunset Stroll', desc: 'Vibrant sunset colors on canyon rock.', cost: 0, category: 'Sight' },
+        { id: 'gc16', name: 'Phantom Ranch Mule Trek', desc: 'Guided mule ride down canyon floor.', cost: 220, category: 'Activity' },
+        { id: 'gc17', name: 'Tusayan General Store', desc: 'Local Southwestern gifts & trail gear.', cost: 25, category: 'Shopping' },
+        { id: 'gc18', name: 'Ooh Aah Point Hike', desc: 'Short steep hike to breathtaking view.', cost: 0, category: 'Activity' },
+        { id: 'gc19', name: 'Canyon Rim Grill Breakfast', desc: 'Hearty pancakes before early hike.', cost: 20, category: 'Dining' },
+        { id: 'gc20', name: 'Navajo Artisan Market', desc: 'Handmade silver jewelry & rugs.', cost: 60, category: 'Shopping' }
+      ]
+    },
+    {
+      id: 'tokyo',
+      name: 'Tokyo (Shinjuku & Shibuya)',
+      country: 'Japan',
+      places: [
+        { id: 't1', name: 'Torien Yakitori', desc: 'Smoky skewers in lantern alleys.', cost: 45, category: 'Dining' },
+        { id: 't2', name: 'Ichiran Ramen Counter', desc: 'Solo booth tonkotsu ramen.', cost: 18, category: 'Dining' },
+        { id: 't3', name: 'Golden Gai Bar Crawl', desc: 'Explore historic micro-bars.', cost: 60, category: 'Nightlife' },
+        { id: 't4', name: 'teamLab Planets', desc: 'Immersive digital art space.', cost: 38, category: 'Activity' },
+        { id: 't5', name: 'Shibuya Sky Deck', desc: '360 degree city open-air view.', cost: 20, category: 'Sight' }
       ]
     }
   ];
 
   let currentCity = CITIES[0];
-  let targetBudget = 500;
+  let targetBudget = 1000;
   let plannedPlaces = [];
   let currentCategoryFilter = 'All';
 
@@ -714,6 +736,8 @@
       filteredPlaces = filteredPlaces.filter(p => p.category === currentCategoryFilter);
     }
 
+    document.getElementById('spot-count-badge').innerText = `${filteredPlaces.length} Spots Available`;
+
     grid.innerHTML = filteredPlaces.map(place => {
       const isAdded = plannedPlaces.some(p => p.id === place.id);
       return `
@@ -726,8 +750,8 @@
             <span class="badge-category">${place.category}</span>
             <span class="badge-cost">$${place.cost}</span>
           </div>
-          <div style="font-size:12px; font-weight:700; color:${isAdded ? 'var(--accent)' : 'var(--text-sub)'}; margin-top:10px;">
-            ${isAdded ? '✓ Added to Plan' : '+ Click to Add'}
+          <div style="font-size:12px; font-weight:800; color:${isAdded ? 'var(--accent)' : 'var(--text-sub)'}; margin-top:12px;">
+            ${isAdded ? '✓ Added to Itinerary' : '+ Click to Select'}
           </div>
         </div>
       `;
@@ -761,7 +785,7 @@
     const newPlace = {
       id: 'custom-' + Date.now(),
       name: name,
-      desc: `Custom added spot`,
+      desc: `User added spot`,
       cost: cost,
       category: category
     };
@@ -809,7 +833,7 @@
     const container = document.getElementById('planner-items-container');
 
     if (plannedPlaces.length === 0) {
-      container.innerHTML = `<div style="font-size:14px; color:var(--text-sub); text-align:center; padding: 24px;">No places added yet. Explore nearby spots to add locations.</div>`;
+      container.innerHTML = `<div style="font-size:14px; color:var(--text-sub); text-align:center; padding: 24px;">No spots selected yet. Go back to Step 2 to pick locations.</div>`;
       calculateTotalBudget();
       return;
     }
@@ -820,13 +844,13 @@
           <span>${item.name} <small style="font-size:12px; color:var(--text-sub); font-weight:normal;">(${item.category || 'Spot'})</small></span>
           <div>
             <span class="val-badge" id="badge-${item.id}">$${item.cost}</span>
-            <button class="btn-danger" style="margin-left:10px;" onclick="removePlace('${item.id}')">Remove</button>
+            <button class="btn-danger" style="margin-left:12px;" onclick="removePlace('${item.id}')">Remove</button>
           </div>
         </div>
         <div class="item-desc">${item.desc}</div>
         <div class="slider-row">
           <label>Adjust Cost Allocation:</label>
-          <input type="range" min="0" max="300" step="5" value="${item.cost}" oninput="updatePlaceCost('${item.id}', this.value)">
+          <input type="range" min="0" max="500" step="5" value="${item.cost}" oninput="updatePlaceCost('${item.id}', this.value)">
         </div>
       </div>
     `).join('');
@@ -844,7 +868,7 @@
 
     const tableBody = document.getElementById('summary-table-body');
     if (plannedPlaces.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--text-sub);">No places selected.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--text-sub);">No spots selected.</td></tr>`;
       return;
     }
 
@@ -852,7 +876,7 @@
       <tr>
         <td><strong>${p.name}</strong><br><small style="color:var(--text-sub);">${p.desc}</small></td>
         <td><span class="badge-category">${p.category || 'Spot'}</span></td>
-        <td style="color:var(--accent); font-weight:700;">$${p.cost}</td>
+        <td style="color:var(--accent); font-weight:800;">$${p.cost}</td>
       </tr>
     `).join('');
   }
@@ -864,7 +888,7 @@
     
     document.getElementById('p-content').innerHTML = `
       <table>
-        <tr><th>Location</th><th>Category</th><th>Cost</th></tr>
+        <tr><th>Spot Name</th><th>Category</th><th>Cost</th></tr>
         ${plannedPlaces.map(p => `<tr><td>${p.name}</td><td>${p.category || 'Spot'}</td><td>$${p.cost}</td></tr>`).join('')}
         <tr><th colspan="2">Total Allocated Cost</th><th>$${total}</th></tr>
       </table>
@@ -876,17 +900,17 @@
     const tripDate = document.getElementById('trip-date').value;
     const total = plannedPlaces.reduce((sum, item) => sum + item.cost, 0);
 
-    let bodyText = `WAY POINT ADVISOR - Travel Briefing\n\n`;
+    let bodyText = `WAY POINT ADVISOR - Travel Itinerary\n\n`;
     bodyText += `Destination: ${currentCity.name}\n`;
     bodyText += `Trip Date: ${tripDate}\n`;
-    bodyText += `Total Allocated Cost: $${total}\n\n`;
-    bodyText += `Planned Locations:\n`;
+    bodyText += `Total Cost: $${total}\n\n`;
+    bodyText += `Selected Locations:\n`;
 
     plannedPlaces.forEach((p, idx) => {
       bodyText += `${idx + 1}. ${p.name} (${p.category || 'Spot'}) - $${p.cost}\n`;
     });
 
-    const subject = encodeURIComponent(`WayPoint Itinerary: ${currentCity.name}`);
+    const subject = encodeURIComponent(`WayPoint Travel Briefing: ${currentCity.name}`);
     const body = encodeURIComponent(bodyText);
 
     window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
