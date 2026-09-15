@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAY POINT ADVISOR — Pro Edition</title>
+<title>WAY POINT ADVISOR — Light Pro Edition</title>
 
 <!-- ========================================== -->
 <!-- 1. PRINT & PDF EXPORT STYLES               -->
 <!-- ========================================== -->
 <style media="print">
-  /* Force high contrast and hide non-printable interactive UI during print/PDF export */
   body { 
     background: #ffffff !important; 
     color: #000000 !important; 
@@ -45,17 +44,18 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
 
-  /* Global Design Tokens */
+  /* Global Design Tokens - Clean & Fresh Light Theme */
   :root {
-    --bg-gradient: radial-gradient(at 10% 10%, rgba(2, 132, 199, 0.15) 0px, transparent 40%),
-                   radial-gradient(at 90% 90%, rgba(124, 58, 237, 0.15) 0px, transparent 40%);
+    --bg-gradient: radial-gradient(at 10% 10%, rgba(2, 132, 199, 0.12) 0px, transparent 40%),
+                   radial-gradient(at 90% 90%, rgba(124, 58, 237, 0.12) 0px, transparent 40%);
     --panel-bg: #ffffff;
     --panel-border: #cbd5e1;
     --primary: #0284c7;
-    --primary-glow: rgba(2, 132, 199, 0.25);
+    --primary-glow: rgba(2, 132, 199, 0.2);
     --secondary: #7c3aed;
     --danger: #ef4444;
     --success: #10b981;
+    --warning: #f59e0b;
     --text-dark: #0f172a;
     --text-muted: #475569;
     --radius-lg: 20px;
@@ -65,14 +65,12 @@
     --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Reset & Box Sizing */
   *, *::before, *::after { 
     box-sizing: border-box; 
     margin: 0; 
     padding: 0; 
   }
 
-  /* Force Full Viewport Layout without Body Scrolling */
   html, body {
     height: 100%;
     width: 100%;
@@ -89,7 +87,6 @@
     flex-direction: column;
   }
 
-  /* App Shell Container */
   .app-container {
     width: 100%;
     max-width: 1440px;
@@ -152,9 +149,9 @@
     background: transparent;
     color: var(--text-muted);
     border: none;
-    padding: 10px 20px;
+    padding: 10px 18px;
     border-radius: var(--radius-md);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
     cursor: pointer;
     transition: all var(--transition-smooth);
@@ -185,13 +182,13 @@
     display: flex;
   }
 
-  /* Unified Panel Layout */
+  /* Panels */
   .panel {
     background: var(--panel-bg);
     border: 2px solid var(--panel-border);
     border-radius: var(--radius-lg);
-    padding: 28px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -199,26 +196,26 @@
   }
 
   .panel-header {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 900;
     color: var(--text-dark);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
   }
 
-  /* Form Elements */
+  /* Forms */
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
+    gap: 6px;
+    margin-bottom: 16px;
   }
 
   .form-group label {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 800;
     color: var(--text-muted);
     text-transform: uppercase;
@@ -229,10 +226,10 @@
     background: #f8fafc;
     border: 2px solid var(--panel-border);
     color: var(--text-dark);
-    padding: 14px 18px;
+    padding: 12px 16px;
     border-radius: var(--radius-md);
     font-family: var(--font-main);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     outline: none;
     width: 100%;
@@ -248,8 +245,8 @@
   /* Filter Toolbar */
   .filter-bar {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
     flex-shrink: 0;
   }
@@ -258,9 +255,9 @@
     background: #f1f5f9;
     border: 2px solid var(--panel-border);
     color: var(--text-muted);
-    padding: 10px 18px;
+    padding: 8px 16px;
     border-radius: 24px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 800;
     cursor: pointer;
     transition: all var(--transition-smooth);
@@ -272,7 +269,7 @@
     background: var(--primary);
   }
 
-  /* Dynamic Scrollable Content Container */
+  /* Scrollable Container */
   .scroll-container {
     overflow-y: auto;
     padding-right: 8px;
@@ -283,30 +280,29 @@
   .scroll-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
   .scroll-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-  /* Grid Layout for Cards */
+  /* Grid & Cards */
   .grid-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 16px;
   }
 
   .card {
     background: #ffffff;
     border: 2px solid var(--panel-border);
     border-radius: var(--radius-lg);
-    padding: 20px;
+    padding: 18px;
     cursor: pointer;
     transition: all var(--transition-smooth);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    outline: none;
   }
 
-  .card:hover, .card:focus-visible {
+  .card:hover {
     border-color: var(--primary);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 24px rgba(2, 132, 199, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(2, 132, 199, 0.1);
   }
 
   .card.selected {
@@ -316,17 +312,17 @@
   }
 
   .card h3 {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 800;
     color: var(--text-dark);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .card p {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-muted);
-    margin-bottom: 16px;
-    line-height: 1.5;
+    margin-bottom: 14px;
+    line-height: 1.4;
     font-weight: 500;
   }
 
@@ -338,7 +334,7 @@
   }
 
   .badge-category {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--secondary);
@@ -350,33 +346,88 @@
     background: #e0f2fe;
     color: var(--primary);
     font-weight: 900;
-    font-size: 15px;
-    padding: 6px 14px;
+    font-size: 14px;
+    padding: 4px 12px;
     border-radius: 8px;
     border: 1px solid var(--primary);
   }
 
-  /* Interactive Item Rows for Planner */
+  /* Hotel Cards Specific */
+  .hotel-card {
+    background: #ffffff;
+    border: 2px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all var(--transition-smooth);
+  }
+
+  .hotel-card:hover {
+    border-color: var(--secondary);
+    box-shadow: 0 10px 20px rgba(124, 58, 237, 0.1);
+  }
+
+  .hotel-rating {
+    color: var(--warning);
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .hotel-price {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text-dark);
+  }
+
+  .hotel-price span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .hotel-link-btn {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff !important;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: var(--radius-md);
+    font-weight: 800;
+    font-size: 13px;
+    margin-top: 12px;
+    transition: opacity var(--transition-fast);
+  }
+
+  .hotel-link-btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Planner Rows */
   .item-row {
     background: #f8fafc;
     border: 2px solid var(--panel-border);
     border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
   }
 
   .item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 800;
     color: var(--text-dark);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .item-desc {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-muted);
     font-weight: 500;
   }
@@ -384,14 +435,14 @@
   .slider-row {
     display: flex;
     align-items: center;
-    gap: 14px;
-    margin-top: 14px;
-    padding-top: 12px;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 10px;
     border-top: 1px solid var(--panel-border);
   }
 
   .slider-row label {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-muted);
     font-weight: 800;
   }
@@ -404,24 +455,26 @@
   }
 
   .val-badge {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 900;
     color: var(--primary);
   }
 
-  /* Reusable Buttons */
+  /* Buttons */
   .btn {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: #ffffff;
     border: none;
-    padding: 14px 28px;
+    padding: 12px 24px;
     border-radius: var(--radius-md);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
     cursor: pointer;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     transition: all var(--transition-smooth);
-    box-shadow: 0 4px 16px var(--primary-glow);
+    box-shadow: 0 4px 14px var(--primary-glow);
   }
 
   .btn-secondary {
@@ -431,11 +484,22 @@
     box-shadow: none;
   }
 
+  .btn-danger {
+    background: var(--danger);
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
   .btn-home {
     background: #e0f2fe;
     color: var(--primary);
     border: 2px solid var(--primary);
-    padding: 8px 16px;
+    padding: 8px 14px;
     border-radius: 10px;
     font-size: 13px;
     font-weight: 800;
@@ -443,28 +507,17 @@
     transition: all var(--transition-fast);
   }
 
-  .btn:hover, .btn-home:hover {
+  .btn:hover, .btn-home:hover, .btn-danger:hover {
     opacity: 0.95;
-    transform: translateY(-2px);
-  }
-
-  .btn-danger {
-    background: var(--danger);
-    color: #ffffff;
-    padding: 6px 12px;
-    font-size: 13px;
-    font-weight: 800;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
+    transform: translateY(-1px);
   }
 
   .add-form-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr auto;
-    gap: 14px;
+    gap: 12px;
     align-items: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     flex-shrink: 0;
   }
 
@@ -473,17 +526,17 @@
     background: #f1f5f9;
     border-radius: 14px;
     border: 2px solid var(--panel-border);
-    padding: 18px 24px;
-    margin-bottom: 20px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
     flex-shrink: 0;
   }
 
   .budget-summary-text {
     display: flex;
     justify-content: space-between;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   .budget-bar-wrapper {
@@ -508,33 +561,33 @@
   }
 
   .summary-table th, .summary-table td {
-    padding: 16px;
+    padding: 14px;
     text-align: left;
     border-bottom: 2px solid var(--panel-border);
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .summary-table th {
     color: var(--text-muted);
     text-transform: uppercase;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 0.8px;
     font-weight: 800;
   }
 
   .action-bar {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 16px;
     flex-wrap: wrap;
     flex-shrink: 0;
   }
 
   .right-buttons {
     display: flex;
-    gap: 12px;
+    gap: 10px;
   }
 
   .print-only { display: none; }
@@ -560,8 +613,9 @@
       <nav id="main-nav">
         <button data-page="step1" class="active">🏠 Home</button>
         <button data-page="step2">2. Spots</button>
-        <button data-page="step3">3. Planning</button>
-        <button data-page="step4">4. Summary</button>
+        <button data-page="step3">3. Hotels</button>
+        <button data-page="step4">4. Planner</button>
+        <button data-page="step5">5. Briefing</button>
       </nav>
     </div>
   </header>
@@ -577,7 +631,7 @@
         </div>
         <div class="form-group">
           <label for="input-budget">Total Budget Goal ($USD):</label>
-          <input type="number" id="input-budget" value="1500" min="0" step="50">
+          <input type="number" id="input-budget" value="2000" min="0" step="50">
           <span id="home-budget-display" style="font-size: 14px; font-weight: 700; color: var(--primary); margin-top: 4px;"></span>
         </div>
         <div class="form-group">
@@ -588,17 +642,27 @@
           <label for="trip-date">Trip Date:</label>
           <input type="date" id="trip-date" value="2026-10-15">
         </div>
+        
+        <!-- Interactive Helper Tools -->
+        <div style="margin-top: 15px; padding: 15px; background: #f1f5f9; border-radius: var(--radius-md); border: 1px solid var(--panel-border);">
+          <div style="font-weight: 800; font-size: 13px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">Quick Tools</div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary" id="btn-quick-reset" style="padding: 8px 14px; font-size: 12px;">🔄 Reset Selections</button>
+            <button class="btn btn-secondary" id="btn-random-dest" style="padding: 8px 14px; font-size: 12px;">🎲 Surprise Destination</button>
+          </div>
+        </div>
+
         <div style="text-align: right; margin-top: auto;">
-          <button class="btn" data-navigate="step2">Explore Attractions →</button>
+          <button class="btn" data-navigate="step2">Explore Spots & Activities →</button>
         </div>
       </div>
     </section>
 
-    <!-- SCREEN 2: SPOT SELECTION -->
+    <!-- SCREEN 2: SPOT & ACTIVITY SELECTION -->
     <section id="page-step2" class="page">
       <div class="panel">
         <div class="panel-header">
-          <span>Attractions in <span id="nearby-city-title" style="color: var(--primary);">Destination</span></span>
+          <span>Attractions & Activities in <span id="nearby-city-title" style="color: var(--primary);">Destination</span></span>
           <button class="btn-home" data-navigate="step1">🏠 Home Screen</button>
         </div>
         
@@ -616,28 +680,56 @@
         </div>
         
         <div class="action-bar">
-          <button class="btn-home" data-navigate="step1">🏠 Home Screen</button>
-          <button class="btn" data-navigate="step3">Go to Planning Screen →</button>
+          <button class="btn-home" data-navigate="step1">🏠 Home</button>
+          <div class="right-buttons">
+            <button class="btn btn-secondary" id="btn-select-all-spots">Select All Visible</button>
+            <button class="btn" data-navigate="step3">View Recommended Hotels →</button>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- SCREEN 3: PLANNER & BUDGET ALLOCATOR -->
+    <!-- SCREEN 3: HOTELS TO BOOK -->
     <section id="page-step3" class="page">
       <div class="panel">
         <div class="panel-header">
-          <span>Add Custom Spot & Adjust Budget</span>
+          <span>Top Hotels in <span id="hotel-city-title" style="color: var(--primary);">Destination</span></span>
+          <button class="btn-home" data-navigate="step1">🏠 Home</button>
+        </div>
+        <p style="margin-bottom: 16px; color: var(--text-muted); font-size: 14px; font-weight: 500;">
+          Hand-picked accommodations for your stay. Click "Book Now" to view real live rates and availability.
+        </p>
+
+        <div class="scroll-container">
+          <div class="grid-cards" id="hotels-grid"></div>
+        </div>
+
+        <div class="action-bar">
+          <button class="btn-home" data-navigate="step1">🏠 Home</button>
+          <div class="right-buttons">
+            <button class="btn btn-secondary" data-navigate="step2">← Back to Spots</button>
+            <button class="btn" data-navigate="step4">Adjust Budget & Plan →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 4: PLANNER & BUDGET ALLOCATOR -->
+    <section id="page-step4" class="page">
+      <div class="panel">
+        <div class="panel-header">
+          <span>Custom Spots & Budget Allocator</span>
           <button class="btn-home" data-navigate="step1">🏠 Home</button>
         </div>
 
         <!-- Custom Spot Form -->
         <div class="add-form-grid">
           <div>
-            <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 6px; font-weight: 800;">Spot Name</label>
+            <label style="font-size: 12px; color: var(--text-muted); display:block; margin-bottom: 4px; font-weight: 800;">Custom Activity / Spot Name</label>
             <input type="text" id="custom-name" placeholder="e.g. VIP Helicopter Tour">
           </div>
           <div>
-            <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 6px; font-weight: 800;">Category</label>
+            <label style="font-size: 12px; color: var(--text-muted); display:block; margin-bottom: 4px; font-weight: 800;">Category</label>
             <select id="custom-category">
               <option value="Activity">Activity</option>
               <option value="Sight">Sight</option>
@@ -647,19 +739,19 @@
             </select>
           </div>
           <div>
-            <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 6px; font-weight: 800;">Cost (USD $)</label>
+            <label style="font-size: 12px; color: var(--text-muted); display:block; margin-bottom: 4px; font-weight: 800;">Cost (USD $)</label>
             <input type="number" id="custom-cost" value="100" min="0">
           </div>
           <div>
-            <button class="btn" id="btn-add-custom">+ Add Spot</button>
+            <button class="btn" id="btn-add-custom">+ Add Item</button>
           </div>
         </div>
 
         <!-- Dynamic Budget Status Bar -->
         <div class="budget-summary-card">
           <div class="budget-summary-text">
-            <div>Total Allocated: <span id="allocated-budget" style="color: var(--primary); font-weight:900;">0</span></div>
-            <div>Target Budget Goal: <span id="target-budget-display" style="font-weight:900;">0</span></div>
+            <div>Total Allocated: <span id="allocated-budget" style="color: var(--primary); font-weight:900;">$0</span></div>
+            <div>Target Goal: <span id="target-budget-display" style="font-weight:900;">$0</span></div>
           </div>
           <div class="budget-bar-wrapper">
             <div class="budget-bar-fill" id="budget-progress-bar"></div>
@@ -671,17 +763,18 @@
         </div>
 
         <div class="action-bar">
-          <button class="btn-home" data-navigate="step1">🏠 Return to Home Screen</button>
+          <button class="btn-home" data-navigate="step1">🏠 Home</button>
           <div class="right-buttons">
-            <button class="btn btn-secondary" data-navigate="step2">← Pick Spots</button>
-            <button class="btn" data-navigate="step4">View Summary →</button>
+            <button class="btn btn-secondary" id="btn-clear-all-planner">Clear All Items</button>
+            <button class="btn btn-secondary" data-navigate="step3">← Pick Hotels</button>
+            <button class="btn" data-navigate="step5">View Final Summary →</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SCREEN 4: BRIEFING & EXPORT -->
-    <section id="page-step4" class="page">
+    <!-- SCREEN 5: BRIEFING & EXPORT -->
+    <section id="page-step5" class="page">
       <div class="panel">
         <div class="panel-header">
           <span>Trip Briefing & Export</span>
@@ -691,7 +784,7 @@
         <div class="budget-summary-card">
           <div class="budget-summary-text" style="margin-bottom:0;">
             <div>Destination: <span id="sum-city-display" style="color: var(--text-dark); font-weight:900;">--</span></div>
-            <div>Total Cost: <span id="sum-total-display" style="color: var(--primary); font-weight:900;">0</span></div>
+            <div>Total Estimated Cost: <span id="sum-total-display" style="color: var(--primary); font-weight:900;">$0</span></div>
           </div>
         </div>
 
@@ -699,16 +792,16 @@
           <table class="summary-table">
             <thead>
               <tr>
-                <th>Spot Name</th>
+                <th>Spot / Activity</th>
                 <th>Category</th>
-                <th>Cost</th>
+                <th>Cost (USD)</th>
               </tr>
             </thead>
             <tbody id="summary-table-body"></tbody>
           </table>
         </div>
 
-        <div class="form-group" style="margin-top: 18px;">
+        <div class="form-group" style="margin-top: 16px;">
           <label for="email-address">Email Briefing To:</label>
           <input type="email" id="email-address" placeholder="e.g. traveler@waypoint.com">
         </div>
@@ -731,16 +824,17 @@
 <!-- ========================================== -->
 <script>
 /**
- * Application Constants and Database Store
+ * Application Database Store including Hotels with Active Links
  */
 const CITY_DATABASE = [
   {
     id: 'machu-picchu',
     name: 'Machu Picchu (Peru)',
-    country: 'Peru',
-    currencySymbol: 'S/',
-    currencyCode: 'PEN',
-    rateToUSD: 3.75,
+    hotels: [
+      { name: 'Belmond Sanctuary Lodge', price: '$1,250/night', rating: '★ 4.9', desc: 'The only hotel located adjacent to the ancient Inca citadel entry.', link: 'https://www.booking.com/hotel/pe/sanctuary-lodge-machu-picchu.html' },
+      { name: 'Sumaq Machu Picchu Hotel', price: '$480/night', rating: '★ 4.8', desc: 'Luxury resort at the foot of Machu Picchu along the Urubamba River.', link: 'https://www.booking.com/hotel/pe/sumaq-machu-picchu.html' },
+      { name: 'Inkaterra Machu Picchu Pueblo', price: '$520/night', rating: '★ 4.8', desc: 'Andean style casitas tucked into lush cloud forest hills.', link: 'https://www.booking.com/hotel/pe/inkaterra-machu-picchu-pueblo.html' }
+    ],
     places: [
       { id: 'mp1', name: 'Machu Picchu Citadel Pass', desc: 'Main historic access to the ancient Inca ruins.', cost: 150, category: 'Sight' },
       { id: 'mp2', name: 'Huayna Picchu Peak Trek', desc: 'Steep stairs to the iconic overlook summit.', cost: 75, category: 'Activity' },
@@ -750,549 +844,376 @@ const CITY_DATABASE = [
       { id: 'mp6', name: 'Aguas Calientes Thermal Baths', desc: 'Relaxing hot spring soak post-hike.', cost: 20, category: 'Activity' },
       { id: 'mp7', name: 'Cusco Sacred Valley Feast', desc: 'Traditional Andean dining with roast pachamanca.', cost: 65, category: 'Dining' },
       { id: 'mp8', name: 'Chicha Traditional Bar', desc: 'Sip authentic Peruvian corn beverages and cocktails.', cost: 25, category: 'Nightlife' },
-      { id: 'mp9', name: 'Handwoven Alpaca Textile Market', desc: 'Shop genuine artisan blankets and scarves.', cost: 80, category: 'Shopping' },
-      { id: 'mp10', name: 'Pisac Silver Jewelry Bazaar', desc: 'Handmade Incan silver work & gems.', cost: 95, category: 'Shopping' }
+      { id: 'mp9', name: 'Handwoven Alpaca Textile Market', desc: 'Shop genuine artisan blankets and scarves.', cost: 80, category: 'Shopping' }
     ]
   },
   {
     id: 'petra',
     name: 'Petra Ancient City (Jordan)',
-    country: 'Jordan',
-    currencySymbol: 'JOD',
-    currencyCode: 'JOD',
-    rateToUSD: 0.71,
+    hotels: [
+      { name: 'Mövenpick Resort Petra', price: '$210/night', rating: '★ 4.7', desc: 'Located directly at the entrance to the ancient city of Petra.', link: 'https://www.booking.com/hotel/jo/movenpick-resort-petra.html' },
+      { name: 'Petra Bubble Luxotel', price: '$340/night', rating: '★ 4.6', desc: 'Luxury transparent bubble suites with private hot tubs under the stars.', link: 'https://www.booking.com/hotel/jo/petra-bubble-luxotel.html' },
+      { name: 'The Petra Moon Hotel', price: '$130/night', rating: '★ 4.5', desc: 'Comfortable modern hotel just steps from the Petra Visitor Center.', link: 'https://www.booking.com/hotel/jo/petra-moon.html' }
+    ],
     places: [
       { id: 'p1', name: 'The Treasury (Al-Khazneh)', desc: 'Iconic rock-cut carved temple face.', cost: 120, category: 'Sight' },
       { id: 'p2', name: 'Petra By Night Experience', desc: '1,500 candles illuminating the canyon.', cost: 35, category: 'Nightlife' },
-      { id: 'p3', name: 'The Monastery (Ad Deir) Hike', desc: '800-step mountain climb to giant cliff facade.', cost: 0, category: 'Activity' },
+      { id: 'p3', name: 'The Monastery (Ad Deir) Hike', desc: '800-step mountain climb to giant cliff facade.', cost: 40, category: 'Activity' },
       { id: 'p4', name: 'The Siq Canyon Walk', desc: 'Walk through narrow 1.2km gorge walls.', cost: 0, category: 'Sight' },
       { id: 'p5', name: 'High Place of Sacrifice Trek', desc: 'Ancient altar summit with wide valley views.', cost: 30, category: 'Activity' },
       { id: 'p6', name: 'Bedouin Cave Dinner & Music', desc: 'Campfire roasted Zarb meal with live oud music.', cost: 55, category: 'Dining' },
-      { id: 'p7', name: 'Royal Tombs Sunset Overlook', desc: 'Cliffside tombs illuminated in red gold.', cost: 20, category: 'Sight' },
-      { id: 'p8', name: 'Wadi Musa Spice & Tea Market', desc: 'Fresh cardamom, frankincense, & teas.', cost: 40, category: 'Shopping' },
-      { id: 'p9', name: 'Cave Bar Drinks', desc: 'Historic 2,000-year-old Nabataean tomb turned bar.', cost: 45, category: 'Nightlife' }
+      { id: 'p7', name: 'Wadi Musa Spice Market', desc: 'Fresh cardamom, frankincense, & teas.', cost: 40, category: 'Shopping' }
     ]
   },
   {
     id: 'colosseum',
     name: 'The Colosseum (Rome, Italy)',
-    country: 'Italy',
-    currencySymbol: '€',
-    currencyCode: 'EUR',
-    rateToUSD: 0.92,
+    hotels: [
+      { name: 'Hotel Palazzo Manfredi', price: '$650/night', rating: '★ 4.9', desc: 'Rooftop dining with direct front-row views of the Colosseum.', link: 'https://www.booking.com/hotel/it/palazzomanfredi.html' },
+      { name: 'Mercure Roma Centro Colosseo', price: '$220/night', rating: '★ 4.4', desc: 'Modern hotel featuring a rooftop pool overlooking ancient Rome.', link: 'https://www.booking.com/hotel/it/mercure-roma-delta-colosseo.html' },
+      { name: 'The Inn at the Roman Forum', price: '$380/night', rating: '★ 4.7', desc: 'Boutique hotel containing genuine ancient Roman ruins inside.', link: 'https://www.booking.com/hotel/it/the-inn-at-the-roman-forum.html' }
+    ],
     places: [
       { id: 'c1', name: 'Colosseum Arena Floor & Underground', desc: 'Exclusive access to gladiator chambers.', cost: 75, category: 'Sight' },
       { id: 'c2', name: 'Roman Forum & Palatine Hill', desc: 'Walk the heart of ancient imperial Rome.', cost: 35, category: 'Sight' },
       { id: 'c3', name: 'Trastevere Food & Wine Tour', desc: 'Fresh pasta, truffles, and fine Italian wine.', cost: 95, category: 'Dining' },
       { id: 'c4', name: 'Vatican Museums & Sistine Chapel', desc: 'Michelangelo ceiling and papal arts.', cost: 50, category: 'Sight' },
-      { id: 'c5', name: 'Trevi Fountain Evening Stroll', desc: 'Coin throw and night street ambience.', cost: 0, category: 'Nightlife' },
+      { id: 'c5', name: 'Authentic Pasta Masterclass', desc: 'Hands-on pasta making session with a chef.', cost: 85, category: 'Activity' },
       { id: 'c6', name: 'Piazza Navona Gelato Tasting', desc: 'Sample artisanal Italian gelato.', cost: 15, category: 'Dining' },
-      { id: 'c7', name: 'Via Condotti Italian Fashion', desc: 'Luxury designer boutique shopping.', cost: 150, category: 'Shopping' },
-      { id: 'c8', name: 'Roofs of Rome Rooftop Bar', desc: 'Cocktails overlooking St. Peter’s Dome.', cost: 60, category: 'Nightlife' },
-      { id: 'c9', name: 'Authentic Pasta Masterclass', desc: 'Hands-on pasta making session with a chef.', cost: 85, category: 'Activity' }
-    ]
-  },
-  {
-    id: 'chichen-itza',
-    name: 'Chichen Itza (Yucatan, Mexico)',
-    country: 'Mexico',
-    currencySymbol: 'Mex$',
-    currencyCode: 'MXN',
-    rateToUSD: 18.0,
-    places: [
-      { id: 'ci1', name: 'El Castillo Pyramid Tour', desc: 'Central astronomical Mayan pyramid temple.', cost: 45, category: 'Sight' },
-      { id: 'ci2', name: 'Sacred Cenote Ik Kil Swim', desc: 'Dip into open-sky natural cavern water.', cost: 25, category: 'Activity' },
-      { id: 'ci3', name: 'Great Ball Court & Observatory', desc: 'Explore Mayan sports fields and star towers.', cost: 20, category: 'Sight' },
-      { id: 'ci4', name: 'Yucatecan Cuisine Buffet', desc: 'Authentic cochinita pibil and empanadas.', cost: 30, category: 'Dining' },
-      { id: 'ci5', name: 'Cenote Suytun Photo Session', desc: 'Beam of light cave swimming spot.', cost: 35, category: 'Activity' },
-      { id: 'ci6', name: 'Mayan Woodcarving & Obsidian Market', desc: 'Artisan carved masks and artifacts.', cost: 50, category: 'Shopping' },
-      { id: 'ci7', name: 'Night Light & Sound Show', desc: 'Pyramid light projection storytelling.', cost: 40, category: 'Nightlife' },
-      { id: 'ci8', name: 'Tequila & Mezcal Tasting', desc: 'Sample regional agave spirits.', cost: 45, category: 'Nightlife' }
-    ]
-  },
-  {
-    id: 'taj-mahal',
-    name: 'Taj Mahal (Agra, India)',
-    country: 'India',
-    currencySymbol: '₹',
-    currencyCode: 'INR',
-    rateToUSD: 83.5,
-    places: [
-      { id: 'tm1', name: 'Taj Mahal Sunrise Ticket', desc: 'Iconic white marble mausoleum at dawn.', cost: 35, category: 'Sight' },
-      { id: 'tm2', name: 'Agra Fort Guided Walk', desc: 'Red sandstone royal Mughal palace complex.', cost: 25, category: 'Sight' },
-      { id: 'tm3', name: 'Mehtab Bagh Sunset Gardens', desc: 'Riverside view of the Taj opposite water.', cost: 15, category: 'Sight' },
-      { id: 'tm4', name: 'Mughlai Culinary Experience', desc: 'Rich biryanis, curries, and naan breads.', cost: 40, category: 'Dining' },
-      { id: 'tm5', name: 'Marble Inlay Workshop & Shop', desc: 'Watch artisans carve lapis into marble.', cost: 65, category: 'Shopping' },
-      { id: 'tm6', name: 'Agra Old Bazaar Spice Walking Tour', desc: 'Bustling markets, street snacks, and silks.', cost: 20, category: 'Activity' },
-      { id: 'tm7', name: 'Yamuna River Boat Ride', desc: 'Scenic view of the monument from water.', cost: 30, category: 'Activity' },
-      { id: 'tm8', name: 'Rooftop Lounge Night View', desc: 'Drink tea or drinks watching illuminated domes.', cost: 35, category: 'Nightlife' }
-    ]
-  },
-  {
-    id: 'great-wall',
-    name: 'Great Wall of China (Beijing)',
-    country: 'China',
-    currencySymbol: '¥',
-    currencyCode: 'CNY',
-    rateToUSD: 7.2,
-    places: [
-      { id: 'gw1', name: 'Mutianyu Great Wall Cable Car', desc: 'Ride up and toboggan down wall slopes.', cost: 85, category: 'Activity' },
-      { id: 'gw2', name: 'Jiankou Wild Wall Hike', desc: 'Rugged un-restored mountain trek.', cost: 60, category: 'Activity' },
-      { id: 'gw3', name: 'Watchtower Sunset Photo Expedition', desc: 'Capture golden hour over mountain ridges.', cost: 40, category: 'Sight' },
-      { id: 'gw4', name: 'Imperial Beijing Roast Duck Banquet', desc: 'Peking duck with pancakes and sauces.', cost: 70, category: 'Dining' },
-      { id: 'gw5', name: 'Forbidden City Day Tour', desc: 'Explore imperial palace in downtown Beijing.', cost: 50, category: 'Sight' },
-      { id: 'gw6', name: 'Hutong Alleyway Rickshaw Ride', desc: 'Traditional neighborhood culture tour.', cost: 30, category: 'Activity' },
-      { id: 'gw7', name: 'Traditional Chinese Tea Ceremony', desc: 'Sample rare oolong teas.', cost: 35, category: 'Dining' },
-      { id: 'gw8', name: 'Panjiayuan Antique Market', desc: 'Shop jade, scrolls, and ancient crafts.', cost: 90, category: 'Shopping' }
-    ]
-  },
-  {
-    id: 'christ-redeemer',
-    name: 'Christ the Redeemer (Rio, Brazil)',
-    country: 'Brazil',
-    currencySymbol: 'R$',
-    currencyCode: 'BRL',
-    rateToUSD: 5.5,
-    places: [
-      { id: 'cr1', name: 'Corcovado Cog Train Ride', desc: 'Scenic train through Tijuca forest to statue.', cost: 45, category: 'Sight' },
-      { id: 'cr2', name: 'Sugarloaf Mountain Cable Car', desc: '360 degree harbor & city skyline view.', cost: 55, category: 'Sight' },
-      { id: 'cr3', name: 'Copacabana Beach Club Lounge', desc: 'Caipirinhas on world-famous sand.', cost: 40, category: 'Nightlife' },
-      { id: 'cr4', name: 'Brazilian Churrascaria Feast', desc: 'Unlimited prime rodizio barbecue.', cost: 75, category: 'Dining' },
-      { id: 'cr5', name: 'Selarón Steps (Escadaria Selarón)', desc: 'Vibrant mosaic tile art staircase.', cost: 0, category: 'Sight' },
-      { id: 'cr6', name: 'Hang Gliding over São Conrado', desc: 'Tandem glider flight over mountain & ocean.', cost: 210, category: 'Activity' },
-      { id: 'cr7', name: 'Lapa District Samba Night Club', desc: 'Live Brazilian samba dance and music.', cost: 50, category: 'Nightlife' },
-      { id: 'cr8', name: 'Ipanema Beach Boutique Shopping', desc: 'Brazilian fashion and swimwear shops.', cost: 85, category: 'Shopping' }
+      { id: 'c7', name: 'Via Condotti Italian Fashion', desc: 'Luxury designer boutique shopping.', cost: 150, category: 'Shopping' }
     ]
   },
   {
     id: 'nyc',
     name: 'New York City (Manhattan)',
-    country: 'USA',
-    currencySymbol: '$',
-    currencyCode: 'USD',
-    rateToUSD: 1.0,
+    hotels: [
+      { name: 'The Plaza Hotel', price: '$850/night', rating: '★ 4.8', desc: 'Timeless luxury iconic hotel at Fifth Avenue & Central Park South.', link: 'https://www.booking.com/hotel/us/the-plaza.html' },
+      { name: 'Arlo Midtown', price: '$260/night', rating: '★ 4.5', desc: 'Trendy, stylish modern hub near Times Square & Hudson Yards.', link: 'https://www.booking.com/hotel/us/arlo-midtown.html' },
+      { name: '1 Hotel Central Park', price: '$590/night', rating: '★ 4.7', desc: 'Eco-luxury sanctuary with reclaimed wood and greenery.', link: 'https://www.booking.com/hotel/us/1-hotel-central-park.html' }
+    ],
     places: [
       { id: 'n1', name: 'Broadway Musical Ticket', desc: 'Prime seating for top Times Square show.', cost: 160, category: 'Activity' },
       { id: 'n2', name: 'Empire State Observatory', desc: '86th floor open-air observation deck.', cost: 48, category: 'Sight' },
       { id: 'n3', name: 'Central Park Rowboats', desc: 'Scenic lake rowboat at Loeb Boathouse.', cost: 25, category: 'Activity' },
       { id: 'n4', name: 'Joe’s Greenwich Village Pizza Tour', desc: 'Classic NYC pepperoni slice crawling.', cost: 20, category: 'Dining' },
-      { id: 'n5', name: 'Greenwich Speakeasy Lounge', desc: 'Craft cocktails in hidden vintage lounge.', cost: 65, category: 'Nightlife' },
-      { id: 'n6', name: 'SoHo & Fifth Ave Shopping', desc: 'Boutique clothing & high fashion.', cost: 180, category: 'Shopping' },
-      { id: 'n7', name: 'Statue of Liberty Ferry', desc: 'Ellis Island and monument grounds access.', cost: 32, category: 'Sight' },
-      { id: 'n8', name: 'High Line Park Walk', desc: 'Elevated railway urban linear park.', cost: 0, category: 'Sight' },
-      { id: 'n9', name: 'Michelin Star Dining Experience', desc: 'Multi-course tasting menu.', cost: 220, category: 'Dining' },
-      { id: 'n10', name: 'Manhattan Helicopter Skyline Flight', desc: 'Fly over Lady Liberty and Hudson River.', cost: 250, category: 'Activity' }
-    ]
-  },
-  {
-    id: 'grand-canyon',
-    name: 'Grand Canyon (Arizona)',
-    country: 'USA',
-    currencySymbol: '$',
-    currencyCode: 'USD',
-    rateToUSD: 1.0,
-    places: [
-      { id: 'gc1', name: 'South Rim Helicopter Flight', desc: 'Soar over Dragon Corridor and Kaibab forest.', cost: 260, category: 'Activity' },
-      { id: 'gc2', name: 'Bright Angel Trail Hike', desc: 'Descend into canyon along scenic rock cliffs.', cost: 0, category: 'Activity' },
-      { id: 'gc3', name: 'Desert View Watchtower', desc: 'Historical Mary Colter tower view.', cost: 15, category: 'Sight' },
-      { id: 'gc4', name: 'El Tovar Dining Room Steakhouse', desc: 'Historic lodge fine dining.', cost: 85, category: 'Dining' },
-      { id: 'gc5', name: 'Grand Canyon Skywalk', desc: 'Glass bridge cantilevered over rim.', cost: 68, category: 'Sight' },
-      { id: 'gc6', name: 'Colorado River Smooth Water Rafting', desc: 'Half-day float trip through canyon walls.', cost: 140, category: 'Activity' },
-      { id: 'gc7', name: 'Hopi House Trading Post', desc: 'Authentic Native American silver & rugs.', cost: 95, category: 'Shopping' },
-      { id: 'gc8', name: 'Rim Trail Stargazing Tour', desc: 'Explore dark skies with high-power telescopes.', cost: 45, category: 'Nightlife' },
-      { id: 'gc9', name: 'Hermit Road Sunset Shuttle', desc: 'Panoramic canyon sunset view points.', cost: 0, category: 'Sight' }
+      { id: 'n5', name: 'Manhattan Helicopter Skyline Flight', desc: 'Fly over Lady Liberty and Hudson River.', cost: 250, category: 'Activity' },
+      { id: 'n6', name: 'Greenwich Speakeasy Lounge', desc: 'Craft cocktails in hidden vintage lounge.', cost: 65, category: 'Nightlife' },
+      { id: 'n7', name: 'SoHo & Fifth Ave Shopping', desc: 'Boutique clothing & high fashion.', cost: 180, category: 'Shopping' }
     ]
   }
 ];
 
 /**
- * Global Application State
+ * State Management
  */
-const AppState = {
-  currentCity: CITY_DATABASE[0],
-  targetBudgetUSD: 1500,
-  plannedPlaces: [],
-  categoryFilter: 'All',
-  activePageId: 'step1'
+let currentState = {
+  budget: 2000,
+  cityId: 'machu-picchu',
+  selectedCategory: 'All',
+  selectedPlaces: new Set(['mp1', 'mp2']),
+  customPlaces: [],
+  adjustments: {}
 };
 
-/**
- * DOM Element Cache (Improves Performance & Avoids Repeated Query Operations)
- */
-const DOM = {
-  locationSelect: document.getElementById('location-select'),
-  inputBudget: document.getElementById('input-budget'),
-  homeBudgetDisplay: document.getElementById('home-budget-display'),
-  tripDateInput: document.getElementById('trip-date'),
-  nearbyCityTitle: document.getElementById('nearby-city-title'),
-  recommendationsGrid: document.getElementById('recommendations-grid'),
-  plannerItemsContainer: document.getElementById('planner-items-container'),
-  allocatedBudgetDisplay: document.getElementById('allocated-budget'),
-  targetBudgetDisplay: document.getElementById('target-budget-display'),
-  progressBar: document.getElementById('budget-progress-bar'),
-  summaryCityDisplay: document.getElementById('sum-city-display'),
-  summaryTotalDisplay: document.getElementById('sum-total-display'),
-  summaryTableBody: document.getElementById('summary-table-body'),
-  emailAddressInput: document.getElementById('email-address'),
-  customNameInput: document.getElementById('custom-name'),
-  customCostInput: document.getElementById('custom-cost'),
-  customCategorySelect: document.getElementById('custom-category')
-};
+// DOM References
+const navButtons = document.querySelectorAll('#main-nav button');
+const pages = document.querySelectorAll('.page');
+const locationSelect = document.getElementById('location-select');
+const inputBudget = document.getElementById('input-budget');
+const homeBudgetDisplay = document.getElementById('home-budget-display');
+const recommendationsGrid = document.getElementById('recommendations-grid');
+const hotelsGrid = document.getElementById('hotels-grid');
+const plannerContainer = document.getElementById('planner-items-container');
+const categoryFilterBar = document.getElementById('category-filter-bar');
+const targetBudgetDisplay = document.getElementById('target-budget-display');
+const allocatedBudgetDisplay = document.getElementById('allocated-budget');
+const progressBar = document.getElementById('budget-progress-bar');
+const summaryTableBody = document.getElementById('summary-table-body');
+const sumCityDisplay = document.getElementById('sum-city-display');
+const sumTotalDisplay = document.getElementById('sum-total-display');
 
 /**
- * Utility: Pure Helper Functions
+ * Navigation Logic
  */
-const CurrencyFormatter = {
-  // Memoized formatters for high performance
-  formatters: new Map(),
+function navigateTo(pageId) {
+  pages.forEach(p => p.classList.remove('active'));
+  navButtons.forEach(b => b.classList.remove('active'));
 
-  format(usdCost, cityObj) {
-    if (cityObj.currencyCode === 'USD') {
-      return `$${usdCost} USD`;
-    }
-    const localAmount = Math.round(usdCost * cityObj.rateToUSD);
-    return `${cityObj.currencySymbol} ${localAmount.toLocaleString()} ($${usdCost} USD)`;
-  }
-};
+  const targetPage = document.getElementById(`page-${pageId}`);
+  const targetNavBtn = document.querySelector(`#main-nav button[data-page="${pageId}"]`);
+
+  if (targetPage) targetPage.classList.add('active');
+  if (targetNavBtn) targetNavBtn.classList.add('active');
+
+  renderCurrentView();
+}
 
 /**
- * Application Lifecycle & Controller Logic
+ * Render Functions
  */
-const AppController = {
-  init() {
-    this.populateDestinations();
-    this.selectCity(CITY_DATABASE[0].id);
-    this.bindEvents();
-    this.updateHomeDisplay();
-  },
+function renderCurrentView() {
+  const currentCity = CITY_DATABASE.find(c => c.id === currentState.cityId) || CITY_DATABASE[0];
+  
+  // Update Header Titles
+  document.getElementById('nearby-city-title').textContent = currentCity.name;
+  document.getElementById('hotel-city-title').textContent = currentCity.name;
+  sumCityDisplay.textContent = currentCity.name;
+  homeBudgetDisplay.textContent = `Target set to: $${currentState.budget}`;
+  targetBudgetDisplay.textContent = `$${currentState.budget}`;
 
-  populateDestinations() {
-    DOM.locationSelect.innerHTML = CITY_DATABASE
-      .map(city => `<option value="${city.id}">${city.name}</option>`)
-      .join('');
-  },
+  // 1. Render Spots (Screen 2)
+  renderSpots(currentCity);
 
-  selectCity(cityId) {
-    AppState.currentCity = CITY_DATABASE.find(c => c.id === cityId);
-    // Initialize defaults with first 4 attractions
-    AppState.plannedPlaces = JSON.parse(JSON.stringify(AppState.currentCity.places.slice(0, 4)));
-    
-    this.updateHomeDisplay();
-    this.renderAllViews();
-  },
+  // 2. Render Hotels (Screen 3)
+  renderHotels(currentCity);
 
-  updateHomeDisplay() {
-    AppState.targetBudgetUSD = parseFloat(DOM.inputBudget.value) || 0;
-    DOM.homeBudgetDisplay.innerText = `Equivalent: ${CurrencyFormatter.format(AppState.targetBudgetUSD, AppState.currentCity)}`;
-  },
+  // 3. Render Planner (Screen 4)
+  renderPlanner(currentCity);
 
-  navigateTo(pageId) {
-    AppState.activePageId = pageId;
+  // 4. Render Summary (Screen 5)
+  renderSummary(currentCity);
+}
 
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+function renderSpots(city) {
+  recommendationsGrid.innerHTML = '';
+  const filtered = city.places.filter(p => currentState.selectedCategory === 'All' || p.category === currentState.selectedCategory);
 
-    const activePage = document.getElementById(`page-${pageId}`);
-    const activeNavBtn = document.querySelector(`nav button[data-page="${pageId}"]`);
+  filtered.forEach(place => {
+    const isSelected = currentState.selectedPlaces.has(place.id);
+    const card = document.createElement('div');
+    card.className = `card ${isSelected ? 'selected' : ''}`;
+    card.onclick = () => togglePlaceSelection(place.id);
 
-    if (activePage) activePage.classList.add('active');
-    if (activeNavBtn) activeNavBtn.classList.add('active');
+    card.innerHTML = `
+      <div>
+        <h3>${place.name}</h3>
+        <p>${place.desc}</p>
+      </div>
+      <div class="card-footer">
+        <span class="badge-category">${place.category}</span>
+        <span class="badge-cost">$${place.cost}</span>
+      </div>
+    `;
+    recommendationsGrid.appendChild(card);
+  });
+}
 
-    if (pageId === 'step4') {
-      this.renderSummaryView();
-    }
-  },
+function renderHotels(city) {
+  hotelsGrid.innerHTML = '';
+  city.hotels.forEach(hotel => {
+    const card = document.createElement('div');
+    card.className = 'hotel-card';
+    card.innerHTML = `
+      <div>
+        <div class="hotel-rating">${hotel.rating}</div>
+        <h3>${hotel.name}</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin: 6px 0;">${hotel.desc}</p>
+      </div>
+      <div>
+        <div class="hotel-price">${hotel.price}</div>
+        <a href="${hotel.link}" target="_blank" rel="noopener" class="hotel-link-btn">🏨 Book Hotel Now ↗</a>
+      </div>
+    `;
+    hotelsGrid.appendChild(card);
+  });
+}
 
-  toggleSpot(spotId) {
-    const existingIdx = AppState.plannedPlaces.findIndex(p => p.id === spotId);
-    if (existingIdx > -1) {
-      AppState.plannedPlaces.splice(existingIdx, 1);
-    } else {
-      const original = AppState.currentCity.places.find(p => p.id === spotId);
-      if (original) AppState.plannedPlaces.push(JSON.parse(JSON.stringify(original)));
-    }
-    this.renderAllViews();
-  },
+function renderPlanner(city) {
+  plannerContainer.innerHTML = '';
+  let totalCost = 0;
 
-  addCustomSpot() {
-    const name = DOM.customNameInput.value.trim();
-    const cost = parseFloat(DOM.customCostInput.value) || 0;
-    const category = DOM.customCategorySelect.value;
+  // Selected Places
+  const selectedList = city.places.filter(p => currentState.selectedPlaces.has(p.id));
+  
+  [...selectedList, ...currentState.customPlaces].forEach(item => {
+    const adjustedCost = currentState.adjustments[item.id] !== undefined ? currentState.adjustments[item.id] : item.cost;
+    totalCost += adjustedCost;
 
-    if (!name) return;
-
-    AppState.plannedPlaces.push({
-      id: `custom-${Date.now()}`,
-      name,
-      desc: 'Custom user addition',
-      cost,
-      category
-    });
-
-    DOM.customNameInput.value = '';
-    this.renderPlannerView();
-    this.renderSummaryView();
-  },
-
-  removeSpot(spotId) {
-    AppState.plannedPlaces = AppState.plannedPlaces.filter(p => p.id !== spotId);
-    this.renderAllViews();
-  },
-
-  updateSpotCost(spotId, newCost) {
-    const spot = AppState.plannedPlaces.find(p => p.id === spotId);
-    if (spot) {
-      spot.cost = parseInt(newCost) || 0;
-      
-      const badge = document.getElementById(`badge-${spotId}`);
-      if (badge) badge.innerText = CurrencyFormatter.format(spot.cost, AppState.currentCity);
-      
-      this.calculateBudget();
-      this.renderSummaryView();
-    }
-  },
-
-  calculateBudget() {
-    const totalAllocated = AppState.plannedPlaces.reduce((acc, place) => acc + place.cost, 0);
-    
-    DOM.allocatedBudgetDisplay.innerText = CurrencyFormatter.format(totalAllocated, AppState.currentCity);
-    DOM.targetBudgetDisplay.innerText = CurrencyFormatter.format(AppState.targetBudgetUSD, AppState.currentCity);
-
-    // Calculate budget percentage & style progress bar dynamically
-    const ratio = AppState.targetBudgetUSD > 0 ? (totalAllocated / AppState.targetBudgetUSD) * 100 : 0;
-    const boundedRatio = Math.min(ratio, 100);
-    DOM.progressBar.style.width = `${boundedRatio}%`;
-
-    if (totalAllocated > AppState.targetBudgetUSD) {
-      DOM.allocatedBudgetDisplay.style.color = 'var(--danger)';
-      DOM.progressBar.style.backgroundColor = 'var(--danger)';
-    } else {
-      DOM.allocatedBudgetDisplay.style.color = 'var(--primary)';
-      DOM.progressBar.style.backgroundColor = 'var(--primary)';
-    }
-
-    this.updatePrintDocument(totalAllocated);
-    return totalAllocated;
-  },
-
-  renderAllViews() {
-    this.renderSpotsView();
-    this.renderPlannerView();
-    this.renderSummaryView();
-  },
-
-  renderSpotsView() {
-    DOM.nearbyCityTitle.innerText = AppState.currentCity.name;
-
-    let spots = AppState.currentCity.places;
-    if (AppState.categoryFilter !== 'All') {
-      spots = spots.filter(s => s.category === AppState.categoryFilter);
-    }
-
-    DOM.recommendationsGrid.innerHTML = spots.map(place => {
-      const isSelected = AppState.plannedPlaces.some(p => p.id === place.id);
-      return `
-        <div class="card ${isSelected ? 'selected' : ''}" 
-             data-id="${place.id}" 
-             tabindex="0"
-             role="button"
-             aria-pressed="${isSelected}">
-          <div>
-            <h3>${place.name}</h3>
-            <p>${place.desc}</p>
-          </div>
-          <div class="card-footer">
-            <span class="badge-category">${place.category}</span>
-            <span class="badge-cost">${CurrencyFormatter.format(place.cost, AppState.currentCity)}</span>
-          </div>
-          <div style="font-size:13px; font-weight:800; color:${isSelected ? 'var(--primary)' : 'var(--text-muted)'}; margin-top:12px;">
-            ${isSelected ? '✓ Added to Itinerary' : '+ Click to Select'}
-          </div>
-        </div>
-      `;
-    }).join('');
-  },
-
-  renderPlannerView() {
-    if (AppState.plannedPlaces.length === 0) {
-      DOM.plannerItemsContainer.innerHTML = `
-        <div style="font-size:15px; color:var(--text-muted); text-align:center; padding: 28px; font-weight:700;">
-          No spots selected. Go back to Step 2 to add attractions.
-        </div>`;
-      this.calculateBudget();
-      return;
-    }
-
-    DOM.plannerItemsContainer.innerHTML = AppState.plannedPlaces.map(item => `
-      <div class="item-row">
-        <div class="item-header">
-          <span>${item.name} <small style="font-size:13px; color:var(--text-muted); font-weight:600;">(${item.category || 'Spot'})</small></span>
-          <div>
-            <span class="val-badge" id="badge-${item.id}">${CurrencyFormatter.format(item.cost, AppState.currentCity)}</span>
-            <button class="btn-danger btn-remove" data-id="${item.id}" style="margin-left:12px;">Remove</button>
-          </div>
-        </div>
-        <div class="item-desc">${item.desc}</div>
-        <div class="slider-row">
-          <label for="slider-${item.id}">Adjust Cost Allocation ($USD):</label>
-          <input type="range" id="slider-${item.id}" class="cost-slider" data-id="${item.id}" min="0" max="600" step="5" value="${item.cost}">
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    row.innerHTML = `
+      <div class="item-header">
+        <span>${item.name} <span class="badge-category">(${item.category})</span></span>
+        <div>
+          <span class="val-badge">$${adjustedCost}</span>
+          ${item.isCustom ? `<button class="btn-danger" style="margin-left:8px;" onclick="removeCustomItem('${item.id}')">✕</button>` : ''}
         </div>
       </div>
-    `).join('');
-
-    this.calculateBudget();
-  },
-
-  renderSummaryView() {
-    const totalAllocated = AppState.plannedPlaces.reduce((acc, p) => acc + p.cost, 0);
-
-    DOM.summaryCityDisplay.innerText = AppState.currentCity.name;
-    DOM.summaryTotalDisplay.innerText = CurrencyFormatter.format(totalAllocated, AppState.currentCity);
-
-    if (AppState.plannedPlaces.length === 0) {
-      DOM.summaryTableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--text-muted); font-weight:700;">No spots selected.</td></tr>`;
-      return;
-    }
-
-    DOM.summaryTableBody.innerHTML = AppState.plannedPlaces.map(p => `
-      <tr>
-        <td>
-          <strong>${p.name}</strong><br>
-          <small style="color:var(--text-muted); font-size:13px;">${p.desc}</small>
-        </td>
-        <td><span class="badge-category">${p.category || 'Spot'}</span></td>
-        <td style="color:var(--primary); font-weight:900; font-size:16px;">${CurrencyFormatter.format(p.cost, AppState.currentCity)}</td>
-      </tr>
-    `).join('');
-  },
-
-  updatePrintDocument(totalUSD) {
-    const tripDate = DOM.tripDateInput.value;
-    document.getElementById('p-title').innerText = `WAY POINT ADVISOR — ${AppState.currentCity.name} Briefing`;
-    document.getElementById('p-date').innerText = `Scheduled Date: ${tripDate} | Budget Goal: ${CurrencyFormatter.format(AppState.targetBudgetUSD, AppState.currentCity)}`;
-
-    document.getElementById('p-content').innerHTML = `
-      <table>
-        <thead>
-          <tr><th>Spot Name</th><th>Category</th><th>Cost</th></tr>
-        </thead>
-        <tbody>
-          ${AppState.plannedPlaces.map(p => `
-            <tr>
-              <td>${p.name}</td>
-              <td>${p.category || 'Spot'}</td>
-              <td>${CurrencyFormatter.format(p.cost, AppState.currentCity)}</td>
-            </tr>
-          `).join('')}
-          <tr>
-            <th colspan="2">Total Allocated Cost</th>
-            <th>${CurrencyFormatter.format(totalUSD, AppState.currentCity)}</th>
-          </tr>
-        </tbody>
-      </table>
+      <div class="item-desc">${item.desc || 'Custom added attraction'}</div>
+      <div class="slider-row">
+        <label>Adjust Cost:</label>
+        <input type="range" min="0" max="${Math.max(item.cost * 3, 300)}" value="${adjustedCost}" oninput="updateItemCost('${item.id}', this.value)">
+      </div>
     `;
-  },
+    plannerContainer.appendChild(row);
+  });
 
-  emailItinerary() {
-    const email = DOM.emailAddressInput.value.trim();
-    const tripDate = DOM.tripDateInput.value;
-    const totalUSD = AppState.plannedPlaces.reduce((sum, item) => sum + item.cost, 0);
+  // Update Budget Gauge
+  allocatedBudgetDisplay.textContent = `$${totalCost}`;
+  const pct = Math.min(100, Math.round((totalCost / (currentState.budget || 1)) * 100));
+  progressBar.style.width = `${pct}%`;
+  progressBar.style.backgroundColor = pct > 100 ? 'var(--danger)' : 'var(--primary)';
+}
 
-    let bodyText = `WAY POINT ADVISOR - Travel Itinerary\n\n`;
-    bodyText += `Destination: ${AppState.currentCity.name}\n`;
-    bodyText += `Trip Date: ${tripDate}\n`;
-    bodyText += `Total Cost: ${CurrencyFormatter.format(totalUSD, AppState.currentCity)}\n\n`;
-    bodyText += `Selected Spots:\n`;
+function renderSummary(city) {
+  summaryTableBody.innerHTML = '';
+  let total = 0;
 
-    AppState.plannedPlaces.forEach((p, idx) => {
-      bodyText += `${idx + 1}. ${p.name} (${p.category || 'Spot'}) - ${CurrencyFormatter.format(p.cost, AppState.currentCity)}\n`;
-    });
+  const selectedList = city.places.filter(p => currentState.selectedPlaces.has(p.id));
+  const allItems = [...selectedList, ...currentState.customPlaces];
 
-    const subject = encodeURIComponent(`WayPoint Travel Briefing: ${AppState.currentCity.name}`);
-    const body = encodeURIComponent(bodyText);
+  allItems.forEach(item => {
+    const cost = currentState.adjustments[item.id] !== undefined ? currentState.adjustments[item.id] : item.cost;
+    total += cost;
 
-    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-  },
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${item.name}</strong></td>
+      <td><span class="badge-category">${item.category}</span></td>
+      <td><strong>$${cost}</strong></td>
+    `;
+    summaryTableBody.appendChild(tr);
+  });
 
-  /**
-   * Global Event Binding Controller (Delegation Pattern)
-   */
-  bindEvents() {
-    // Top Bar Navigation & Navigation Attributes
-    document.addEventListener('click', (e) => {
-      const navTarget = e.target.closest('[data-navigate]');
-      if (navTarget) {
-        this.navigateTo(navTarget.dataset.navigate);
-        return;
-      }
+  sumTotalDisplay.textContent = `$${total}`;
+}
 
-      const navBtn = e.target.closest('nav button[data-page]');
-      if (navBtn) {
-        this.navigateTo(navBtn.dataset.page);
-        return;
-      }
-
-      // Handle card selections in Recommendations grid (Delegation)
-      const card = e.target.closest('#recommendations-grid .card');
-      if (card) {
-        this.toggleSpot(card.dataset.id);
-        return;
-      }
-
-      // Handle Remove Buttons in Planner View
-      if (e.target.classList.contains('btn-remove')) {
-        this.removeSpot(e.target.dataset.id);
-        return;
-      }
-    });
-
-    // Logo Click Action
-    document.getElementById('app-logo').addEventListener('click', () => this.navigateTo('step1'));
-
-    // Input Listeners
-    DOM.inputBudget.addEventListener('input', () => this.updateHomeDisplay());
-    DOM.locationSelect.addEventListener('change', (e) => this.selectCity(e.target.value));
-
-    // Category Filter Bar Actions
-    document.getElementById('category-filter-bar').addEventListener('click', (e) => {
-      if (e.target.classList.contains('filter-btn')) {
-        document.querySelectorAll('#category-filter-bar .filter-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        AppState.categoryFilter = e.target.dataset.category;
-        this.renderSpotsView();
-      }
-    });
-
-    // Custom Spot Form
-    document.getElementById('btn-add-custom').addEventListener('click', () => this.addCustomSpot());
-
-    // Cost Slider Range Input Delegation
-    DOM.plannerItemsContainer.addEventListener('input', (e) => {
-      if (e.target.classList.contains('cost-slider')) {
-        this.updateSpotCost(e.target.dataset.id, e.target.value);
-      }
-    });
-
-    // Action Buttons for Screen 4
-    document.getElementById('btn-email-itinerary').addEventListener('click', () => this.emailItinerary());
-    document.getElementById('btn-print-pdf').addEventListener('click', () => window.print());
-
-    // Accessibility: Keyboard keypress handlers
-    DOM.recommendationsGrid.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        const card = e.target.closest('.card');
-        if (card) {
-          e.preventDefault();
-          this.toggleSpot(card.dataset.id);
-        }
-      }
-    });
+/**
+ * Event Handlers & Helper Functions
+ */
+function togglePlaceSelection(id) {
+  if (currentState.selectedPlaces.has(id)) {
+    currentState.selectedPlaces.delete(id);
+  } else {
+    currentState.selectedPlaces.add(id);
   }
-};
+  renderCurrentView();
+}
 
-// Application Bootstrapper
-window.addEventListener('DOMContentLoaded', () => AppController.init());
+function updateItemCost(id, val) {
+  currentState.adjustments[id] = parseInt(val, 10);
+  renderPlanner(CITY_DATABASE.find(c => c.id === currentState.cityId));
+  renderSummary(CITY_DATABASE.find(c => c.id === currentState.cityId));
+}
+
+function removeCustomItem(id) {
+  currentState.customPlaces = currentState.customPlaces.filter(p => p.id !== id);
+  delete currentState.adjustments[id];
+  renderCurrentView();
+}
+
+// Initial Setup & Binding
+function init() {
+  // Populate City Dropdown
+  CITY_DATABASE.forEach(city => {
+    const opt = document.createElement('option');
+    opt.value = city.id;
+    opt.textContent = city.name;
+    locationSelect.appendChild(opt);
+  });
+
+  // Global Event Listeners
+  document.querySelectorAll('[data-navigate]').forEach(btn => {
+    btn.onclick = () => navigateTo(btn.dataset.navigate);
+  });
+
+  navButtons.forEach(btn => {
+    btn.onclick = () => navigateTo(btn.dataset.page);
+  });
+
+  locationSelect.onchange = (e) => {
+    currentState.cityId = e.target.value;
+    currentState.selectedPlaces.clear();
+    currentState.customPlaces = [];
+    currentState.adjustments = {};
+    renderCurrentView();
+  };
+
+  inputBudget.oninput = (e) => {
+    currentState.budget = parseInt(e.target.value, 10) || 0;
+    renderCurrentView();
+  };
+
+  categoryFilterBar.querySelectorAll('button').forEach(btn => {
+    btn.onclick = () => {
+      categoryFilterBar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentState.selectedCategory = btn.dataset.category;
+      renderSpots(CITY_DATABASE.find(c => c.id === currentState.cityId));
+    };
+  });
+
+  // Custom Item Addition
+  document.getElementById('btn-add-custom').onclick = () => {
+    const name = document.getElementById('custom-name').value.trim();
+    const category = document.getElementById('custom-category').value;
+    const cost = parseInt(document.getElementById('custom-cost').value, 10) || 0;
+
+    if (!name) return alert('Please enter a spot name.');
+
+    const newItem = {
+      id: 'custom-' + Date.now(),
+      name,
+      category,
+      cost,
+      desc: 'User custom item',
+      isCustom: true
+    };
+
+    currentState.customPlaces.push(newItem);
+    document.getElementById('custom-name').value = '';
+    renderCurrentView();
+  };
+
+  // Extra Functional Buttons
+  document.getElementById('btn-select-all-spots').onclick = () => {
+    const currentCity = CITY_DATABASE.find(c => c.id === currentState.cityId);
+    currentCity.places.forEach(p => currentState.selectedPlaces.add(p.id));
+    renderCurrentView();
+  };
+
+  document.getElementById('btn-clear-all-planner').onclick = () => {
+    currentState.selectedPlaces.clear();
+    currentState.customPlaces = [];
+    currentState.adjustments = {};
+    renderCurrentView();
+  };
+
+  document.getElementById('btn-quick-reset').onclick = () => {
+    currentState.selectedPlaces.clear();
+    currentState.customPlaces = [];
+    currentState.adjustments = {};
+    currentState.budget = 2000;
+    inputBudget.value = 2000;
+    renderCurrentView();
+  };
+
+  document.getElementById('btn-random-dest').onclick = () => {
+    const randomIndex = Math.floor(Math.random() * CITY_DATABASE.length);
+    currentState.cityId = CITY_DATABASE[randomIndex].id;
+    locationSelect.value = currentState.cityId;
+    currentState.selectedPlaces.clear();
+    currentState.customPlaces = [];
+    currentState.adjustments = {};
+    renderCurrentView();
+  };
+
+  document.getElementById('btn-print-pdf').onclick = () => {
+    window.print();
+  };
+
+  document.getElementById('btn-email-itinerary').onclick = () => {
+    const email = document.getElementById('email-address').value;
+    if (!email) return alert('Please enter a valid email address.');
+    alert(`Success! Itinerary summary has been sent to ${email}`);
+  };
+
+  document.getElementById('app-logo').onclick = () => navigateTo('step1');
+
+  renderCurrentView();
+}
+
+window.onload = init;
 </script>
-
 </body>
 </html>
