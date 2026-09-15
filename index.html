@@ -86,6 +86,11 @@
     color: var(--text-dark);
   }
 
+  /* Interactive elements pointer override */
+  button, select, input, a, .card, .logo {
+    cursor: pointer;
+  }
+
   body {
     background-image: var(--bg-gradient);
     background-attachment: fixed;
@@ -130,7 +135,6 @@
     align-items: center;
     gap: 10px;
     text-transform: uppercase;
-    cursor: pointer;
     user-select: none;
     transition: transform var(--transition-fast);
   }
@@ -160,7 +164,6 @@
     border-radius: var(--radius-md);
     font-size: 15px;
     font-weight: 800;
-    cursor: pointer;
     transition: all var(--transition-smooth);
   }
 
@@ -266,7 +269,6 @@
     border-radius: 24px;
     font-size: 14px;
     font-weight: 800;
-    cursor: pointer;
     transition: all var(--transition-smooth);
   }
 
@@ -436,7 +438,6 @@
     border-radius: 8px;
     font-weight: 800;
     font-size: 13px;
-    cursor: pointer;
     transition: background var(--transition-fast);
   }
 
@@ -485,7 +486,6 @@
   .slider-row input[type="range"] {
     flex: 1;
     accent-color: var(--primary);
-    cursor: pointer;
     height: 6px;
   }
 
@@ -503,7 +503,6 @@
     border-radius: var(--radius-md);
     font-size: 15px;
     font-weight: 800;
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -532,7 +531,6 @@
     border-radius: 10px;
     font-size: 13px;
     font-weight: 800;
-    cursor: pointer;
     transition: all var(--transition-fast);
   }
 
@@ -549,7 +547,6 @@
     font-weight: 800;
     border-radius: 8px;
     border: none;
-    cursor: pointer;
   }
 
   .add-form-grid {
@@ -829,6 +826,25 @@
 <!-- ========================================== -->
 <script>
 /**
+ * Dynamic Globe Emoji Cursor Generator
+ */
+function setGlobeEmojiCursor() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 32;
+  canvas.height = 32;
+  const ctx = canvas.getContext('2d');
+  ctx.font = '24px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🌐', 16, 16);
+
+  const cursorUrl = canvas.toDataURL();
+  const style = document.createElement('style');
+  style.innerHTML = `* { cursor: url("${cursorUrl}") 16 16, auto !important; }`;
+  document.head.appendChild(style);
+}
+
+/**
  * Application Database Store - 10 Locations
  * Guaranteeing AT LEAST 5 Spots and AT LEAST 5 Hotels per location
  */
@@ -1072,6 +1088,7 @@ let appState = {
 
 // Initialize Application Logic
 document.addEventListener('DOMContentLoaded', () => {
+  setGlobeEmojiCursor();
   initUI();
   bindEvents();
 });
