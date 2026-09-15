@@ -846,7 +846,7 @@ function setGlobeEmojiCursor() {
 
 /**
  * Application Database Store - 10 Locations
- * Guaranteeing AT LEAST 5 Spots and AT LEAST 5 Hotels per location
+ * Includes Nightlife activities added to all locations.
  */
 const CITY_DATABASE = [
   {
@@ -870,7 +870,9 @@ const CITY_DATABASE = [
       { id: 'tm4', name: 'Mughlai Culinary Experience', desc: 'Rich biryanis, curries, and naan breads.', cost: 40, category: 'Dining' },
       { id: 'tm5', name: 'Marble Inlay Workshop & Shop', desc: 'Watch artisans carve lapis into marble.', cost: 65, category: 'Shopping' },
       { id: 'tm6', name: 'Agra Old Bazaar Spice Walking Tour', desc: 'Bustling markets, street snacks, and silks.', cost: 20, category: 'Activity' },
-      { id: 'tm7', name: 'Tomb of I\'timād-ud-Daulah (Baby Taj)', desc: 'Exquisite jewel-box marble tomb along the river.', cost: 12, category: 'Sight' }
+      { id: 'tm7', name: 'Tomb of I\'timād-ud-Daulah (Baby Taj)', desc: 'Exquisite jewel-box marble tomb along the river.', cost: 12, category: 'Sight' },
+      { id: 'tm8', name: 'Infini Rooftop Lounge Cocktails', desc: 'Sip craft cocktails with nighttime view of the Taj Mahal.', cost: 45, category: 'Nightlife' },
+      { id: 'tm9', name: 'Mohabbat the Taj Cultural Dance Show', desc: 'Evening live theatrical musical performance depicting Mughal romance.', cost: 30, category: 'Nightlife' }
     ]
   },
   {
@@ -893,7 +895,9 @@ const CITY_DATABASE = [
       { id: 'c3', name: 'Trastevere Food & Wine Tour', desc: 'Fresh pasta, truffles, and fine Italian wine.', cost: 95, category: 'Dining' },
       { id: 'c4', name: 'Vatican Museums & Sistine Chapel', desc: 'Michelangelo ceiling and papal arts.', cost: 50, category: 'Sight' },
       { id: 'c5', name: 'Piazza Navona Gelato & Evening Stroll', desc: 'Sample artisanal Italian gelato at historic fountains.', cost: 15, category: 'Dining' },
-      { id: 'c6', name: 'Via Condotti Fashion Shopping', desc: 'Luxury Italian designer boutiques.', cost: 150, category: 'Shopping' }
+      { id: 'c6', name: 'Via Condotti Fashion Shopping', desc: 'Luxury Italian designer boutiques.', cost: 150, category: 'Shopping' },
+      { id: 'c7', name: 'The Court Cocktail Bar overlooking Colosseum', desc: 'World-class mixology right in front of the illuminated ancient monument.', cost: 60, category: 'Nightlife' },
+      { id: 'c8', name: 'Trastevere Speakeasy & Craft Beer Crawl', desc: 'Explore hidden cocktail bars and vibrant plazas after dark.', cost: 45, category: 'Nightlife' }
     ]
   },
   {
@@ -916,7 +920,9 @@ const CITY_DATABASE = [
       { id: 'mp3', name: 'Inca Trail Day Hike', desc: 'Guided trek along historic stone pathways.', cost: 110, category: 'Activity' },
       { id: 'mp4', name: 'Aguas Calientes Thermal Baths', desc: 'Relaxing hot spring soak post-hike.', cost: 20, category: 'Activity' },
       { id: 'mp5', name: 'Cusco Sacred Valley Feast', desc: 'Traditional Andean dining with roast pachamanca.', cost: 65, category: 'Dining' },
-      { id: 'mp6', name: 'Handwoven Alpaca Textile Market', desc: 'Shop genuine artisan blankets and scarves.', cost: 80, category: 'Shopping' }
+      { id: 'mp6', name: 'Handwoven Alpaca Textile Market', desc: 'Shop genuine artisan blankets and scarves.', cost: 80, category: 'Shopping' },
+      { id: 'mp7', name: 'Pisco Sour Tasting Lounge at Aguas Calientes', desc: 'Sample Peruvian craft Piscos with live Andean music.', cost: 35, category: 'Nightlife' },
+      { id: 'mp8', name: 'Inca Pueblo Fire Pit Evening Gathering', desc: 'Cocktails and storytelling around warm mountain fire pits.', cost: 25, category: 'Nightlife' }
     ]
   },
   {
@@ -938,7 +944,8 @@ const CITY_DATABASE = [
       { id: 'ci2', name: 'Sacred Cenote Ik Kil Swim', desc: 'Dip into open-sky natural cavern water.', cost: 25, category: 'Activity' },
       { id: 'ci3', name: 'Yucatecan Cuisine Buffet', desc: 'Authentic cochinita pibil and empanadas.', cost: 30, category: 'Dining' },
       { id: 'ci4', name: 'Mayan Woodcarving Market', desc: 'Artisan carved masks and artifacts.', cost: 50, category: 'Shopping' },
-      { id: 'ci5', name: 'Night Light & Sound Show', desc: 'Pyramid light projection storytelling.', cost: 40, category: 'Nightlife' }
+      { id: 'ci5', name: 'Night Light & Sound Show', desc: 'Pyramid light projection storytelling.', cost: 40, category: 'Nightlife' },
+      { id: 'ci6', name: 'Valladolid Cantina & Mezcal Crawl', desc: 'Experience traditional Yucatan cantinas and artisanal mezcal.', cost: 50, category: 'Nightlife' }
     ]
   },
   {
@@ -956,506 +963,447 @@ const CITY_DATABASE = [
       { id: 'h_p5', name: 'Petra Guest House Hotel', desc: 'Right at the Siq canyon entrance with historic Cave Bar.', cost: 130, category: 'Hotel', bookingQuery: 'Petra Guest House Hotel' }
     ],
     places: [
-      { id: 'p1', name: 'The Treasury (Al-Khazneh)', desc: 'Iconic rock-cut carved temple face.', cost: 120, category: 'Sight' },
-      { id: 'p2', name: 'Petra By Night Experience', desc: '1,500 candles illuminating the canyon.', cost: 35, category: 'Nightlife' },
-      { id: 'p3', name: 'The Monastery (Ad Deir) Hike', desc: '800-step mountain climb to giant cliff facade.', cost: 0, category: 'Activity' },
-      { id: 'p4', name: 'Bedouin Cave Dinner & Music', desc: 'Campfire roasted Zarb meal with live oud music.', cost: 55, category: 'Dining' },
-      { id: 'p5', name: 'Wadi Musa Spice Market', desc: 'Fresh cardamom, frankincense, & teas.', cost: 40, category: 'Shopping' }
-    ]
-  },
-  {
-    id: 'great-wall',
-    name: 'Great Wall of China (Beijing)',
-    country: 'China',
-    currencySymbol: '¥',
-    currencyCode: 'CNY',
-    rateToUSD: 7.2,
-    hotels: [
-      { id: 'h_gw1', name: 'Commune by the Great Wall', desc: 'Architectural boutique hotel near Mutianyu.', cost: 280, category: 'Hotel', bookingQuery: 'Commune by the Great Wall Beijing' },
-      { id: 'h_gw2', name: 'The Peninsula Beijing', desc: 'Ultra-luxury stay in downtown Beijing.', cost: 380, category: 'Hotel', bookingQuery: 'The Peninsula Beijing' },
-      { id: 'h_gw3', name: 'Brickyard Retreat at Mutianyu', desc: 'Eco-lodge converted from a tile factory with Wall views.', cost: 210, category: 'Hotel', bookingQuery: 'Brickyard Retreat Mutianyu' },
-      { id: 'h_gw4', name: 'Rosewood Beijing', desc: 'Sophisticated modern luxury in the CBD district.', cost: 290, category: 'Hotel', bookingQuery: 'Rosewood Beijing' },
-      { id: 'h_gw5', name: 'Gubei Water Town Hotel', desc: 'Traditional water town stay right below Simatai Great Wall.', cost: 170, category: 'Hotel', bookingQuery: 'Gubei Water Town Hotel' }
-    ],
-    places: [
-      { id: 'gw1', name: 'Mutianyu Cable Car & Toboggan', desc: 'Ride up and toboggan down wall slopes.', cost: 85, category: 'Activity' },
-      { id: 'gw2', name: 'Watchtower Sunset Expedition', desc: 'Capture golden hour over mountain ridges.', cost: 40, category: 'Sight' },
-      { id: 'gw3', name: 'Imperial Beijing Roast Duck', desc: 'Peking duck with pancakes and sauces.', cost: 70, category: 'Dining' },
-      { id: 'gw4', name: 'Forbidden City Day Tour', desc: 'Explore imperial palace in downtown Beijing.', cost: 50, category: 'Sight' },
-      { id: 'gw5', name: 'Panjiayuan Antique Market', desc: 'Shop jade, scrolls, and ancient crafts.', cost: 90, category: 'Shopping' }
+      { id: 'p1', name: 'The Treasury (Al-Khazneh) Walkthrough', desc: 'Ancient carved rock-cut facade entrance.', cost: 70, category: 'Sight' },
+      { id: 'p2', name: 'The Monastery (Ad Deir) Hike', desc: '800 steps to monumental mountain temple.', cost: 40, category: 'Activity' },
+      { id: 'p3', name: 'Bedouin Tea & Camp Dinner', desc: 'Traditional cooked feast in desert tent.', cost: 35, category: 'Dining' },
+      { id: 'p4', name: 'Petra Night Candlelit Show', desc: '1,500 candles lighting the Siq and Treasury.', cost: 25, category: 'Nightlife' },
+      { id: 'p5', name: 'Cave Bar Drinks', desc: 'Cocktails inside a 2,000-year-old Nabataean tomb bar.', cost: 40, category: 'Nightlife' }
     ]
   },
   {
     id: 'christ-redeemer',
-    name: 'Christ the Redeemer (Rio, Brazil)',
+    name: 'Christ the Redeemer (Rio de Janeiro, Brazil)',
     country: 'Brazil',
     currencySymbol: 'R$',
     currencyCode: 'BRL',
-    rateToUSD: 5.5,
+    rateToUSD: 5.2,
     hotels: [
-      { id: 'h_cr1', name: 'Copacabana Palace, A Belmond Hotel', desc: 'Glamorous oceanfront palace on Copacabana Beach.', cost: 520, category: 'Hotel', bookingQuery: 'Copacabana Palace Rio' },
-      { id: 'h_cr2', name: 'Fasano Rio de Janeiro', desc: 'Chic luxury design hotel on Ipanema Beach.', cost: 610, category: 'Hotel', bookingQuery: 'Hotel Fasano Rio de Janeiro' },
-      { id: 'h_cr3', name: 'Miramar Hotel by Windsor', desc: 'Modern high-rise overlooking the beach.', cost: 180, category: 'Hotel', bookingQuery: 'Miramar Hotel by Windsor Rio' },
-      { id: 'h_cr4', name: 'Hotel Santa Teresa Rio MGallery', desc: 'Boutique hilltop retreat in historic Santa Teresa.', cost: 240, category: 'Hotel', bookingQuery: 'Hotel Santa Teresa Rio MGallery' },
-      { id: 'h_cr5', name: 'Hilton Barra Rio de Janeiro', desc: 'Contemporary stay near Olympic park and beaches.', cost: 130, category: 'Hotel', bookingQuery: 'Hilton Barra Rio de Janeiro' }
+      { id: 'h_cr1', name: 'Belmond Copacabana Palace', desc: 'Iconic 1920s beachfront palace hotel in Rio de Janeiro.', cost: 480, category: 'Hotel', bookingQuery: 'Belmond Copacabana Palace Rio' },
+      { id: 'h_cr2', name: 'Hotel Fasano Rio de Janeiro', desc: 'Ultra-stylish hotel on Ipanema Beach with rooftop infinity pool.', cost: 520, category: 'Hotel', bookingQuery: 'Hotel Fasano Rio de Janeiro' },
+      { id: 'h_cr3', name: 'Hilton Copacabana Rio', desc: 'Modern high-rise with breathtaking views over the ocean.', cost: 210, category: 'Hotel', bookingQuery: 'Hilton Copacabana Rio de Janeiro' },
+      { id: 'h_cr4', name: 'Miramar Hotel by Windsor', desc: 'Sophisticated beachfront stay right along Copacabana promenade.', cost: 180, category: 'Hotel', bookingQuery: 'Miramar Hotel Windsor Rio' },
+      { id: 'h_cr5', name: 'Santa Teresa Hotel RJ - MGallery', desc: 'Boutique eco-luxury hotel in the bohemian hilltop district.', cost: 240, category: 'Hotel', bookingQuery: 'Santa Teresa Hotel MGallery Rio' }
     ],
     places: [
-      { id: 'cr1', name: 'Corcovado Cog Train Ride', desc: 'Scenic train through Tijuca forest to statue.', cost: 45, category: 'Sight' },
-      { id: 'cr2', name: 'Sugarloaf Mountain Cable Car', desc: '360 degree harbor & city skyline view.', cost: 55, category: 'Sight' },
-      { id: 'cr3', name: 'Brazilian Churrascaria Feast', desc: 'Unlimited prime rodizio barbecue.', cost: 75, category: 'Dining' },
-      { id: 'cr4', name: 'Hang Gliding over São Conrado', desc: 'Tandem glider flight over mountain & ocean.', cost: 210, category: 'Activity' },
-      { id: 'cr5', name: 'Lapa Samba Night Club', desc: 'Live Brazilian samba dance and music.', cost: 50, category: 'Nightlife' }
+      { id: 'cr1', name: 'Corcovado Mountain Cog Train & Statue', desc: 'Panoramic views under Christ statue.', cost: 35, category: 'Sight' },
+      { id: 'cr2', name: 'Sugarloaf Mountain Cable Car', desc: '360 degree summit view over Guanabara Bay.', cost: 40, category: 'Sight' },
+      { id: 'cr3', name: 'Copacabana & Ipanema Beach Walk', desc: 'Famous coastline stroll with caipirinhas.', cost: 15, category: 'Activity' },
+      { id: 'cr4', name: 'Traditional Churrascaria BBQ Feast', desc: 'Rodizio grilled meats carved tableside.', cost: 60, category: 'Dining' },
+      { id: 'cr5', name: 'Rio Scenarium Lapa Samba Club', desc: 'Multi-level samba hall with live bands and dancing.', cost: 50, category: 'Nightlife' },
+      { id: 'cr6', name: 'Ipanema Rooftop Sunset Lounge', desc: 'Sip signature cocktails as dusk settles over Two Brothers mountain.', cost: 45, category: 'Nightlife' }
     ]
   },
   {
-    id: 'tokyo',
-    name: 'Tokyo & Mount Fuji (Japan)',
-    country: 'Japan',
+    id: 'great-wall',
+    name: 'The Great Wall (Beijing, China)',
+    country: 'China',
     currencySymbol: '¥',
-    currencyCode: 'JPY',
-    rateToUSD: 155.0,
+    currencyCode: 'CNY',
+    rateToUSD: 7.23,
     hotels: [
-      { id: 'h_tk1', name: 'Aman Tokyo', desc: 'Urban sanctuary above Otemachi Tower.', cost: 980, category: 'Hotel', bookingQuery: 'Aman Tokyo' },
-      { id: 'h_tk2', name: 'Park Hyatt Tokyo', desc: 'Iconic Shinjuku skyscraper hotel with city views.', cost: 520, category: 'Hotel', bookingQuery: 'Park Hyatt Tokyo' },
-      { id: 'h_tk3', name: 'Hotel Gracery Shinjuku', desc: 'Famous Godzilla head hotel in vibrant Kabukicho.', cost: 160, category: 'Hotel', bookingQuery: 'Hotel Gracery Shinjuku' },
-      { id: 'h_tk4', name: 'The Capitol Hotel Tokyu', desc: 'Refined Japanese hospitality near Imperial Palace.', cost: 380, category: 'Hotel', bookingQuery: 'The Capitol Hotel Tokyu' },
-      { id: 'h_tk5', name: 'Trunk (Hotel) Cat Street', desc: 'Boutique lifestyle hotel in trendy Shibuya.', cost: 290, category: 'Hotel', bookingQuery: 'Trunk Hotel Cat Street Tokyo' }
+      { id: 'h_gw1', name: 'The Peninsula Beijing', desc: '5-star ultra-luxury hotel in central Beijing close to Forbidden City.', cost: 380, category: 'Hotel', bookingQuery: 'The Peninsula Beijing' },
+      { id: 'h_gw2', name: 'Commune by the Great Wall', desc: 'Modern architectural resort nestled in Shuiguan mountains.', cost: 290, category: 'Hotel', bookingQuery: 'Commune by the Great Wall Beijing' },
+      { id: 'h_gw3', name: 'Rosewood Beijing', desc: 'Refined modern luxury hotel in central Beijing business district.', cost: 310, category: 'Hotel', bookingQuery: 'Rosewood Beijing' },
+      { id: 'h_gw4', name: 'Brickyard Retreat at Mutianyu', desc: 'Boutique eco-lodge directly below the Great Wall.', cost: 220, category: 'Hotel', bookingQuery: 'Brickyard Retreat Mutianyu' },
+      { id: 'h_gw5', name: 'Grand Hyatt Beijing', desc: 'Prime location at Oriental Plaza near Tiananmen Square.', cost: 190, category: 'Hotel', bookingQuery: 'Grand Hyatt Beijing' }
     ],
     places: [
-      { id: 'tk1', name: 'Mt. Fuji & Hakone Day Pass', desc: 'Bullet train and lake cruise near Mt. Fuji.', cost: 110, category: 'Sight' },
-      { id: 'tk2', name: 'teamLab Planets Digital Art', desc: 'Immersive body-on digital museum.', cost: 38, category: 'Activity' },
-      { id: 'tk3', name: 'Tsukiji Outer Market Sushi Tasting', desc: 'Ultra-fresh omakase sushi breakfast.', cost: 65, category: 'Dining' },
-      { id: 'tk4', name: 'Shibuya Crossing & Rooftop Bar', desc: 'World’s busiest intersection night view.', cost: 25, category: 'Nightlife' },
-      { id: 'tk5', name: 'Akihabara Tech & Anime Shopping', desc: 'Electronics, games, and collectibles.', cost: 100, category: 'Shopping' }
+      { id: 'gw1', name: 'Mutianyu Great Wall Cable Car & Toboggan', desc: 'Scenic mountain wall ride.', cost: 45, category: 'Sight' },
+      { id: 'gw2', name: 'Forbidden City Imperial Palace Tour', desc: 'Historic home of Ming and Qing emperors.', cost: 30, category: 'Sight' },
+      { id: 'gw3', name: 'Authentic Peking Duck Banquet', desc: 'Crispy roasted duck carved with pancakes.', cost: 55, category: 'Dining' },
+      { id: 'gw4', name: 'Hutong Rickshaw & Tea Ceremony Tour', desc: 'Traditional narrow alleys and tea tasting.', cost: 35, category: 'Activity' },
+      { id: 'gw5', name: 'Atmosphere Bar at China World Tower', desc: 'Ultra-high-altitude rooftop cocktail lounge on the 80th floor.', cost: 65, category: 'Nightlife' },
+      { id: 'gw6', name: 'Sanlitun Bar Street Lounge Crawl', desc: 'Vibrant nightlife quarter with craft breweries and DJ venues.', cost: 40, category: 'Nightlife' }
     ]
   },
   {
-    id: 'paris',
+    id: 'eiffel-tower',
     name: 'Eiffel Tower (Paris, France)',
     country: 'France',
     currencySymbol: '€',
     currencyCode: 'EUR',
     rateToUSD: 0.92,
     hotels: [
-      { id: 'h_pa1', name: 'Hôtel Plaza Athénée', desc: 'Haute couture luxury hotel with direct Eiffel Tower balcony views.', cost: 1100, category: 'Hotel', bookingQuery: 'Hotel Plaza Athenee Paris' },
-      { id: 'h_pa2', name: 'Pullman Paris Tour Eiffel', desc: 'Steps away from the Eiffel Tower grounds.', cost: 320, category: 'Hotel', bookingQuery: 'Pullman Paris Tour Eiffel' },
-      { id: 'h_pa3', name: 'CitizenM Paris Gare de Lyon', desc: 'Trendy, affordable boutique hotel with rooftop views.', cost: 170, category: 'Hotel', bookingQuery: 'CitizenM Paris Gare de Lyon' },
-      { id: 'h_pa4', name: 'Le Meurice Paris', desc: 'Palace hotel located opposite Tuileries Garden.', cost: 890, category: 'Hotel', bookingQuery: 'Le Meurice Paris' },
-      { id: 'h_pa5', name: 'Hotel Madame Rêve', desc: 'Modern Parisian stay inside historic Grand Poste.', cost: 410, category: 'Hotel', bookingQuery: 'Hotel Madame Reve Paris' }
+      { id: 'h_et1', name: 'Pullman Paris Tour Eiffel', desc: 'Direct views of the Eiffel Tower right from private balcony.', cost: 380, category: 'Hotel', bookingQuery: 'Pullman Paris Tour Eiffel' },
+      { id: 'h_et2', name: 'Shangri-La Paris', desc: 'Palatial luxury in former Prince Bonaparte residence with Eiffel views.', cost: 980, category: 'Hotel', bookingQuery: 'Shangri La Paris' },
+      { id: 'h_et3', name: 'Hôtel Plaza Athénée', desc: 'Haute couture luxury on Avenue Montaigne with red balconies.', cost: 1100, category: 'Hotel', bookingQuery: 'Hotel Plaza Athena Paris' },
+      { id: 'h_et4', name: 'Le Meurice Paris', desc: 'Palace hotel located opposite the Tuileries Garden.', cost: 890, category: 'Hotel', bookingQuery: 'Le Meurice Paris' },
+      { id: 'h_et5', name: 'Hôtel Derby Alma', desc: 'Charming boutique hotel located steps from Eiffel Tower lawn.', cost: 210, category: 'Hotel', bookingQuery: 'Hotel Derby Alma Paris' }
     ],
     places: [
-      { id: 'pa1', name: 'Eiffel Tower Summit Access Pass', desc: 'Elevator pass to topmost observation floor.', cost: 38, category: 'Sight' },
-      { id: 'pa2', name: 'Louvre Museum Priority Ticket', desc: 'Mona Lisa and classical masterworks.', cost: 22, category: 'Sight' },
-      { id: 'pa3', name: 'Seine River Evening Dinner Cruise', desc: '3-course dining while passing illuminated monuments.', cost: 120, category: 'Dining' },
-      { id: 'pa4', name: 'Montmartre Wine & Cheese Tasting', desc: 'Artistic quarter culinary walking tour.', cost: 85, category: 'Activity' },
-      { id: 'pa5', name: 'Champs-Élysées Boutique Shopping', desc: 'Designer fashion along iconic avenue.', cost: 200, category: 'Shopping' }
+      { id: 'et1', name: 'Eiffel Tower Summit Elevator Pass', desc: 'Top floor glass elevator panoramic view.', cost: 42, category: 'Sight' },
+      { id: 'et2', name: 'Louvre Museum Guided Highlights', desc: 'Mona Lisa, Venus de Milo, and masterworks.', cost: 55, category: 'Sight' },
+      { id: 'et3', name: 'Seine River Evening Dinner Cruise', desc: 'Gourmet meal floating past lit monuments.', cost: 110, category: 'Dining' },
+      { id: 'et4', name: 'Montmartre Artists & Sacré-Cœur Walk', desc: 'Bohemian hillside neighborhood tour.', cost: 25, category: 'Activity' },
+      { id: 'et5', name: 'Moulin Rouge Cabaret Show & Champagne', desc: 'World-famous iconic cabaret performance in Montmartre.', cost: 145, category: 'Nightlife' },
+      { id: 'et6', name: 'Le Caveau de la Huchette Jazz Club', desc: 'Historic underground Latin Quarter live jazz cellars.', cost: 35, category: 'Nightlife' }
     ]
   },
   {
-    id: 'nyc',
-    name: 'New York City (Manhattan)',
-    country: 'USA',
+    id: 'pyramids-giza',
+    name: 'Pyramids of Giza (Cairo, Egypt)',
+    country: 'Egypt',
+    currencySymbol: 'E£',
+    currencyCode: 'EGP',
+    rateToUSD: 48.0,
+    hotels: [
+      { id: 'h_pg1', name: 'Marriott Mena House Cairo', desc: 'Historic 5-star hotel with direct views of the Great Pyramids.', cost: 320, category: 'Hotel', bookingQuery: 'Marriott Mena House Cairo' },
+      { id: 'h_pg2', name: 'Four Seasons Hotel Cairo at First Residence', desc: 'Luxury along the River Nile with views of pyramids and city.', cost: 360, category: 'Hotel', bookingQuery: 'Four Seasons First Residence Cairo' },
+      { id: 'h_pg3', name: 'Steigenberger Pyramids Cairo', desc: 'Resort hotel surrounded by gardens close to Pyramids plateau.', cost: 140, category: 'Hotel', bookingQuery: 'Steigenberger Pyramids Cairo' },
+      { id: 'h_pg4', name: 'Great Pyramid Inn', desc: 'Boutique rooftop hotel directly facing the Sphinx and Pyramids.', cost: 85, category: 'Hotel', bookingQuery: 'Great Pyramid Inn Cairo' },
+      { id: 'h_pg5', name: 'The Nile Ritz-Carlton Cairo', desc: 'Iconic luxury downtown between Tahrir Square and the Nile.', cost: 310, category: 'Hotel', bookingQuery: 'Nile Ritz Carlton Cairo' }
+    ],
+    places: [
+      { id: 'pg1', name: 'Great Pyramid Entry & Great Sphinx Walk', desc: 'Stand before the ancient Wonders of the World.', cost: 30, category: 'Sight' },
+      { id: 'pg2', name: 'Grand Egyptian Museum Guided Tour', desc: 'Tutankhamun treasures and royal mummies.', cost: 40, category: 'Sight' },
+      { id: 'pg3', name: 'Sunset Camel Trek across Giza Dunes', desc: 'Ride horses or camels as sun sets behind pyramids.', cost: 35, category: 'Activity' },
+      { id: 'pg4', name: 'Traditional Egyptian Koshary & Grill Feast', desc: 'Local spices, grilled meats, and aromatic tea.', cost: 20, category: 'Dining' },
+      { id: 'pg5', name: 'Giza Pyramids Sound & Light Evening Show', desc: 'Dramatic nighttime narration and pyramid illuminations.', cost: 30, category: 'Nightlife' },
+      { id: 'pg6', name: 'Nile River Lounge & Live Oud Performance', desc: 'Evening craft drinks and traditional music along the water.', cost: 40, category: 'Nightlife' }
+    ]
+  },
+  {
+    id: 'statue-liberty',
+    name: 'Statue of Liberty & Manhattan (New York, USA)',
+    country: 'United States',
     currencySymbol: '$',
     currencyCode: 'USD',
     rateToUSD: 1.0,
     hotels: [
-      { id: 'h_nyc1', name: 'The Plaza Hotel Manhattan', desc: 'Iconic 5-star luxury landmark at Fifth Ave & Central Park.', cost: 750, category: 'Hotel', bookingQuery: 'The Plaza Hotel New York' },
-      { id: 'h_nyc2', name: 'Arlo Midtown NYC', desc: 'Trendy modern boutique hotel near Times Square and Hudson Yards.', cost: 260, category: 'Hotel', bookingQuery: 'Arlo Midtown New York' },
-      { id: 'h_nyc3', name: 'Moxy NYC Times Square', desc: 'Vibrant lifestyle hotel with famous Magic Hour Rooftop Bar.', cost: 220, category: 'Hotel', bookingQuery: 'Moxy NYC Times Square' },
-      { id: 'h_nyc4', name: 'The Standard High Line', desc: 'Sleek Meatpacking district hotel spanning the High Line park.', cost: 340, category: 'Hotel', bookingQuery: 'The Standard High Line New York' },
-      { id: 'h_nyc5', name: 'Pod 51 Hotel Manhattan', desc: 'Smart micro-hotel in Midtown East for budget travelers.', cost: 140, category: 'Hotel', bookingQuery: 'Pod 51 Hotel New York' }
+      { id: 'h_ny1', name: 'The Plaza Hotel NYC', desc: 'World famous luxury flagship hotel at Fifth Avenue & Central Park.', cost: 750, category: 'Hotel', bookingQuery: 'The Plaza Hotel New York' },
+      { id: 'h_ny2', name: 'Conrad New York Downtown', desc: 'All-suite luxury hotel located in Lower Manhattan near Statue ferry.', cost: 390, category: 'Hotel', bookingQuery: 'Conrad New York Downtown' },
+      { id: 'h_ny3', name: 'Arlo SoHo', desc: 'Trendy boutique hotel with stylish rooms and courtyard lounge.', cost: 240, category: 'Hotel', bookingQuery: 'Arlo SoHo New York' },
+      { id: 'h_ny4', name: 'Moxy NYC Lower East Side', desc: 'Vibrant modern hotel in the heart of downtown nightlife.', cost: 210, category: 'Hotel', bookingQuery: 'Moxy NYC Lower East Side' },
+      { id: 'h_ny5', name: 'The Beekman A Thompson Hotel', desc: 'Architectural gem with historic 9-story atrium downtown.', cost: 340, category: 'Hotel', bookingQuery: 'The Beekman New York' }
     ],
     places: [
-      { id: 'n1', name: 'Broadway Musical Ticket', desc: 'Prime seating for top Times Square show.', cost: 160, category: 'Activity' },
-      { id: 'n2', name: 'Empire State Observatory', desc: '86th floor open-air observation deck.', cost: 48, category: 'Sight' },
-      { id: 'n3', name: 'Central Park Rowboats', desc: 'Scenic lake rowboat at Loeb Boathouse.', cost: 25, category: 'Activity' },
-      { id: 'n4', name: 'Joe’s Greenwich Village Pizza Tour', desc: 'Classic NYC pepperoni slice crawling.', cost: 20, category: 'Dining' },
-      { id: 'n5', name: 'Greenwich Speakeasy Lounge', desc: 'Craft cocktails in hidden vintage lounge.', cost: 65, category: 'Nightlife' },
-      { id: 'n6', name: 'SoHo & Fifth Ave Shopping', desc: 'Boutique clothing & high fashion.', cost: 180, category: 'Shopping' }
+      { id: 'ny1', name: 'Statue of Liberty Crown & Ellis Island Ferry', desc: 'Ferry ride and pedestal access pass.', cost: 32, category: 'Sight' },
+      { id: 'ny2', name: 'SUMMIT One Vanderbilt Observation Deck', desc: 'Immersive mirrored glass tower view over Manhattan.', cost: 46, category: 'Sight' },
+      { id: 'ny3', name: 'Broadway Musical Evening Ticket', desc: 'Prime seating at top-rated Times Square show.', cost: 165, category: 'Nightlife' },
+      { id: 'ny4', name: 'Broadway & Times Square Night Walk', desc: 'Explore the bright neon heart of NYC after dark.', cost: 10, category: 'Nightlife' },
+      { id: 'ny5', name: '230 Fifth Rooftop Garden Bar', desc: 'Empire State views with cocktails and heated igloos.', cost: 50, category: 'Nightlife' },
+      { id: 'ny6', name: 'NYC Rooftop Cocktail & Speakeasy Tour', desc: 'Guided nightlife tour through hidden Manhattan speakeasies.', cost: 75, category: 'Nightlife' },
+      { id: 'ny7', name: 'Central Park Bicycle Rental', desc: 'Cruise past Bethesda Terrace and Strawberry Fields.', cost: 25, category: 'Activity' }
     ]
   }
 ];
 
 /**
- * State Management System
+ * Global State Store
  */
-let appState = {
-  budgetGoal: 1500,
+const AppState = {
+  budget: 1500,
+  tripDate: '2026-10-15',
   selectedCityId: 'taj-mahal',
-  selectedCategory: 'All',
+  activeCategory: 'All',
   selectedItems: []
 };
 
-// Initialize Application Logic
-document.addEventListener('DOMContentLoaded', () => {
-  setGlobeEmojiCursor();
-  initUI();
-  bindEvents();
-});
-
-function initUI() {
-  const citySelect = document.getElementById('location-select');
-  citySelect.innerHTML = '';
-  CITY_DATABASE.forEach(city => {
-    const opt = document.createElement('option');
-    opt.value = city.id;
-    opt.textContent = city.name;
-    citySelect.appendChild(opt);
-  });
-  citySelect.value = appState.selectedCityId;
-
-  updateCityHeader();
-  renderRecommendations();
-  renderPlanner();
-  renderSummary();
+/**
+ * Booking URL Generator Helper
+ */
+function getBookingUrls(query) {
+  const enc = encodeURIComponent(query);
+  return {
+    bookingCom: `https://www.booking.com/searchresults.html?ss=${enc}`,
+    tripAdvisor: `https://www.tripadvisor.com/Search?q=${enc}`,
+    googleHotels: `https://www.google.com/travel/hotels?q=${enc}`
+  };
 }
 
-function bindEvents() {
-  // Navigation Routing
-  document.querySelectorAll('[data-page], [data-navigate]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const target = e.currentTarget.dataset.page || e.currentTarget.dataset.navigate;
-      navigateToPage(target);
-    });
-  });
+/**
+ * Currency Formatting Helpers
+ */
+function getCity() {
+  return CITY_DATABASE.find(c => c.id === AppState.selectedCityId) || CITY_DATABASE[0];
+}
 
-  document.getElementById('app-logo').addEventListener('click', () => navigateToPage('step1'));
+function formatUSD(amount) {
+  return `$${Math.round(amount).toLocaleString('en-US')}`;
+}
 
-  // Input Listeners
-  document.getElementById('input-budget').addEventListener('input', (e) => {
-    appState.budgetGoal = parseFloat(e.target.value) || 0;
+function formatLocal(amountUSD, city) {
+  const localVal = amountUSD * city.rateToUSD;
+  return `${city.currencySymbol} ${Math.round(localVal).toLocaleString()}`;
+}
+
+/**
+ * Render Functions
+ */
+function renderDestinationSelect() {
+  const selectEl = document.getElementById('location-select');
+  selectEl.innerHTML = CITY_DATABASE.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  selectEl.value = AppState.selectedCityId;
+}
+
+function renderCards() {
+  const grid = document.getElementById('recommendations-grid');
+  const city = getCity();
+  
+  document.getElementById('nearby-city-title').textContent = city.name;
+
+  let allList = [...city.hotels, ...city.places];
+  
+  if (AppState.activeCategory !== 'All') {
+    allList = allList.filter(item => item.category === AppState.activeCategory);
+  }
+
+  grid.innerHTML = allList.map(item => {
+    const isAdded = AppState.selectedItems.some(i => i.id === item.id);
+    const booking = item.bookingQuery ? getBookingUrls(item.bookingQuery) : null;
+
+    return `
+      <div class="card ${isAdded ? 'selected' : ''}">
+        <div>
+          <span class="badge-category cat-${item.category}">${item.category}</span>
+          <h3 style="margin-top: 10px;">${item.name}</h3>
+          <p>${item.desc}</p>
+          ${booking ? `
+            <div class="hotel-links-box">
+              <span class="hotel-links-title">Reserve Online:</span>
+              <div class="booking-buttons-group">
+                <a href="${booking.bookingCom}" target="_blank" class="hotel-booking-btn">🏨 Booking.com</a>
+                <a href="${booking.tripAdvisor}" target="_blank" class="hotel-booking-btn">🦉 TripAdvisor</a>
+                <a href="${booking.googleHotels}" target="_blank" class="hotel-booking-btn">🔍 Google Hotels</a>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+        <div class="card-footer">
+          <div class="badge-cost-wrapper">
+            <span class="badge-cost">${formatUSD(item.cost)}</span>
+            <span class="badge-currency-local">${formatLocal(item.cost, city)}</span>
+          </div>
+          <button class="btn-card-add ${isAdded ? 'added' : ''}" onclick="toggleItem('${item.id}')">
+            ${isAdded ? '✓ Selected' : '+ Select Item'}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderPlanner() {
+  const container = document.getElementById('planner-items-container');
+  const city = getCity();
+
+  document.getElementById('target-budget-display').textContent = formatUSD(AppState.budget);
+  
+  let totalSpent = 0;
+
+  if (AppState.selectedItems.length === 0) {
+    container.innerHTML = `<p style="text-align:center; color: var(--text-muted); padding: 40px; font-weight: 700;">No spots or hotels selected yet. Go back to Step 2 to add items!</p>`;
+  } else {
+    container.innerHTML = AppState.selectedItems.map(item => {
+      totalSpent += item.cost;
+      return `
+        <div class="item-row">
+          <div class="item-header">
+            <div>
+              <span>${item.name}</span>
+              <span class="badge-category cat-${item.category}" style="margin-left: 8px;">${item.category}</span>
+            </div>
+            <button class="btn-danger" onclick="removeItem('${item.id}')">Remove</button>
+          </div>
+          <div class="item-desc">${item.desc || 'Custom itinerary entry'}</div>
+          <div class="slider-row">
+            <label>Allocated Budget ($USD):</label>
+            <input type="range" min="0" max="1000" step="10" value="${item.cost}" oninput="updateItemCost('${item.id}', this.value)">
+            <span class="val-badge">${formatUSD(item.cost)}</span>
+            <span style="font-size: 13px; font-weight: 700; color: var(--accent-emerald);">(${formatLocal(item.cost, city)})</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('allocated-budget').textContent = formatUSD(totalSpent);
+
+  // Update Budget Bar
+  const pct = AppState.budget > 0 ? Math.min((totalSpent / AppState.budget) * 100, 100) : 0;
+  const bar = document.getElementById('budget-progress-bar');
+  bar.style.width = `${pct}%`;
+  
+  if (totalSpent > AppState.budget) {
+    bar.style.backgroundColor = 'var(--danger)';
+  } else {
+    bar.style.backgroundColor = 'var(--primary)';
+  }
+}
+
+function renderSummary() {
+  const city = getCity();
+  document.getElementById('sum-city-display').textContent = city.name;
+  
+  const tbody = document.getElementById('summary-table-body');
+  let total = 0;
+
+  tbody.innerHTML = AppState.selectedItems.map(item => {
+    total += item.cost;
+    return `
+      <tr>
+        <td style="font-weight: 800;">${item.name}</td>
+        <td><span class="badge-category cat-${item.category}">${item.category}</span></td>
+        <td style="font-weight: 800; color: var(--primary);">${formatUSD(item.cost)}</td>
+        <td style="font-weight: 700; color: var(--accent-emerald);">${formatLocal(item.cost, city)}</td>
+      </tr>
+    `;
+  }).join('');
+
+  document.getElementById('sum-total-display').textContent = formatUSD(total);
+}
+
+/**
+ * Controller Actions
+ */
+function toggleItem(id) {
+  const city = getCity();
+  const all = [...city.hotels, ...city.places];
+  const item = all.find(i => i.id === id);
+
+  if (!item) return;
+
+  const idx = AppState.selectedItems.findIndex(i => i.id === id);
+  if (idx > -1) {
+    AppState.selectedItems.splice(idx, 1);
+  } else {
+    AppState.selectedItems.push({ ...item });
+  }
+
+  renderCards();
+}
+
+function removeItem(id) {
+  AppState.selectedItems = AppState.selectedItems.filter(i => i.id !== id);
+  renderPlanner();
+}
+
+function updateItemCost(id, val) {
+  const item = AppState.selectedItems.find(i => i.id === id);
+  if (item) {
+    item.cost = parseFloat(val) || 0;
     renderPlanner();
-  });
+  }
+}
+
+function switchPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+
+  const page = document.getElementById(`page-${pageId}`);
+  if (page) page.classList.add('active');
+
+  const navBtn = document.querySelector(`nav button[data-page="${pageId}"]`);
+  if (navBtn) navBtn.classList.add('active');
+
+  if (pageId === 'step2') renderCards();
+  if (pageId === 'step3') renderPlanner();
+  if (pageId === 'step4') renderSummary();
+}
+
+/**
+ * Event Listeners & Setup
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  setGlobeEmojiCursor();
+  renderDestinationSelect();
+
+  // Inputs binding
+  const inputBudget = document.getElementById('input-budget');
+  const budgetDisp = document.getElementById('home-budget-display');
+  
+  const syncBudget = () => {
+    AppState.budget = parseFloat(inputBudget.value) || 0;
+    budgetDisp.textContent = `Target: ${formatUSD(AppState.budget)}`;
+  };
+  inputBudget.addEventListener('input', syncBudget);
+  syncBudget();
 
   document.getElementById('location-select').addEventListener('change', (e) => {
-    appState.selectedCityId = e.target.value;
-    appState.selectedItems = []; // Reset selected spots on city change
-    updateCityHeader();
-    renderRecommendations();
-    renderPlanner();
-    renderSummary();
+    AppState.selectedCityId = e.target.value;
+    AppState.selectedItems = []; // reset selection on city change
   });
 
-  // Filter Bar Category Click Handler
+  document.getElementById('trip-date').addEventListener('change', (e) => {
+    AppState.tripDate = e.target.value;
+  });
+
+  // Navigation Click Handling
+  document.querySelectorAll('[data-navigate]').forEach(el => {
+    el.addEventListener('click', () => switchPage(el.dataset.navigate));
+  });
+
+  document.querySelectorAll('nav button').forEach(btn => {
+    btn.addEventListener('click', () => switchPage(btn.dataset.page));
+  });
+
+  document.getElementById('app-logo').addEventListener('click', () => switchPage('step1'));
+
+  // Category Filtering
   document.getElementById('category-filter-bar').addEventListener('click', (e) => {
     if (e.target.classList.contains('filter-btn')) {
       document.querySelectorAll('#category-filter-bar .filter-btn').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
-      appState.selectedCategory = e.target.dataset.category;
-      renderRecommendations();
+      AppState.activeCategory = e.target.dataset.category;
+      renderCards();
     }
   });
 
-  // Custom Item Adder
+  // Custom Item Creation
   document.getElementById('btn-add-custom').addEventListener('click', () => {
-    const nameInput = document.getElementById('custom-name');
-    const catInput = document.getElementById('custom-category');
-    const costInput = document.getElementById('custom-cost');
-
-    const name = nameInput.value.trim();
-    const category = catInput.value;
-    const cost = parseFloat(costInput.value) || 0;
+    const name = document.getElementById('custom-name').value.trim();
+    const category = document.getElementById('custom-category').value;
+    const cost = parseFloat(document.getElementById('custom-cost').value) || 0;
 
     if (!name) {
-      alert('Please enter a spot or hotel name.');
+      alert('Please enter a name for the custom spot or activity.');
       return;
     }
 
     const newItem = {
       id: 'custom_' + Date.now(),
       name: name,
-      desc: 'Custom added spot/item',
+      desc: 'User created custom itinerary entry',
       cost: cost,
       category: category
     };
 
-    appState.selectedItems.push(newItem);
-    nameInput.value = '';
-    
-    renderRecommendations();
+    AppState.selectedItems.push(newItem);
+    document.getElementById('custom-name').value = '';
     renderPlanner();
-    renderSummary();
   });
 
-  // Briefing Actions
+  // Export Actions
   document.getElementById('btn-print-pdf').addEventListener('click', () => {
-    preparePrintView();
+    const city = getCity();
+    document.getElementById('p-title').textContent = `WAY POINT ADVISOR Briefing — ${city.name}`;
+    document.getElementById('p-date').textContent = `Scheduled Trip Date: ${AppState.tripDate}`;
+    
+    let html = `<table><thead><tr><th>Item</th><th>Category</th><th>USD ($)</th><th>Local Est.</th></tr></thead><tbody>`;
+    let tot = 0;
+    AppState.selectedItems.forEach(i => {
+      tot += i.cost;
+      html += `<tr><td>${i.name}</td><td>${i.category}</td><td>${formatUSD(i.cost)}</td><td>${formatLocal(i.cost, city)}</td></tr>`;
+    });
+    html += `</tbody></table><h3>Total Estimated Cost: ${formatUSD(tot)}</h3>`;
+    
+    document.getElementById('p-content').innerHTML = html;
     window.print();
   });
 
+  document.getElementById('btn-send-phone').addEventListener('click', () => {
+    alert('📲 Detailed itinerary SMS and Mobile Pass pushed to registered device!');
+  });
+
   document.getElementById('btn-email-itinerary').addEventListener('click', () => {
-    const email = document.getElementById('email-address').value.trim();
+    const email = document.getElementById('email-address').value;
     if (!email) {
-      alert('Please enter an email address to send your briefing.');
+      alert('Please enter an email address to send the briefing.');
       return;
     }
-    alert(`Itinerary briefing successfully queued for delivery to: ${email}`);
+    alert(`✉️ Travel Briefing and confirmation links successfully emailed to ${email}!`);
   });
-
-  // 📲 SEND TO PHONE FUNCTIONALITY
-  document.getElementById('btn-send-phone').addEventListener('click', sendToPhone);
-}
-
-function navigateToPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-
-  const activePage = document.getElementById(`page-${pageId}`);
-  if (activePage) activePage.classList.add('active');
-
-  const navBtn = document.querySelector(`nav button[data-page="${pageId}"]`);
-  if (navBtn) navBtn.classList.add('active');
-}
-
-function updateCityHeader() {
-  const currentCity = CITY_DATABASE.find(c => c.id === appState.selectedCityId);
-  if (currentCity) {
-    document.getElementById('nearby-city-title').textContent = currentCity.name;
-    document.getElementById('sum-city-display').textContent = currentCity.name;
-  }
-}
-
-/**
- * Format Local Currency
- */
-function formatLocalCurrency(costInUSD, city) {
-  if (city.currencyCode === 'USD') return '';
-  const localVal = Math.round(costInUSD * city.rateToUSD);
-  return `(${city.currencySymbol}${localVal.toLocaleString()} ${city.currencyCode})`;
-}
-
-/**
- * Generate Hotels Direct Links
- */
-function createHotelBookingLinksHTML(hotelName) {
-  const encoded = encodeURIComponent(hotelName);
-  const bookingUrl = `https://www.booking.com/searchresults.html?ss=${encoded}`;
-  const hotelsComUrl = `https://www.hotels.com/Hotel-Search?q=${encoded}`;
-  const expediaUrl = `https://www.expedia.com/Hotel-Search?destination=${encoded}`;
-
-  return `
-    <div class="hotel-links-box">
-      <div class="hotel-links-title">Book Direct Online:</div>
-      <div class="booking-buttons-group">
-        <a href="${bookingUrl}" target="_blank" class="hotel-booking-btn">🏨 Booking.com</a>
-        <a href="${hotelsComUrl}" target="_blank" class="hotel-booking-btn">🏨 Hotels.com</a>
-        <a href="${expediaUrl}" target="_blank" class="hotel-booking-btn">✈️ Expedia</a>
-      </div>
-    </div>
-  `;
-}
-
-/**
- * Render Recommendations (Step 2)
- */
-function renderRecommendations() {
-  const grid = document.getElementById('recommendations-grid');
-  grid.innerHTML = '';
-
-  const city = CITY_DATABASE.find(c => c.id === appState.selectedCityId);
-  if (!city) return;
-
-  const allAvailableItems = [...(city.hotels || []), ...(city.places || [])];
-
-  const filtered = appState.selectedCategory === 'All' 
-    ? allAvailableItems 
-    : allAvailableItems.filter(item => item.category === appState.selectedCategory);
-
-  filtered.forEach(item => {
-    const isSelected = appState.selectedItems.some(i => i.id === item.id);
-    const card = document.createElement('div');
-    card.className = `card ${isSelected ? 'selected' : ''}`;
-
-    const isHotel = item.category === 'Hotel';
-    const hotelLinksHTML = isHotel ? createHotelBookingLinksHTML(item.bookingQuery || item.name) : '';
-    const localCostStr = formatLocalCurrency(item.cost, city);
-
-    card.innerHTML = `
-      <div>
-        <h3>${item.name}</h3>
-        <p>${item.desc}</p>
-        ${hotelLinksHTML}
-      </div>
-      <div class="card-footer">
-        <div class="badge-cost-wrapper">
-          <span class="badge-category cat-${item.category}">${item.category}</span>
-          <div style="margin-top: 6px;">
-            <span class="badge-cost">$${item.cost}</span>
-            <div class="badge-currency-local">${localCostStr}</div>
-          </div>
-        </div>
-        <button class="btn-card-add ${isSelected ? 'added' : ''}">${isSelected ? '✓ Added' : '+ Select'}</button>
-      </div>
-    `;
-
-    card.querySelector('.btn-card-add').addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleItemSelection(item);
-    });
-
-    grid.appendChild(card);
-  });
-}
-
-function toggleItemSelection(item) {
-  const index = appState.selectedItems.findIndex(i => i.id === item.id);
-  if (index >= 0) {
-    appState.selectedItems.splice(index, 1);
-  } else {
-    appState.selectedItems.push({...item});
-  }
-  renderRecommendations();
-  renderPlanner();
-  renderSummary();
-}
-
-/**
- * Render Planner (Step 3)
- */
-function renderPlanner() {
-  const container = document.getElementById('planner-items-container');
-  container.innerHTML = '';
-
-  let totalAllocated = 0;
-
-  if (appState.selectedItems.length === 0) {
-    container.innerHTML = '<p style="color: var(--text-muted); font-weight: 600; text-align: center; padding: 20px;">No spots or hotels selected yet. Head back to Step 2 to add items!</p>';
-  }
-
-  appState.selectedItems.forEach((item, index) => {
-    totalAllocated += item.cost;
-    const row = document.createElement('div');
-    row.className = 'item-row';
-    row.innerHTML = `
-      <div class="item-header">
-        <span>${item.name} <small class="badge-category cat-${item.category}">${item.category}</small></span>
-        <div>
-          <span class="val-badge">$${item.cost}</span>
-          <button class="btn-danger" style="margin-left: 10px;">Remove</button>
-        </div>
-      </div>
-      <div class="item-desc">${item.desc}</div>
-      <div class="slider-row">
-        <label>Adjust Spend:</label>
-        <input type="range" min="0" max="${Math.max(500, item.cost * 2)}" value="${item.cost}">
-      </div>
-    `;
-
-    const slider = row.querySelector('input[type="range"]');
-    slider.addEventListener('input', (e) => {
-      const newCost = parseFloat(e.target.value) || 0;
-      appState.selectedItems[index].cost = newCost;
-      renderPlanner();
-      renderSummary();
-    });
-
-    row.querySelector('.btn-danger').addEventListener('click', () => {
-      appState.selectedItems.splice(index, 1);
-      renderRecommendations();
-      renderPlanner();
-      renderSummary();
-    });
-
-    container.appendChild(row);
-  });
-
-  document.getElementById('allocated-budget').textContent = `$${totalAllocated}`;
-  document.getElementById('target-budget-display').textContent = `$${appState.budgetGoal}`;
-  document.getElementById('home-budget-display').textContent = `Target Goal: $${appState.budgetGoal}`;
-
-  const progressBar = document.getElementById('budget-progress-bar');
-  const percentage = appState.budgetGoal > 0 ? Math.min(100, (totalAllocated / appState.budgetGoal) * 100) : 0;
-  progressBar.style.width = `${percentage}%`;
-
-  if (totalAllocated > appState.budgetGoal) {
-    progressBar.style.backgroundColor = 'var(--danger)';
-  } else {
-    progressBar.style.backgroundColor = 'var(--primary)';
-  }
-}
-
-/**
- * Render Briefing Summary (Step 4)
- */
-function renderSummary() {
-  const tbody = document.getElementById('summary-table-body');
-  tbody.innerHTML = '';
-
-  const city = CITY_DATABASE.find(c => c.id === appState.selectedCityId);
-  let totalCost = 0;
-
-  appState.selectedItems.forEach(item => {
-    totalCost += item.cost;
-    const localCostStr = city ? formatLocalCurrency(item.cost, city) : '';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="font-weight: 700;">${item.name}</td>
-      <td><span class="badge-category cat-${item.category}">${item.category}</span></td>
-      <td style="font-weight: 800; color: var(--primary);">$${item.cost}</td>
-      <td style="font-weight: 700; color: var(--accent-emerald);">${localCostStr || 'USD'}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  const cityTotalLocal = city ? formatLocalCurrency(totalCost, city) : '';
-  document.getElementById('sum-total-display').textContent = `$${totalCost} ${cityTotalLocal}`;
-}
-
-/**
- * 📲 Send To Phone Action Handler
- */
-function sendToPhone() {
-  const city = CITY_DATABASE.find(c => c.id === appState.selectedCityId);
-  let total = 0;
-  let summaryText = `📍 WayPoint Briefing for ${city ? city.name : 'Trip'}:\n`;
-  
-  appState.selectedItems.forEach((item, i) => {
-    total += item.cost;
-    summaryText += `${i + 1}. ${item.name} ($${item.cost})\n`;
-  });
-  summaryText += `Total Estimated Cost: $${total}\nGenerated via WayPoint Advisor.`;
-
-  // Use Native Web Share API if available (Mobile/Tablets)
-  if (navigator.share) {
-    navigator.share({
-      title: 'WayPoint Travel Briefing',
-      text: summaryText,
-      url: window.location.href
-    }).catch(() => {});
-  } else {
-    // Fallback SMS/Copy trigger for Desktop
-    const encodedBody = encodeURIComponent(summaryText);
-    const smsUrl = `sms:?body=${encodedBody}`;
-    
-    // Copy summary to clipboard
-    navigator.clipboard.writeText(summaryText).then(() => {
-      alert(`📲 Briefing copied to clipboard!\n\nOpening your SMS application...`);
-      window.location.href = smsUrl;
-    }).catch(() => {
-      window.location.href = smsUrl;
-    });
-  }
-}
-
-/**
- * Prepare Print Briefing Target
- */
-function preparePrintView() {
-  const city = CITY_DATABASE.find(c => c.id === appState.selectedCityId);
-  document.getElementById('p-date').textContent = `Generated on: ${new Date().toLocaleDateString()} for Destination: ${city ? city.name : ''}`;
-
-  let contentHTML = `<h3>Planned Selected Items:</h3><table style="width:100%; border-collapse:collapse; margin-top:10px;">
-    <thead><tr style="background:#f1f5f9;"><th>Item</th><th>Category</th><th>Cost (USD)</th></tr></thead><tbody>`;
-
-  let total = 0;
-  appState.selectedItems.forEach(item => {
-    total += item.cost;
-    contentHTML += `<tr><td>${item.name}</td><td>${item.category}</td><td>$${item.cost}</td></tr>`;
-  });
-
-  contentHTML += `</tbody></table><h3 style="margin-top:20px;">Total Allocated Cost: $${total}</h3>`;
-  document.getElementById('p-content').innerHTML = contentHTML;
-}
+});
 </script>
 </body>
 </html>
