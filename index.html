@@ -829,7 +829,8 @@
 <!-- ========================================== -->
 <script>
 /**
- * Application Database Store - 10 Locations with Currency Rates & Hotels
+ * Application Database Store - 10 Locations
+ * Guaranteeing AT LEAST 5 Spots and AT LEAST 5 Hotels per location
  */
 const CITY_DATABASE = [
   {
@@ -841,8 +842,10 @@ const CITY_DATABASE = [
     rateToUSD: 83.5,
     hotels: [
       { id: 'h_tm1', name: 'The Oberoi Amarvilas Agra', desc: 'Uninterrupted views of the Taj Mahal from every room.', cost: 450, category: 'Hotel', bookingQuery: 'The Oberoi Amarvilas Agra' },
-      { id: 'h_tm2', name: 'ITC Mughal Resort & Spa', desc: '5-star Mughal architecture hotel in lush gardens.', cost: 160, category: 'Hotel', bookingQuery: 'ITC Mughal Agra' },
-      { id: 'h_tm3', name: 'Taj Hotel & Convention Centre', desc: 'Modern luxury with an infinity rooftop pool overlooking the Taj.', cost: 120, category: 'Hotel', bookingQuery: 'Taj Hotel Convention Centre Agra' }
+      { id: 'h_tm2', name: 'ITC Mughal Resort & Spa', desc: '5-star Mughal architecture hotel set in lush gardens.', cost: 160, category: 'Hotel', bookingQuery: 'ITC Mughal Agra' },
+      { id: 'h_tm3', name: 'Taj Hotel & Convention Centre', desc: 'Modern luxury with an infinity rooftop pool overlooking the Taj.', cost: 120, category: 'Hotel', bookingQuery: 'Taj Hotel Convention Centre Agra' },
+      { id: 'h_tm4', name: 'Courtyard by Marriott Agra', desc: 'Upscale comfort located minutes from the eastern gate.', cost: 95, category: 'Hotel', bookingQuery: 'Courtyard by Marriott Agra' },
+      { id: 'h_tm5', name: 'Hotel Taj Resorts', desc: 'Boutique stay with rooftop dining overlooking the monument.', cost: 55, category: 'Hotel', bookingQuery: 'Hotel Taj Resorts Agra' }
     ],
     places: [
       { id: 'tm1', name: 'Taj Mahal Sunrise Ticket', desc: 'Iconic white marble mausoleum at dawn.', cost: 35, category: 'Sight' },
@@ -851,8 +854,7 @@ const CITY_DATABASE = [
       { id: 'tm4', name: 'Mughlai Culinary Experience', desc: 'Rich biryanis, curries, and naan breads.', cost: 40, category: 'Dining' },
       { id: 'tm5', name: 'Marble Inlay Workshop & Shop', desc: 'Watch artisans carve lapis into marble.', cost: 65, category: 'Shopping' },
       { id: 'tm6', name: 'Agra Old Bazaar Spice Walking Tour', desc: 'Bustling markets, street snacks, and silks.', cost: 20, category: 'Activity' },
-      { id: 'tm7', name: 'Yamuna River Boat Ride', desc: 'Scenic view of the monument from water.', cost: 30, category: 'Activity' },
-      { id: 'tm8', name: 'Rooftop Lounge Night View', desc: 'Drink tea or drinks watching illuminated domes.', cost: 35, category: 'Nightlife' }
+      { id: 'tm7', name: 'Tomb of I\'timād-ud-Daulah (Baby Taj)', desc: 'Exquisite jewel-box marble tomb along the river.', cost: 12, category: 'Sight' }
     ]
   },
   {
@@ -865,16 +867,17 @@ const CITY_DATABASE = [
     hotels: [
       { id: 'h_c1', name: 'Hotel Forum Rome', desc: 'Rooftop dining directly facing the ancient Roman Forum.', cost: 260, category: 'Hotel', bookingQuery: 'Hotel Forum Rome' },
       { id: 'h_c2', name: 'Palazzo Manfredi', desc: 'Luxury boutique hotel with direct views of the Colosseum.', cost: 650, category: 'Hotel', bookingQuery: 'Palazzo Manfredi Rome' },
-      { id: 'h_c3', name: 'Mercure Roma Centro Colosseo', desc: 'Modern stay with rooftop pool overlooking the Colosseum.', cost: 190, category: 'Hotel', bookingQuery: 'Mercure Roma Centro Colosseo' }
+      { id: 'h_c3', name: 'Mercure Roma Centro Colosseo', desc: 'Modern stay with rooftop pool overlooking the Colosseum.', cost: 190, category: 'Hotel', bookingQuery: 'Mercure Roma Centro Colosseo' },
+      { id: 'h_c4', name: 'The Inn at the Roman Forum', desc: 'Charming luxury hotel with private ancient ruins inside.', cost: 320, category: 'Hotel', bookingQuery: 'The Inn at the Roman Forum' },
+      { id: 'h_c5', name: 'Hotel Capo d\'África', desc: 'Stylish hotel located in a quiet street near the amphitheater.', cost: 175, category: 'Hotel', bookingQuery: 'Hotel Capo d Africa Rome' }
     ],
     places: [
       { id: 'c1', name: 'Colosseum Arena Floor & Underground', desc: 'Exclusive access to gladiator chambers.', cost: 75, category: 'Sight' },
       { id: 'c2', name: 'Roman Forum & Palatine Hill', desc: 'Walk the heart of ancient imperial Rome.', cost: 35, category: 'Sight' },
       { id: 'c3', name: 'Trastevere Food & Wine Tour', desc: 'Fresh pasta, truffles, and fine Italian wine.', cost: 95, category: 'Dining' },
       { id: 'c4', name: 'Vatican Museums & Sistine Chapel', desc: 'Michelangelo ceiling and papal arts.', cost: 50, category: 'Sight' },
-      { id: 'c5', name: 'Trevi Fountain Evening Stroll', desc: 'Coin throw and night street ambience.', cost: 0, category: 'Nightlife' },
-      { id: 'c6', name: 'Piazza Navona Gelato Tasting', desc: 'Sample artisanal Italian gelato.', cost: 15, category: 'Dining' },
-      { id: 'c7', name: 'Via Condotti Italian Fashion', desc: 'Luxury designer boutique shopping.', cost: 150, category: 'Shopping' }
+      { id: 'c5', name: 'Piazza Navona Gelato & Evening Stroll', desc: 'Sample artisanal Italian gelato at historic fountains.', cost: 15, category: 'Dining' },
+      { id: 'c6', name: 'Via Condotti Fashion Shopping', desc: 'Luxury Italian designer boutiques.', cost: 150, category: 'Shopping' }
     ]
   },
   {
@@ -887,7 +890,9 @@ const CITY_DATABASE = [
     hotels: [
       { id: 'h_mp1', name: 'Belmond Sanctuary Lodge', desc: 'Luxury hotel located directly adjacent to the entrance of Machu Picchu.', cost: 950, category: 'Hotel', bookingQuery: 'Belmond Sanctuary Lodge Machu Picchu' },
       { id: 'h_mp2', name: 'Sumaq Machu Picchu Hotel', desc: '5-star luxury at the foot of Machu Picchu along the Urubamba River.', cost: 380, category: 'Hotel', bookingQuery: 'Sumaq Machu Picchu Hotel' },
-      { id: 'h_mp3', name: 'Inkaterra Machu Picchu Pueblo', desc: 'Intimate Andean village style hotel set in rainforest hills.', cost: 420, category: 'Hotel', bookingQuery: 'Inkaterra Machu Picchu Pueblo Hotel' }
+      { id: 'h_mp3', name: 'Inkaterra Machu Picchu Pueblo', desc: 'Intimate Andean village style hotel set in rainforest hills.', cost: 420, category: 'Hotel', bookingQuery: 'Inkaterra Machu Picchu Pueblo Hotel' },
+      { id: 'h_mp4', name: 'Tierra Viva Machu Picchu', desc: 'Comfortable riverfront hotel with scenic cloud forest views.', cost: 140, category: 'Hotel', bookingQuery: 'Tierra Viva Machu Picchu Hotel' },
+      { id: 'h_mp5', name: 'El MaPi Hotel by Inkaterra', desc: 'Contemporary, eco-friendly boutique stay in Aguas Calientes.', cost: 180, category: 'Hotel', bookingQuery: 'El Mapi Hotel by Inkaterra' }
     ],
     places: [
       { id: 'mp1', name: 'Machu Picchu Citadel Pass', desc: 'Main historic access to the ancient Inca ruins.', cost: 150, category: 'Sight' },
@@ -908,7 +913,9 @@ const CITY_DATABASE = [
     hotels: [
       { id: 'h_ci1', name: 'Hacienda Chichen Resort', desc: 'Historic jungle eco-resort with private entrance to ruins.', cost: 220, category: 'Hotel', bookingQuery: 'Hacienda Chichen Resort' },
       { id: 'h_ci2', name: 'Mayaland Hotel & Bungalows', desc: 'World famous resort located inside the archaeological park.', cost: 180, category: 'Hotel', bookingQuery: 'Mayaland Hotel Chichen Itza' },
-      { id: 'h_ci3', name: 'Hotel Villa Archeological Sites', desc: 'Charming hotel steps away from the Mayan pyramids.', cost: 110, category: 'Hotel', bookingQuery: 'Villa Arqueologica Chichen Itza' }
+      { id: 'h_ci3', name: 'Hotel Villa Archeological Sites', desc: 'Charming hotel steps away from the Mayan pyramids.', cost: 110, category: 'Hotel', bookingQuery: 'Villa Arqueologica Chichen Itza' },
+      { id: 'h_ci4', name: 'La Ostraca Boutique Hotel', desc: 'Tranquil luxury retreat tucked into surrounding nature.', cost: 140, category: 'Hotel', bookingQuery: 'La Ostraca Chichen Itza' },
+      { id: 'h_ci5', name: 'Hotel Oca Pontevedra Valladolid', desc: 'Colonial style hotel nearby in vibrant Valladolid town.', cost: 85, category: 'Hotel', bookingQuery: 'Hotel Oca Valladolid Mexico' }
     ],
     places: [
       { id: 'ci1', name: 'El Castillo Pyramid Tour', desc: 'Central astronomical Mayan pyramid temple.', cost: 45, category: 'Sight' },
@@ -928,7 +935,9 @@ const CITY_DATABASE = [
     hotels: [
       { id: 'h_p1', name: 'Mövenpick Resort Petra', desc: 'Located right at the entrance to the ancient city of Petra.', cost: 210, category: 'Hotel', bookingQuery: 'Movenpick Resort Petra' },
       { id: 'h_p2', name: 'Petra Marriott Hotel', desc: 'Overlooking the stunning Petra valley with panoramic views.', cost: 180, category: 'Hotel', bookingQuery: 'Petra Marriott Hotel' },
-      { id: 'h_p3', name: 'Petra Bubble Luxotel', desc: 'Luxury bubble suites under the stars in Wadi Musa.', cost: 290, category: 'Hotel', bookingQuery: 'Petra Bubble Luxotel' }
+      { id: 'h_p3', name: 'Petra Bubble Luxotel', desc: 'Luxury bubble suites under the stars in Wadi Musa.', cost: 290, category: 'Hotel', bookingQuery: 'Petra Bubble Luxotel' },
+      { id: 'h_p4', name: 'The Old Village Resort', desc: 'Restored 18th-century rural village turned boutique resort.', cost: 160, category: 'Hotel', bookingQuery: 'The Old Village Resort Petra' },
+      { id: 'h_p5', name: 'Petra Guest House Hotel', desc: 'Right at the Siq canyon entrance with historic Cave Bar.', cost: 130, category: 'Hotel', bookingQuery: 'Petra Guest House Hotel' }
     ],
     places: [
       { id: 'p1', name: 'The Treasury (Al-Khazneh)', desc: 'Iconic rock-cut carved temple face.', cost: 120, category: 'Sight' },
@@ -947,8 +956,10 @@ const CITY_DATABASE = [
     rateToUSD: 7.2,
     hotels: [
       { id: 'h_gw1', name: 'Commune by the Great Wall', desc: 'Architectural boutique hotel near Mutianyu.', cost: 280, category: 'Hotel', bookingQuery: 'Commune by the Great Wall Beijing' },
-      { id: 'h_gw2', name: 'The Peninsular Beijing', desc: 'Ultra-luxury luxury stay in downtown Beijing.', cost: 380, category: 'Hotel', bookingQuery: 'The Peninsula Beijing' },
-      { id: 'h_gw3', name: 'Brickyard Retreat at Mutianyu', desc: 'Eco-lodge converted from a tile factory with Wall views.', cost: 210, category: 'Hotel', bookingQuery: 'Brickyard Retreat Mutianyu' }
+      { id: 'h_gw2', name: 'The Peninsula Beijing', desc: 'Ultra-luxury stay in downtown Beijing.', cost: 380, category: 'Hotel', bookingQuery: 'The Peninsula Beijing' },
+      { id: 'h_gw3', name: 'Brickyard Retreat at Mutianyu', desc: 'Eco-lodge converted from a tile factory with Wall views.', cost: 210, category: 'Hotel', bookingQuery: 'Brickyard Retreat Mutianyu' },
+      { id: 'h_gw4', name: 'Rosewood Beijing', desc: 'Sophisticated modern luxury in the CBD district.', cost: 290, category: 'Hotel', bookingQuery: 'Rosewood Beijing' },
+      { id: 'h_gw5', name: 'Gubei Water Town Hotel', desc: 'Traditional water town stay right below Simatai Great Wall.', cost: 170, category: 'Hotel', bookingQuery: 'Gubei Water Town Hotel' }
     ],
     places: [
       { id: 'gw1', name: 'Mutianyu Cable Car & Toboggan', desc: 'Ride up and toboggan down wall slopes.', cost: 85, category: 'Activity' },
@@ -968,7 +979,9 @@ const CITY_DATABASE = [
     hotels: [
       { id: 'h_cr1', name: 'Copacabana Palace, A Belmond Hotel', desc: 'Glamorous oceanfront palace on Copacabana Beach.', cost: 520, category: 'Hotel', bookingQuery: 'Copacabana Palace Rio' },
       { id: 'h_cr2', name: 'Fasano Rio de Janeiro', desc: 'Chic luxury design hotel on Ipanema Beach.', cost: 610, category: 'Hotel', bookingQuery: 'Hotel Fasano Rio de Janeiro' },
-      { id: 'h_cr3', name: 'Miramar Hotel by Windsor', desc: 'Modern high-rise overlooking the beach.', cost: 180, category: 'Hotel', bookingQuery: 'Miramar Hotel by Windsor Rio' }
+      { id: 'h_cr3', name: 'Miramar Hotel by Windsor', desc: 'Modern high-rise overlooking the beach.', cost: 180, category: 'Hotel', bookingQuery: 'Miramar Hotel by Windsor Rio' },
+      { id: 'h_cr4', name: 'Hotel Santa Teresa Rio MGallery', desc: 'Boutique hilltop retreat in historic Santa Teresa.', cost: 240, category: 'Hotel', bookingQuery: 'Hotel Santa Teresa Rio MGallery' },
+      { id: 'h_cr5', name: 'Hilton Barra Rio de Janeiro', desc: 'Contemporary stay near Olympic park and beaches.', cost: 130, category: 'Hotel', bookingQuery: 'Hilton Barra Rio de Janeiro' }
     ],
     places: [
       { id: 'cr1', name: 'Corcovado Cog Train Ride', desc: 'Scenic train through Tijuca forest to statue.', cost: 45, category: 'Sight' },
@@ -988,7 +1001,9 @@ const CITY_DATABASE = [
     hotels: [
       { id: 'h_tk1', name: 'Aman Tokyo', desc: 'Urban sanctuary above Otemachi Tower.', cost: 980, category: 'Hotel', bookingQuery: 'Aman Tokyo' },
       { id: 'h_tk2', name: 'Park Hyatt Tokyo', desc: 'Iconic Shinjuku skyscraper hotel with city views.', cost: 520, category: 'Hotel', bookingQuery: 'Park Hyatt Tokyo' },
-      { id: 'h_tk3', name: 'Hotel Gracery Shinjuku', desc: 'Famous Godzilla head hotel in vibrant Kabukicho.', cost: 160, category: 'Hotel', bookingQuery: 'Hotel Gracery Shinjuku' }
+      { id: 'h_tk3', name: 'Hotel Gracery Shinjuku', desc: 'Famous Godzilla head hotel in vibrant Kabukicho.', cost: 160, category: 'Hotel', bookingQuery: 'Hotel Gracery Shinjuku' },
+      { id: 'h_tk4', name: 'The Capitol Hotel Tokyu', desc: 'Refined Japanese hospitality near Imperial Palace.', cost: 380, category: 'Hotel', bookingQuery: 'The Capitol Hotel Tokyu' },
+      { id: 'h_tk5', name: 'Trunk (Hotel) Cat Street', desc: 'Boutique lifestyle hotel in trendy Shibuya.', cost: 290, category: 'Hotel', bookingQuery: 'Trunk Hotel Cat Street Tokyo' }
     ],
     places: [
       { id: 'tk1', name: 'Mt. Fuji & Hakone Day Pass', desc: 'Bullet train and lake cruise near Mt. Fuji.', cost: 110, category: 'Sight' },
@@ -1008,7 +1023,9 @@ const CITY_DATABASE = [
     hotels: [
       { id: 'h_pa1', name: 'Hôtel Plaza Athénée', desc: 'Haute couture luxury hotel with direct Eiffel Tower balcony views.', cost: 1100, category: 'Hotel', bookingQuery: 'Hotel Plaza Athenee Paris' },
       { id: 'h_pa2', name: 'Pullman Paris Tour Eiffel', desc: 'Steps away from the Eiffel Tower grounds.', cost: 320, category: 'Hotel', bookingQuery: 'Pullman Paris Tour Eiffel' },
-      { id: 'h_pa3', name: 'CitizenM Paris Gare de Lyon', desc: 'Trendy, affordable boutique hotel with rooftop views.', cost: 170, category: 'Hotel', bookingQuery: 'CitizenM Paris Gare de Lyon' }
+      { id: 'h_pa3', name: 'CitizenM Paris Gare de Lyon', desc: 'Trendy, affordable boutique hotel with rooftop views.', cost: 170, category: 'Hotel', bookingQuery: 'CitizenM Paris Gare de Lyon' },
+      { id: 'h_pa4', name: 'Le Meurice Paris', desc: 'Palace hotel located opposite Tuileries Garden.', cost: 890, category: 'Hotel', bookingQuery: 'Le Meurice Paris' },
+      { id: 'h_pa5', name: 'Hotel Madame Rêve', desc: 'Modern Parisian stay inside historic Grand Poste.', cost: 410, category: 'Hotel', bookingQuery: 'Hotel Madame Reve Paris' }
     ],
     places: [
       { id: 'pa1', name: 'Eiffel Tower Summit Access Pass', desc: 'Elevator pass to topmost observation floor.', cost: 38, category: 'Sight' },
@@ -1028,7 +1045,9 @@ const CITY_DATABASE = [
     hotels: [
       { id: 'h_nyc1', name: 'The Plaza Hotel Manhattan', desc: 'Iconic 5-star luxury landmark at Fifth Ave & Central Park.', cost: 750, category: 'Hotel', bookingQuery: 'The Plaza Hotel New York' },
       { id: 'h_nyc2', name: 'Arlo Midtown NYC', desc: 'Trendy modern boutique hotel near Times Square and Hudson Yards.', cost: 260, category: 'Hotel', bookingQuery: 'Arlo Midtown New York' },
-      { id: 'h_nyc3', name: 'Moxy NYC Times Square', desc: 'Vibrant lifestyle hotel with famous Magic Hour Rooftop Bar.', cost: 220, category: 'Hotel', bookingQuery: 'Moxy NYC Times Square' }
+      { id: 'h_nyc3', name: 'Moxy NYC Times Square', desc: 'Vibrant lifestyle hotel with famous Magic Hour Rooftop Bar.', cost: 220, category: 'Hotel', bookingQuery: 'Moxy NYC Times Square' },
+      { id: 'h_nyc4', name: 'The Standard High Line', desc: 'Sleek Meatpacking district hotel spanning the High Line park.', cost: 340, category: 'Hotel', bookingQuery: 'The Standard High Line New York' },
+      { id: 'h_nyc5', name: 'Pod 51 Hotel Manhattan', desc: 'Smart micro-hotel in Midtown East for budget travelers.', cost: 140, category: 'Hotel', bookingQuery: 'Pod 51 Hotel New York' }
     ],
     places: [
       { id: 'n1', name: 'Broadway Musical Ticket', desc: 'Prime seating for top Times Square show.', cost: 160, category: 'Activity' },
