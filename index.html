@@ -175,41 +175,69 @@
     box-shadow: 0 4px 14px var(--primary-glow);
   }
 
-  /* Weather Widget Component */
+  /* 5-Day Weather Forecast Widget Component */
   .weather-widget {
     background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
     border: 2px solid var(--primary);
     border-radius: var(--radius-md);
     padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
     margin-bottom: 20px;
     box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
     flex-shrink: 0;
   }
 
-  .weather-icon {
-    width: 48px;
-    height: 48px;
+  .forecast-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
-  .weather-info {
+  .forecast-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    overflow-x: auto;
+  }
+
+  .forecast-day {
+    flex: 1;
+    min-width: 90px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
 
-  .weather-temp {
-    font-size: 20px;
-    font-weight: 900;
+  .forecast-date {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-dark);
+  }
+
+  .forecast-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .forecast-temp {
+    font-size: 13px;
+    font-weight: 800;
     color: var(--primary);
   }
 
-  .weather-desc {
-    font-size: 13px;
-    font-weight: 700;
+  .forecast-desc {
+    font-size: 11px;
+    font-weight: 600;
     color: var(--text-muted);
     text-transform: capitalize;
+    margin-top: 2px;
   }
 
   /* Main Viewport Container */
@@ -730,12 +758,11 @@
           <button class="btn-home" data-navigate="step1">🏠 Home Screen</button>
         </div>
         
-        <!-- Live Weather Widget Container -->
+        <!-- Live 5-Day Weather Widget Container -->
         <div id="weather-widget" class="weather-widget">
-          <img id="weather-icon" class="weather-icon" src="" alt="Weather Icon">
-          <div class="weather-info">
-            <span id="weather-temp" class="weather-temp">--°C</span>
-            <span id="weather-desc" class="weather-desc">Loading weather...</span>
+          <div class="forecast-title">5-Day Weather Forecast</div>
+          <div id="forecast-grid" class="forecast-grid">
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 6px;">Loading weather forecast...</div>
           </div>
         </div>
 
@@ -1177,7 +1204,6 @@ const AppState = {
 };
 
 /**
-/**
  * Helper function to convert Celsius to Fahrenheit
  */
 function cToF(celsius) {
@@ -1185,36 +1211,48 @@ function cToF(celsius) {
 }
 
 /**
- * OpenWeather API Fetcher
+ * OpenWeather 5-Day Forecast Fetcher
  */
 async function fetchWeatherData(city) {
-  const tempEl = document.getElementById('weather-temp');
-  const descEl = document.getElementById('weather-desc');
-  const iconEl = document.getElementById('weather-icon');
-
-  tempEl.textContent = '--°C / --°F';
-  descEl.textContent = 'Loading weather...';
-  iconEl.style.display = 'none';
+  const gridEl = document.getElementById('forecast-grid');
+  gridEl.innerHTML = `<div style="font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 6px;">Loading weather forecast...</div>`;
 
   try {
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&units=metric&appid=${AppState.weatherApiKey}`;
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&units=metric&appid=${AppState.weatherApiKey}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('Weather fetch failed');
     const data = await res.json();
 
-    const tempC = Math.round(data.main.temp);
-    const tempF = cToF(tempC);
-    const desc = data.weather[0].description;
-    const iconCode = data.weather[0].icon;
+    // OpenWeather 5-day forecast returns 3-hour increments (40 items).
+    // Filter to pick one reading per day (e.g. around 12:00:00).
+    const dailyForecasts = data.list.filter(item => item.dt_txt.includes('12:00:00')).slice(0, 5);
 
-    tempEl.textContent = `${tempC}°C / ${tempF}°F`;
-    descEl.textContent = desc;
-    iconEl.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-    iconEl.style.display = 'block';
+    // Fallback if 12:00:00 items are fewer than 5
+    const forecastItems = dailyForecasts.length === 5 ? dailyForecasts : data.list.filter((_, idx) => idx % 8 === 0).slice(0, 5);
+
+    gridEl.innerHTML = forecastItems.map(item => {
+      const dateObj = new Date(item.dt * 1000);
+      const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric' });
+      
+      const tempC = Math.round(item.main.temp);
+      const tempF = cToF(tempC);
+      const desc = item.weather[0].description;
+      const iconCode = item.weather[0].icon;
+
+      return `
+        <div class="forecast-day">
+          <div class="forecast-date">${dayName}</div>
+          <img class="forecast-icon" src="https://openweathermap.org/img/wn/${iconCode}@2x.png" alt="${desc}">
+          <div class="forecast-temp">${tempC}°C / ${tempF}°F</div>
+          <div class="forecast-desc">${desc}</div>
+        </div>
+      `;
+    }).join('');
   } catch (err) {
-    descEl.textContent = 'Weather unavailable';
+    gridEl.innerHTML = `<div style="font-size: 13px; font-weight: 700; color: var(--danger); padding: 6px;">Weather forecast unavailable</div>`;
   }
 }
+
 /**
  * Booking URL Generator Helper
  */
