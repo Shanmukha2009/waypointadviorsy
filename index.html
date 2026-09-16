@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WAY POINT ADVISOR — Pro Edition</title>
 
+<!-- Leaflet Map Styles -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
 <!-- ========================================== -->
 <!-- 1. PRINT & PDF EXPORT STYLES               -->
 <!-- ========================================== -->
@@ -15,7 +18,7 @@
     font-family: Arial, sans-serif; 
     padding: 20px; 
   }
-  .no-print, nav, button, select, input, .add-form-grid, .budget-bar-wrapper { 
+  .no-print, nav, button, select, input, .add-form-grid, .budget-bar-wrapper, #weather-map { 
     display: none !important; 
   }
   .print-only { 
@@ -252,26 +255,27 @@
     background: #ffffff;
   }
 
-  /* API Key Settings Box */
-  .api-settings-box {
-    background: #f0f9ff;
-    border: 2px dashed var(--primary);
-    border-radius: var(--radius-md);
-    padding: 16px;
+  /* Weather Map Container */
+  .weather-section {
     margin-bottom: 20px;
+    flex-shrink: 0;
   }
 
-  .api-settings-box h4 {
+  .weather-section h4 {
     font-size: 14px;
     font-weight: 800;
     color: var(--primary);
     margin-bottom: 8px;
     text-transform: uppercase;
+    letter-spacing: 0.8px;
   }
 
-  .api-input-group {
-    display: flex;
-    gap: 10px;
+  #weather-map {
+    width: 100%;
+    height: 220px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--panel-border);
+    z-index: 1;
   }
 
   /* Filter Toolbar */
@@ -689,14 +693,6 @@
           <button class="btn-home" data-navigate="step1">🏠 Home</button>
         </div>
 
-        <!-- NEW: API KEY SETTINGS SECTION -->
-        <div class="api-settings-box">
-          <h4>🔑 API Configuration</h4>
-          <div class="api-input-group">
-            <button class="btn" id="btn-save-api" style="padding: 10px 18px; font-size: 13px;">Save Key</button>
-          </div>
-        </div>
-
         <div class="form-group">
           <label for="input-budget">Total Budget Goal ($USD):</label>
           <input type="number" id="input-budget" value="1500" min="0" step="50">
@@ -751,6 +747,12 @@
         <div class="panel-header">
           <span>Add Custom Spot & Adjust Budget</span>
           <button class="btn-home" data-navigate="step1">🏠 Home</button>
+        </div>
+
+        <!-- Destination Weather Map -->
+        <div class="weather-section">
+          <h4>🗺️ Destination Interactive Map & Precipitation Radar</h4>
+          <div id="weather-map"></div>
         </div>
 
         <!-- Custom Spot Form -->
@@ -852,13 +854,13 @@
   </div>
 </div>
 
+<!-- Leaflet Library JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <!-- ========================================== -->
 <!-- 3. APPLICATION JAVASCRIPT LOGIC            -->
 <!-- ========================================== -->
 <script>
-// OPTION A: Hardcode your API key below
-let API_KEY = 'c1635656553fbe989993f75eb197e00a';
-
 /**
  * Dynamic Globe Emoji Cursor Generator
  */
@@ -879,14 +881,15 @@ function setGlobeEmojiCursor() {
 }
 
 /**
- * Application Database Store - 10 Locations
- * Includes Nightlife activities added to all locations.
+ * Application Database Store - 10 Locations with Coordinates
  */
 const CITY_DATABASE = [
   {
     id: 'taj-mahal',
     name: 'Taj Mahal (Agra, India)',
     country: 'India',
+    lat: 27.1751,
+    lng: 78.0421,
     currencySymbol: '₹',
     currencyCode: 'INR',
     rateToUSD: 83.5,
@@ -913,6 +916,8 @@ const CITY_DATABASE = [
     id: 'colosseum',
     name: 'The Colosseum (Rome, Italy)',
     country: 'Italy',
+    lat: 41.8902,
+    lng: 12.4922,
     currencySymbol: '€',
     currencyCode: 'EUR',
     rateToUSD: 0.92,
@@ -938,6 +943,8 @@ const CITY_DATABASE = [
     id: 'machu-picchu',
     name: 'Machu Picchu (Peru)',
     country: 'Peru',
+    lat: -13.1631,
+    lng: -72.5450,
     currencySymbol: 'S/',
     currencyCode: 'PEN',
     rateToUSD: 3.75,
@@ -963,6 +970,8 @@ const CITY_DATABASE = [
     id: 'chichen-itza',
     name: 'Chichen Itza (Yucatan, Mexico)',
     country: 'Mexico',
+    lat: 20.6843,
+    lng: -88.5678,
     currencySymbol: 'Mex$',
     currencyCode: 'MXN',
     rateToUSD: 18.0,
@@ -986,6 +995,8 @@ const CITY_DATABASE = [
     id: 'petra',
     name: 'Petra Ancient City (Jordan)',
     country: 'Jordan',
+    lat: 30.3285,
+    lng: 35.4444,
     currencySymbol: 'JOD',
     currencyCode: 'JOD',
     rateToUSD: 0.71,
@@ -1008,6 +1019,8 @@ const CITY_DATABASE = [
     id: 'christ-redeemer',
     name: 'Christ the Redeemer (Rio de Janeiro, Brazil)',
     country: 'Brazil',
+    lat: -22.9519,
+    lng: -43.2105,
     currencySymbol: 'R$',
     currencyCode: 'BRL',
     rateToUSD: 5.2,
@@ -1031,6 +1044,8 @@ const CITY_DATABASE = [
     id: 'great-wall',
     name: 'The Great Wall (Beijing, China)',
     country: 'China',
+    lat: 40.4319,
+    lng: 116.5704,
     currencySymbol: '¥',
     currencyCode: 'CNY',
     rateToUSD: 7.23,
@@ -1054,6 +1069,8 @@ const CITY_DATABASE = [
     id: 'eiffel-tower',
     name: 'Eiffel Tower (Paris, France)',
     country: 'France',
+    lat: 48.8584,
+    lng: 2.2945,
     currencySymbol: '€',
     currencyCode: 'EUR',
     rateToUSD: 0.92,
@@ -1077,6 +1094,8 @@ const CITY_DATABASE = [
     id: 'pyramids-giza',
     name: 'Pyramids of Giza (Cairo, Egypt)',
     country: 'Egypt',
+    lat: 29.9792,
+    lng: 31.1342,
     currencySymbol: 'E£',
     currencyCode: 'EGP',
     rateToUSD: 48.0,
@@ -1100,6 +1119,8 @@ const CITY_DATABASE = [
     id: 'statue-liberty',
     name: 'Statue of Liberty & Manhattan (New York, USA)',
     country: 'United States',
+    lat: 40.6892,
+    lng: -74.0445,
     currencySymbol: '$',
     currencyCode: 'USD',
     rateToUSD: 1.0,
@@ -1132,6 +1153,9 @@ const AppState = {
   activeCategory: 'All',
   selectedItems: []
 };
+
+let mapInstance = null;
+let mapMarker = null;
 
 /**
  * Booking URL Generator Helper
@@ -1217,9 +1241,48 @@ function renderCards() {
   }).join('');
 }
 
+/**
+ * Leaflet Weather & Satellite Map Controller
+ */
+function initOrUpdateMap() {
+  const city = getCity();
+
+  if (!mapInstance) {
+    mapInstance = L.map('weather-map').setView([city.lat, city.lng], 10);
+
+    // Standard OpenStreetMap Tile Layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(mapInstance);
+
+    // RainViewer Radar Overlay
+    L.tileLayer('https://tile.rainviewer.com/v2/radar/nowcast/256/{z}/{x}/{y}/2/1_1.png', {
+      opacity: 0.6,
+      attribution: 'RainViewer Weather Radar'
+    }).addTo(mapInstance);
+
+    mapMarker = L.marker([city.lat, city.lng]).addTo(mapInstance)
+      .bindPopup(`<b>${city.name}</b><br>Coordinates: ${city.lat}, ${city.lng}`)
+      .openPopup();
+  } else {
+    mapInstance.setView([city.lat, city.lng], 10);
+    mapMarker.setLatLng([city.lat, city.lng])
+      .setPopupContent(`<b>${city.name}</b><br>Coordinates: ${city.lat}, ${city.lng}`)
+      .openPopup();
+  }
+
+  // Handle map size recalculation inside hidden tabs
+  setTimeout(() => {
+    mapInstance.invalidateSize();
+  }, 200);
+}
+
 function renderPlanner() {
   const container = document.getElementById('planner-items-container');
   const city = getCity();
+
+  initOrUpdateMap();
 
   document.getElementById('target-budget-display').textContent = formatUSD(AppState.budget);
   
@@ -1341,17 +1404,6 @@ function switchPage(pageId) {
 document.addEventListener('DOMContentLoaded', () => {
   setGlobeEmojiCursor();
   renderDestinationSelect();
-
-  // Save API Key Action
-  document.getElementById('btn-save-api').addEventListener('click', () => {
-    const keyVal = document.getElementById('input-api-key').value.trim();
-    if (keyVal) {
-      API_KEY = keyVal;
-      alert('API Key updated and saved successfully!');
-    } else {
-      alert('Please enter a key string before saving.');
-    }
-  });
 
   // Inputs binding
   const inputBudget = document.getElementById('input-budget');
