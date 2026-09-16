@@ -42,19 +42,20 @@
 <!-- 2. APPLICATION CORE STYLES                 -->
 <!-- ========================================== -->
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Outfit:wght@500;700;800;900&display=swap');
 
-  /* Global Design Tokens & Vibrant Light Palette */
+  /* Global Design Tokens & Hyper-Vibrant Light Palette */
   :root {
-    --bg-gradient: radial-gradient(at 10% 10%, rgba(2, 132, 199, 0.12) 0px, transparent 40%),
-                   radial-gradient(at 90% 10%, rgba(124, 58, 237, 0.12) 0px, transparent 40%),
-                   radial-gradient(at 50% 90%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
-    --panel-bg: #ffffff;
+    --bg-gradient: radial-gradient(at 10% 10%, rgba(245, 158, 11, 0.18) 0px, transparent 40%),
+                   radial-gradient(at 90% 10%, rgba(236, 72, 153, 0.18) 0px, transparent 40%),
+                   radial-gradient(at 50% 90%, rgba(14, 165, 233, 0.18) 0px, transparent 50%),
+                   radial-gradient(at 80% 50%, rgba(139, 92, 246, 0.15) 0px, transparent 40%);
+    --panel-bg: rgba(255, 255, 255, 0.95);
     --panel-border: #cbd5e1;
     --primary: #0284c7;
-    --primary-glow: rgba(2, 132, 199, 0.25);
+    --primary-glow: rgba(2, 132, 199, 0.3);
     --secondary: #7c3aed;
-    --secondary-glow: rgba(124, 58, 237, 0.2);
+    --secondary-glow: rgba(124, 58, 237, 0.25);
     --accent-emerald: #059669;
     --accent-amber: #d97706;
     --accent-rose: #e11d48;
@@ -62,9 +63,10 @@
     --success: #10b981;
     --text-dark: #0f172a;
     --text-muted: #475569;
-    --radius-lg: 20px;
-    --radius-md: 12px;
+    --radius-lg: 24px;
+    --radius-md: 14px;
     --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-display: 'Outfit', var(--font-main);
     --transition-fast: 0.15s ease;
     --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -113,10 +115,10 @@
   header {
     border-bottom: 2px solid var(--panel-border);
     padding: 14px 0;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
     flex-shrink: 0;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   }
 
   .nav-bar {
@@ -127,7 +129,8 @@
   }
 
   .logo {
-    font-size: 26px;
+    font-family: var(--font-display);
+    font-size: 28px;
     font-weight: 900;
     letter-spacing: -0.5px;
     color: var(--text-dark);
@@ -139,10 +142,10 @@
     transition: transform var(--transition-fast);
   }
 
-  .logo:hover { transform: scale(1.02); }
+  .logo:hover { transform: scale(1.03); }
 
   .logo span {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    background: linear-gradient(135deg, #ec4899, #8b5cf6, #06b6d4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -153,7 +156,7 @@
     background: #f1f5f9;
     padding: 6px;
     border-radius: var(--radius-lg);
-    border: 1px solid var(--panel-border);
+    border: 2px solid var(--panel-border);
   }
 
   nav button {
@@ -170,9 +173,31 @@
   nav button:hover { color: var(--text-dark); }
 
   nav button.active {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    background: linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6);
     color: #ffffff;
-    box-shadow: 0 4px 14px var(--primary-glow);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+  }
+
+  /* Colorful Typography Classes for Glazing */
+  .gradient-text-rainbow {
+    background: linear-gradient(135deg, #f43f5e, #8b5cf6, #06b6d4, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-display);
+  }
+
+  .gradient-text-sunfire {
+    background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-display);
+  }
+
+  .gradient-text-ocean {
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-display);
   }
 
   /* Hero Home Screen Styling */
@@ -180,46 +205,117 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     text-align: center;
-    gap: 20px;
-    padding: 40px 20px;
+    gap: 16px;
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  .hero-badge-pill {
+    background: linear-gradient(135deg, #fef3c7, #fce7f3);
+    border: 2px solid #f43f5e;
+    color: #be123c;
+    padding: 6px 18px;
+    border-radius: 30px;
+    font-weight: 900;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(244, 63, 94, 0.15);
   }
 
   .hero-title {
-    font-size: 42px;
+    font-size: 40px;
     font-weight: 900;
     letter-spacing: -1px;
     color: var(--text-dark);
-    line-height: 1.2;
-  }
-
-  .hero-title span {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    line-height: 1.15;
+    max-width: 900px;
   }
 
   .hero-subtitle {
-    font-size: 18px;
-    color: var(--text-muted);
-    max-width: 600px;
+    font-size: 16px;
+    color: #334155;
+    max-width: 750px;
     font-weight: 600;
-    line-height: 1.6;
+    line-height: 1.5;
   }
 
   .hero-actions {
     display: flex;
     gap: 16px;
-    margin-top: 10px;
-    flex-wrap: wrap;
+    margin-top: 4px;
     justify-content: center;
   }
 
   .btn-hero {
-    font-size: 18px;
-    padding: 18px 36px;
+    font-size: 19px;
+    padding: 20px 42px;
     border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+    animation: pulseGlow 2.5s infinite alternate;
+  }
+
+  @keyframes pulseGlow {
+    0% { transform: scale(1); box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4); }
+    100% { transform: scale(1.03); box-shadow: 0 15px 35px rgba(236, 72, 153, 0.5); }
+  }
+
+  /* Glazing Showcase Section on Home Screen */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .feature-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 18px;
+    text-align: left;
+    transition: all var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #f43f5e, #8b5cf6, #06b6d4);
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--secondary);
+    box-shadow: 0 12px 24px rgba(124, 58, 237, 0.15);
+  }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    display: inline-block;
+  }
+
+  .feature-card h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .feature-card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-weight: 1.4;
+    font-weight: 600;
   }
 
   /* 5-Day Weather Forecast Widget Component */
@@ -775,13 +871,40 @@
     <!-- HOME SCREEN WELCOME / LANDING PAGE -->
     <section id="page-home" class="page active">
       <div class="panel hero-panel">
-        <h1 class="hero-title">Welcome to <span>WayPoint Advisor</span></h1>
+        <div class="hero-badge-pill">✨ The Ultimate Next-Gen Travel Engine</div>
+        <h1 class="hero-title">
+          Explore the World with <span class="gradient-text-rainbow">Unmatched Intelligence</span> & Precision
+        </h1>
         <p class="hero-subtitle">
-          Plan your dream itinerary across world-class landmarks, discover handpicked accommodations, track local currency budgets, and get live weather forecasts in real time.
+          WayPoint Advisor revolutionizes travel planning! Effortlessly browse iconic world landmarks, track multi-currency budgets in real-time, get live 5-day weather updates, and organize your dream vacation with smooth perfection.
         </p>
+        
         <div class="hero-actions">
-          <button class="btn btn-hero" data-navigate="step2">🔍 Explore Places & Spots</button>
-          <button class="btn btn-secondary btn-hero" data-navigate="step1">⚙️ Set Budget & Dates</button>
+          <button class="btn btn-hero" data-navigate="step2">✨ Start Exploring Places & Budgeting ✨</button>
+        </div>
+
+        <!-- Glazing Showcase Feature Grid -->
+        <div class="features-grid">
+          <div class="feature-card">
+            <span class="feature-icon">🗺️</span>
+            <h3 class="gradient-text-ocean">Global Landmark Explorer</h3>
+            <p>Curated premier attractions, hot spots, and luxury stays across 10 iconic world destinations.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">💸</span>
+            <h3 class="gradient-text-sunfire">Smart Budget Allocator</h3>
+            <p>Dynamic visual progress bars with auto-converting real-time local currency calculations.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🌤️</span>
+            <h3 class="gradient-text-rainbow">Live 5-Day Weather</h3>
+            <p>Integrated OpenWeather API forecasting to keep your daily itinerary prepped for any climate.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">📲</span>
+            <h3 class="gradient-text-ocean">Instant Mobile Sync & PDF</h3>
+            <p>Export pixel-perfect PDF itineraries or dispatch instant SMS trip passes straight to your phone.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -790,7 +913,7 @@
     <section id="page-step1" class="page">
       <div class="panel">
         <div class="panel-header">
-          <span>Step 1: Set Your Travel Preferences</span>
+          <span class="gradient-text-rainbow">Step 1: Set Your Travel Preferences</span>
           <button class="btn-home" data-navigate="home">🏠 Home</button>
         </div>
         <div class="form-group">
@@ -816,13 +939,13 @@
     <section id="page-step2" class="page">
       <div class="panel">
         <div class="panel-header">
-          <span>Attractions & Hotels in <span id="nearby-city-title" style="color: var(--primary);">Destination</span></span>
+          <span>Attractions & Hotels in <span id="nearby-city-title" class="gradient-text-sunfire">Destination</span></span>
           <button class="btn-home" data-navigate="home">🏠 Home Screen</button>
         </div>
         
         <!-- Live 5-Day Weather Widget Container -->
         <div id="weather-widget" class="weather-widget">
-          <div class="forecast-title">5-Day Weather Forecast</div>
+          <div class="forecast-title gradient-text-ocean">5-Day Live Weather Forecast</div>
           <div id="forecast-grid" class="forecast-grid">
             <div style="font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 6px;">Loading weather forecast...</div>
           </div>
@@ -853,7 +976,7 @@
     <section id="page-step3" class="page">
       <div class="panel">
         <div class="panel-header">
-          <span>Add Custom Spot & Adjust Budget</span>
+          <span class="gradient-text-rainbow">Add Custom Spot & Adjust Budget</span>
           <button class="btn-home" data-navigate="home">🏠 Home</button>
         </div>
 
@@ -886,7 +1009,7 @@
         <!-- Dynamic Budget Status Bar -->
         <div class="budget-summary-card">
           <div class="budget-summary-text">
-            <div>Total Allocated: <span id="allocated-budget" style="color: var(--primary); font-weight:900;">$0</span></div>
+            <div>Total Allocated: <span id="allocated-budget" class="gradient-text-sunfire" style="font-weight:900;">$0</span></div>
             <div>Target Budget Goal: <span id="target-budget-display" style="font-weight:900;">$0</span></div>
           </div>
           <div class="budget-bar-wrapper">
@@ -912,14 +1035,14 @@
     <section id="page-step4" class="page">
       <div class="panel">
         <div class="panel-header">
-          <span>Trip Briefing & Mobile Export</span>
+          <span class="gradient-text-rainbow">Trip Briefing & Mobile Export</span>
           <button class="btn-home" data-navigate="home">🏠 Home Screen</button>
         </div>
 
         <div class="budget-summary-card">
           <div class="budget-summary-text" style="margin-bottom:0;">
-            <div>Destination: <span id="sum-city-display" style="color: var(--text-dark); font-weight:900;">--</span></div>
-            <div>Total Cost: <span id="sum-total-display" style="color: var(--primary); font-weight:900;">$0</span></div>
+            <div>Destination: <span id="sum-city-display" class="gradient-text-ocean" style="font-weight:900;">--</span></div>
+            <div>Total Cost: <span id="sum-total-display" class="gradient-text-sunfire" style="font-weight:900;">$0</span></div>
           </div>
         </div>
 
@@ -981,7 +1104,6 @@ function setGlobeEmojiCursor() {
 
 /**
  * Application Database Store - 10 Locations
- * Includes Nightlife activities added to all locations along with geo coordinates for OpenWeather API.
  */
 const CITY_DATABASE = [
   {
@@ -1285,11 +1407,7 @@ async function fetchWeatherData(city) {
     if (!res.ok) throw new Error('Weather fetch failed');
     const data = await res.json();
 
-    // OpenWeather 5-day forecast returns 3-hour increments (40 items).
-    // Filter to pick one reading per day (e.g. around 12:00:00).
     const dailyForecasts = data.list.filter(item => item.dt_txt.includes('12:00:00')).slice(0, 5);
-
-    // Fallback if 12:00:00 items are fewer than 5
     const forecastItems = dailyForecasts.length === 5 ? dailyForecasts : data.list.filter((_, idx) => idx % 8 === 0).slice(0, 5);
 
     gridEl.innerHTML = forecastItems.map(item => {
