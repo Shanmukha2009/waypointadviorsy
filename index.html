@@ -1173,8 +1173,16 @@ const AppState = {
   selectedCityId: 'taj-mahal',
   activeCategory: 'All',
   selectedItems: [],
-  weatherApiKey: '47d7c6b997c4852c00edef3c790ca4a9'
+  weatherApiKey: 'c1635656553fbe989993f75eb197e00a'
 };
+
+/**
+/**
+ * Helper function to convert Celsius to Fahrenheit
+ */
+function cToF(celsius) {
+  return Math.round((celsius * 9 / 5) + 32);
+}
 
 /**
  * OpenWeather API Fetcher
@@ -1184,7 +1192,7 @@ async function fetchWeatherData(city) {
   const descEl = document.getElementById('weather-desc');
   const iconEl = document.getElementById('weather-icon');
 
-  tempEl.textContent = '--°C';
+  tempEl.textContent = '--°C / --°F';
   descEl.textContent = 'Loading weather...';
   iconEl.style.display = 'none';
 
@@ -1194,11 +1202,12 @@ async function fetchWeatherData(city) {
     if (!res.ok) throw new Error('Weather fetch failed');
     const data = await res.json();
 
-    const temp = Math.round(data.main.temp);
+    const tempC = Math.round(data.main.temp);
+    const tempF = cToF(tempC);
     const desc = data.weather[0].description;
     const iconCode = data.weather[0].icon;
 
-    tempEl.textContent = `${temp}°C`;
+    tempEl.textContent = `${tempC}°C / ${tempF}°F`;
     descEl.textContent = desc;
     iconEl.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
     iconEl.style.display = 'block';
@@ -1206,7 +1215,6 @@ async function fetchWeatherData(city) {
     descEl.textContent = 'Weather unavailable';
   }
 }
-
 /**
  * Booking URL Generator Helper
  */
