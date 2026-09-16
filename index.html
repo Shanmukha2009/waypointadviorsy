@@ -175,6 +175,53 @@
     box-shadow: 0 4px 14px var(--primary-glow);
   }
 
+  /* Hero Home Screen Styling */
+  .hero-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 20px;
+    padding: 40px 20px;
+  }
+
+  .hero-title {
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    color: var(--text-dark);
+    line-height: 1.2;
+  }
+
+  .hero-title span {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 600px;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-hero {
+    font-size: 18px;
+    padding: 18px 36px;
+    border-radius: var(--radius-lg);
+  }
+
   /* 5-Day Weather Forecast Widget Component */
   .weather-widget {
     background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
@@ -714,7 +761,8 @@
         <span>📍 WayPoint</span> Advisor
       </div>
       <nav id="main-nav">
-        <button data-page="step1" class="active">🏠 Home</button>
+        <button data-page="home" class="active">🏠 Home</button>
+        <button data-page="step1">1. Preferences</button>
         <button data-page="step2">2. Spots & Hotels</button>
         <button data-page="step3">3. Planning</button>
         <button data-page="step4">4. Summary</button>
@@ -724,12 +772,26 @@
 
   <div class="page-viewport">
 
+    <!-- HOME SCREEN WELCOME / LANDING PAGE -->
+    <section id="page-home" class="page active">
+      <div class="panel hero-panel">
+        <h1 class="hero-title">Welcome to <span>WayPoint Advisor</span></h1>
+        <p class="hero-subtitle">
+          Plan your dream itinerary across world-class landmarks, discover handpicked accommodations, track local currency budgets, and get live weather forecasts in real time.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-hero" data-navigate="step2">🔍 Explore Places & Spots</button>
+          <button class="btn btn-secondary btn-hero" data-navigate="step1">⚙️ Set Budget & Dates</button>
+        </div>
+      </div>
+    </section>
+
     <!-- SCREEN 1: PREFERENCES & DESTINATION -->
-    <section id="page-step1" class="page active">
+    <section id="page-step1" class="page">
       <div class="panel">
         <div class="panel-header">
           <span>Step 1: Set Your Travel Preferences</span>
-          <button class="btn-home" data-navigate="step1">🏠 Home</button>
+          <button class="btn-home" data-navigate="home">🏠 Home</button>
         </div>
         <div class="form-group">
           <label for="input-budget">Total Budget Goal ($USD):</label>
@@ -755,7 +817,7 @@
       <div class="panel">
         <div class="panel-header">
           <span>Attractions & Hotels in <span id="nearby-city-title" style="color: var(--primary);">Destination</span></span>
-          <button class="btn-home" data-navigate="step1">🏠 Home Screen</button>
+          <button class="btn-home" data-navigate="home">🏠 Home Screen</button>
         </div>
         
         <!-- Live 5-Day Weather Widget Container -->
@@ -781,7 +843,7 @@
         </div>
         
         <div class="action-bar">
-          <button class="btn-home" data-navigate="step1">🏠 Home Screen</button>
+          <button class="btn-home" data-navigate="home">🏠 Home Screen</button>
           <button class="btn" data-navigate="step3">Go to Planning Screen →</button>
         </div>
       </div>
@@ -792,7 +854,7 @@
       <div class="panel">
         <div class="panel-header">
           <span>Add Custom Spot & Adjust Budget</span>
-          <button class="btn-home" data-navigate="step1">🏠 Home</button>
+          <button class="btn-home" data-navigate="home">🏠 Home</button>
         </div>
 
         <!-- Custom Spot Form -->
@@ -837,7 +899,7 @@
         </div>
 
         <div class="action-bar">
-          <button class="btn-home" data-navigate="step1">🏠 Return Home</button>
+          <button class="btn-home" data-navigate="home">🏠 Return Home</button>
           <div class="right-buttons">
             <button class="btn btn-secondary" data-navigate="step2">← Pick Spots</button>
             <button class="btn" data-navigate="step4">View Summary →</button>
@@ -851,7 +913,7 @@
       <div class="panel">
         <div class="panel-header">
           <span>Trip Briefing & Mobile Export</span>
-          <button class="btn-home" data-navigate="step1">🏠 Home Screen</button>
+          <button class="btn-home" data-navigate="home">🏠 Home Screen</button>
         </div>
 
         <div class="budget-summary-card">
@@ -881,7 +943,7 @@
         </div>
 
         <div class="action-bar">
-          <button class="btn-home" data-navigate="step1">🏠 Home Screen</button>
+          <button class="btn-home" data-navigate="home">🏠 Home Screen</button>
           <div class="right-buttons">
             <button class="btn btn-phone" id="btn-send-phone">📲 Send to Phone</button>
             <button class="btn btn-secondary" id="btn-email-itinerary">✉️ Email Itinerary</button>
@@ -1492,7 +1554,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => switchPage(btn.dataset.page));
   });
 
-  document.getElementById('app-logo').addEventListener('click', () => switchPage('step1'));
+  document.getElementById('app-logo').addEventListener('click', () => switchPage('home'));
 
   // Category Filtering
   document.getElementById('category-filter-bar').addEventListener('click', (e) => {
