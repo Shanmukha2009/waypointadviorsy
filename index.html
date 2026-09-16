@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WAY POINT ADVISOR — Pro Edition</title>
 
-<!-- Leaflet Map Styles -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
 <!-- ========================================== -->
 <!-- 1. PRINT & PDF EXPORT STYLES               -->
 <!-- ========================================== -->
@@ -18,7 +15,7 @@
     font-family: Arial, sans-serif; 
     padding: 20px; 
   }
-  .no-print, nav, button, select, input, .add-form-grid, .budget-bar-wrapper, #weather-map { 
+  .no-print, nav, button, select, input, .add-form-grid, .budget-bar-wrapper { 
     display: none !important; 
   }
   .print-only { 
@@ -178,6 +175,43 @@
     box-shadow: 0 4px 14px var(--primary-glow);
   }
 
+  /* Weather Widget Component */
+  .weather-widget {
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+    flex-shrink: 0;
+  }
+
+  .weather-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .weather-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .weather-temp {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--primary);
+  }
+
+  .weather-desc {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: capitalize;
+  }
+
   /* Main Viewport Container */
   .page-viewport {
     flex: 1;
@@ -235,7 +269,7 @@
     letter-spacing: 0.8px;
   }
 
-  select, input[type="number"], input[type="text"], input[type="date"], input[type="email"], input[type="password"] {
+  select, input[type="number"], input[type="text"], input[type="date"], input[type="email"] {
     background: #f8fafc;
     border: 2px solid var(--panel-border);
     color: var(--text-dark);
@@ -253,29 +287,6 @@
     border-color: var(--primary);
     box-shadow: 0 0 0 4px var(--primary-glow);
     background: #ffffff;
-  }
-
-  /* Weather Map Container */
-  .weather-section {
-    margin-bottom: 20px;
-    flex-shrink: 0;
-  }
-
-  .weather-section h4 {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--primary);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-  }
-
-  #weather-map {
-    width: 100%;
-    height: 220px;
-    border-radius: var(--radius-md);
-    border: 2px solid var(--panel-border);
-    z-index: 1;
   }
 
   /* Filter Toolbar */
@@ -692,7 +703,6 @@
           <span>Step 1: Set Your Travel Preferences</span>
           <button class="btn-home" data-navigate="step1">🏠 Home</button>
         </div>
-
         <div class="form-group">
           <label for="input-budget">Total Budget Goal ($USD):</label>
           <input type="number" id="input-budget" value="1500" min="0" step="50">
@@ -720,6 +730,15 @@
           <button class="btn-home" data-navigate="step1">🏠 Home Screen</button>
         </div>
         
+        <!-- Live Weather Widget Container -->
+        <div id="weather-widget" class="weather-widget">
+          <img id="weather-icon" class="weather-icon" src="" alt="Weather Icon">
+          <div class="weather-info">
+            <span id="weather-temp" class="weather-temp">--°C</span>
+            <span id="weather-desc" class="weather-desc">Loading weather...</span>
+          </div>
+        </div>
+
         <div class="filter-bar" id="category-filter-bar">
           <button class="filter-btn active" data-category="All">All Items</button>
           <button class="filter-btn" data-category="Hotel">🏨 Hotels</button>
@@ -747,12 +766,6 @@
         <div class="panel-header">
           <span>Add Custom Spot & Adjust Budget</span>
           <button class="btn-home" data-navigate="step1">🏠 Home</button>
-        </div>
-
-        <!-- Destination Weather Map -->
-        <div class="weather-section">
-          <h4>🗺️ Destination Interactive Map & Precipitation Radar</h4>
-          <div id="weather-map"></div>
         </div>
 
         <!-- Custom Spot Form -->
@@ -854,9 +867,6 @@
   </div>
 </div>
 
-<!-- Leaflet Library JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <!-- ========================================== -->
 <!-- 3. APPLICATION JAVASCRIPT LOGIC            -->
 <!-- ========================================== -->
@@ -881,15 +891,17 @@ function setGlobeEmojiCursor() {
 }
 
 /**
- * Application Database Store - 10 Locations with Coordinates
+ * Application Database Store - 10 Locations
+ * Includes Nightlife activities added to all locations along with geo coordinates for OpenWeather API.
  */
 const CITY_DATABASE = [
   {
     id: 'taj-mahal',
     name: 'Taj Mahal (Agra, India)',
-    country: 'India',
+    queryCity: 'Agra',
     lat: 27.1751,
-    lng: 78.0421,
+    lon: 78.0421,
+    country: 'India',
     currencySymbol: '₹',
     currencyCode: 'INR',
     rateToUSD: 83.5,
@@ -915,9 +927,10 @@ const CITY_DATABASE = [
   {
     id: 'colosseum',
     name: 'The Colosseum (Rome, Italy)',
-    country: 'Italy',
+    queryCity: 'Rome',
     lat: 41.8902,
-    lng: 12.4922,
+    lon: 12.4922,
+    country: 'Italy',
     currencySymbol: '€',
     currencyCode: 'EUR',
     rateToUSD: 0.92,
@@ -942,9 +955,10 @@ const CITY_DATABASE = [
   {
     id: 'machu-picchu',
     name: 'Machu Picchu (Peru)',
-    country: 'Peru',
+    queryCity: 'Cusco',
     lat: -13.1631,
-    lng: -72.5450,
+    lon: -72.5450,
+    country: 'Peru',
     currencySymbol: 'S/',
     currencyCode: 'PEN',
     rateToUSD: 3.75,
@@ -969,9 +983,10 @@ const CITY_DATABASE = [
   {
     id: 'chichen-itza',
     name: 'Chichen Itza (Yucatan, Mexico)',
-    country: 'Mexico',
+    queryCity: 'Valladolid',
     lat: 20.6843,
-    lng: -88.5678,
+    lon: -88.5678,
+    country: 'Mexico',
     currencySymbol: 'Mex$',
     currencyCode: 'MXN',
     rateToUSD: 18.0,
@@ -994,9 +1009,10 @@ const CITY_DATABASE = [
   {
     id: 'petra',
     name: 'Petra Ancient City (Jordan)',
+    queryCity: 'Ma\'an',
+    lat: 30.3289,
+    lon: 35.4444,
     country: 'Jordan',
-    lat: 30.3285,
-    lng: 35.4444,
     currencySymbol: 'JOD',
     currencyCode: 'JOD',
     rateToUSD: 0.71,
@@ -1018,9 +1034,10 @@ const CITY_DATABASE = [
   {
     id: 'christ-redeemer',
     name: 'Christ the Redeemer (Rio de Janeiro, Brazil)',
-    country: 'Brazil',
+    queryCity: 'Rio de Janeiro',
     lat: -22.9519,
-    lng: -43.2105,
+    lon: -43.2105,
+    country: 'Brazil',
     currencySymbol: 'R$',
     currencyCode: 'BRL',
     rateToUSD: 5.2,
@@ -1043,9 +1060,10 @@ const CITY_DATABASE = [
   {
     id: 'great-wall',
     name: 'The Great Wall (Beijing, China)',
-    country: 'China',
+    queryCity: 'Beijing',
     lat: 40.4319,
-    lng: 116.5704,
+    lon: 116.5704,
+    country: 'China',
     currencySymbol: '¥',
     currencyCode: 'CNY',
     rateToUSD: 7.23,
@@ -1068,9 +1086,10 @@ const CITY_DATABASE = [
   {
     id: 'eiffel-tower',
     name: 'Eiffel Tower (Paris, France)',
-    country: 'France',
+    queryCity: 'Paris',
     lat: 48.8584,
-    lng: 2.2945,
+    lon: 2.2945,
+    country: 'France',
     currencySymbol: '€',
     currencyCode: 'EUR',
     rateToUSD: 0.92,
@@ -1093,9 +1112,10 @@ const CITY_DATABASE = [
   {
     id: 'pyramids-giza',
     name: 'Pyramids of Giza (Cairo, Egypt)',
-    country: 'Egypt',
+    queryCity: 'Cairo',
     lat: 29.9792,
-    lng: 31.1342,
+    lon: 31.1342,
+    country: 'Egypt',
     currencySymbol: 'E£',
     currencyCode: 'EGP',
     rateToUSD: 48.0,
@@ -1118,9 +1138,10 @@ const CITY_DATABASE = [
   {
     id: 'statue-liberty',
     name: 'Statue of Liberty & Manhattan (New York, USA)',
-    country: 'United States',
+    queryCity: 'New York',
     lat: 40.6892,
-    lng: -74.0445,
+    lon: -74.0445,
+    country: 'United States',
     currencySymbol: '$',
     currencyCode: 'USD',
     rateToUSD: 1.0,
@@ -1151,11 +1172,40 @@ const AppState = {
   tripDate: '2026-10-15',
   selectedCityId: 'taj-mahal',
   activeCategory: 'All',
-  selectedItems: []
+  selectedItems: [],
+  weatherApiKey: '47d7c6b997c4852c00edef3c790ca4a9'
 };
 
-let mapInstance = null;
-let mapMarker = null;
+/**
+ * OpenWeather API Fetcher
+ */
+async function fetchWeatherData(city) {
+  const tempEl = document.getElementById('weather-temp');
+  const descEl = document.getElementById('weather-desc');
+  const iconEl = document.getElementById('weather-icon');
+
+  tempEl.textContent = '--°C';
+  descEl.textContent = 'Loading weather...';
+  iconEl.style.display = 'none';
+
+  try {
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&units=metric&appid=${AppState.weatherApiKey}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Weather fetch failed');
+    const data = await res.json();
+
+    const temp = Math.round(data.main.temp);
+    const desc = data.weather[0].description;
+    const iconCode = data.weather[0].icon;
+
+    tempEl.textContent = `${temp}°C`;
+    descEl.textContent = desc;
+    iconEl.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+    iconEl.style.display = 'block';
+  } catch (err) {
+    descEl.textContent = 'Weather unavailable';
+  }
+}
 
 /**
  * Booking URL Generator Helper
@@ -1199,6 +1249,7 @@ function renderCards() {
   const city = getCity();
   
   document.getElementById('nearby-city-title').textContent = city.name;
+  fetchWeatherData(city);
 
   let allList = [...city.hotels, ...city.places];
   
@@ -1241,48 +1292,9 @@ function renderCards() {
   }).join('');
 }
 
-/**
- * Leaflet Weather & Satellite Map Controller
- */
-function initOrUpdateMap() {
-  const city = getCity();
-
-  if (!mapInstance) {
-    mapInstance = L.map('weather-map').setView([city.lat, city.lng], 10);
-
-    // Standard OpenStreetMap Tile Layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(mapInstance);
-
-    // RainViewer Radar Overlay
-    L.tileLayer('https://tile.rainviewer.com/v2/radar/nowcast/256/{z}/{x}/{y}/2/1_1.png', {
-      opacity: 0.6,
-      attribution: 'RainViewer Weather Radar'
-    }).addTo(mapInstance);
-
-    mapMarker = L.marker([city.lat, city.lng]).addTo(mapInstance)
-      .bindPopup(`<b>${city.name}</b><br>Coordinates: ${city.lat}, ${city.lng}`)
-      .openPopup();
-  } else {
-    mapInstance.setView([city.lat, city.lng], 10);
-    mapMarker.setLatLng([city.lat, city.lng])
-      .setPopupContent(`<b>${city.name}</b><br>Coordinates: ${city.lat}, ${city.lng}`)
-      .openPopup();
-  }
-
-  // Handle map size recalculation inside hidden tabs
-  setTimeout(() => {
-    mapInstance.invalidateSize();
-  }, 200);
-}
-
 function renderPlanner() {
   const container = document.getElementById('planner-items-container');
   const city = getCity();
-
-  initOrUpdateMap();
 
   document.getElementById('target-budget-display').textContent = formatUSD(AppState.budget);
   
