@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAY POINT ADVISOR — Crazy Ultra Edition</title>
+<title>WAY POINT ADVISOR — Pro Edition</title>
+
+<!-- GSAP Core & Confetti for Overkill Animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
 
 <!-- ========================================== -->
 <!-- 1. PRINT & PDF EXPORT STYLES               -->
@@ -42,44 +46,43 @@
 <!-- 2. APPLICATION CORE STYLES                 -->
 <!-- ========================================== -->
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Outfit:wght@500;700;800;900&family=Fredoka:wght@600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Outfit:wght@500;700;800;900&display=swap');
 
-  /* Global Design Tokens & Crazy Multi-Color Light Palette */
+  /* Global Design Tokens & Hyper-Vibrant Light Palette */
   :root {
-    --bg-mesh: radial-gradient(at 0% 0%, rgba(255, 0, 128, 0.25) 0px, transparent 50%),
-               radial-gradient(at 100% 0%, rgba(0, 230, 255, 0.3) 0px, transparent 50%),
-               radial-gradient(at 100% 100%, rgba(255, 200, 0, 0.3) 0px, transparent 50%),
-               radial-gradient(at 0% 100%, rgba(138, 43, 226, 0.25) 0px, transparent 50%),
-               linear-gradient(135deg, #fff0f6 0%, #e6f7ff 50%, #fffbe6 100%);
-    --panel-bg: rgba(255, 255, 255, 0.92);
-    --panel-border: #f472b6;
-    --primary: #d946ef;
-    --primary-glow: rgba(217, 70, 239, 0.4);
-    --secondary: #2563eb;
-    --secondary-glow: rgba(37, 99, 235, 0.35);
-    --accent-emerald: #10b981;
-    --accent-amber: #f59e0b;
-    --accent-rose: #f43f5e;
-    --accent-cyan: #06b6d4;
-    --danger: #ff0055;
-    --success: #00e676;
+    --bg-gradient: radial-gradient(at 10% 10%, rgba(245, 158, 11, 0.18) 0px, transparent 40%),
+                   radial-gradient(at 90% 10%, rgba(236, 72, 153, 0.18) 0px, transparent 40%),
+                   radial-gradient(at 50% 90%, rgba(14, 165, 233, 0.18) 0px, transparent 50%),
+                   radial-gradient(at 80% 50%, rgba(139, 92, 246, 0.15) 0px, transparent 40%);
+    --panel-bg: rgba(255, 255, 255, 0.95);
+    --panel-border: #cbd5e1;
+    --primary: #0284c7;
+    --primary-glow: rgba(2, 132, 199, 0.3);
+    --secondary: #7c3aed;
+    --secondary-glow: rgba(124, 58, 237, 0.25);
+    --accent-emerald: #059669;
+    --accent-amber: #d97706;
+    --accent-rose: #e11d48;
+    --danger: #ef4444;
+    --success: #10b981;
     --text-dark: #0f172a;
     --text-muted: #475569;
-    --radius-lg: 28px;
-    --radius-md: 18px;
+    --radius-lg: 24px;
+    --radius-md: 14px;
     --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     --font-display: 'Outfit', var(--font-main);
-    --font-fun: 'Fredoka', cursive;
-    --transition-fast: 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-    --transition-smooth: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-fast: 0.15s ease;
+    --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* Reset & Box Sizing */
   *, *::before, *::after { 
     box-sizing: border-box; 
     margin: 0; 
     padding: 0; 
   }
 
+  /* Force Full Viewport Layout without Body Scrolling */
   html, body {
     height: 100%;
     width: 100%;
@@ -89,56 +92,22 @@
     color: var(--text-dark);
   }
 
+  /* Interactive elements pointer override */
   button, select, input, a, .card, .logo {
     cursor: pointer;
   }
 
   body {
-    background: var(--bg-mesh);
-    background-size: 200% 200%;
-    animation: gradientShift 12s ease infinite;
+    background-image: var(--bg-gradient);
+    background-attachment: fixed;
     display: flex;
     flex-direction: column;
-  }
-
-  /* Keyframe Animations */
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  @keyframes floatAnimation {
-    0% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-8px) rotate(1deg); }
-    100% { transform: translateY(0px) rotate(0deg); }
-  }
-
-  @keyframes pulseRainbow {
-    0% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.6), 0 0 40px rgba(139, 92, 246, 0.4); }
-    50% { box-shadow: 0 0 30px rgba(6, 182, 212, 0.8), 0 0 50px rgba(16, 185, 129, 0.5); }
-    100% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.6), 0 0 40px rgba(139, 92, 246, 0.4); }
-  }
-
-  @keyframes popIn {
-    0% { opacity: 0; transform: scale(0.85) translateY(20px); }
-    100% { opacity: 1; transform: scale(1) translateY(0); }
-  }
-
-  @keyframes bounceIcon {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-10px) scale(1.15) rotate(-5deg); }
-  }
-
-  @keyframes rotateBadge {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
   }
 
   /* App Shell Container */
   .app-container {
     width: 100%;
-    max-width: 1480px;
+    max-width: 1440px;
     height: 100%;
     margin: 0 auto;
     padding: 0 24px;
@@ -146,15 +115,14 @@
     flex-direction: column;
   }
 
-  /* Dynamic Animated Header */
+  /* Navigation Header */
   header {
-    border-bottom: 3px solid transparent;
-    border-image: linear-gradient(90deg, #ff007f, #7928ca, #00dfd8, #ff007f) 1;
+    border-bottom: 2px solid var(--panel-border);
     padding: 14px 0;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
     flex-shrink: 0;
-    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   }
 
   .nav-bar {
@@ -165,8 +133,8 @@
   }
 
   .logo {
-    font-family: var(--font-fun);
-    font-size: 32px;
+    font-family: var(--font-display);
+    font-size: 28px;
     font-weight: 900;
     letter-spacing: -0.5px;
     color: var(--text-dark);
@@ -178,26 +146,21 @@
     transition: transform var(--transition-fast);
   }
 
-  .logo:hover { 
-    transform: scale(1.08) rotate(-2deg); 
-  }
+  .logo:hover { transform: scale(1.03); }
 
   .logo span {
-    background: linear-gradient(135deg, #ff007f, #7928ca, #00dfd8);
+    background: linear-gradient(135deg, #ec4899, #8b5cf6, #06b6d4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: floatAnimation 3s ease-in-out infinite;
-    display: inline-block;
   }
 
   nav {
     display: flex;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.7);
+    background: #f1f5f9;
     padding: 6px;
     border-radius: var(--radius-lg);
-    border: 3px solid #e2e8f0;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    border: 2px solid var(--panel-border);
   }
 
   nav button {
@@ -208,46 +171,40 @@
     border-radius: var(--radius-md);
     font-size: 15px;
     font-weight: 800;
-    transition: all var(--transition-fast);
+    transition: all var(--transition-smooth);
   }
 
-  nav button:hover { 
-    color: var(--primary);
-    transform: translateY(-2px) scale(1.05);
-  }
+  nav button:hover { color: var(--text-dark); }
 
   nav button.active {
-    background: linear-gradient(135deg, #ff007f, #7928ca, #00dfd8);
+    background: linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6);
     color: #ffffff;
-    box-shadow: 0 6px 20px rgba(121, 40, 202, 0.4);
-    animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
   }
 
-  /* Colorful Typography Classes */
+  /* Colorful Typography Classes for Glazing */
   .gradient-text-rainbow {
-    background: linear-gradient(135deg, #ff0055, #7928ca, #00dfd8, #00e676);
-    background-size: 200% 200%;
-    animation: gradientShift 4s ease infinite;
+    background: linear-gradient(135deg, #f43f5e, #8b5cf6, #06b6d4, #10b981);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-family: var(--font-display);
   }
 
   .gradient-text-sunfire {
-    background: linear-gradient(135deg, #ff9900, #ff007f, #7928ca);
+    background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-family: var(--font-display);
   }
 
   .gradient-text-ocean {
-    background: linear-gradient(135deg, #00dfd8, #007cf0, #7928ca);
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6, #6366f1);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-family: var(--font-display);
   }
 
-  /* Animated Hero Home Screen */
+  /* Hero Home Screen Styling */
   .hero-panel {
     display: flex;
     flex-direction: column;
@@ -255,39 +212,37 @@
     justify-content: space-between;
     text-align: center;
     gap: 16px;
-    padding: 28px;
+    padding: 24px;
     overflow-y: auto;
-    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  .slogan-banner {
-    font-family: var(--font-fun);
-    font-size: 18px;
+  .hero-badge-pill {
+    background: linear-gradient(135deg, #fef3c7, #fce7f3);
+    border: 2px solid #f43f5e;
+    color: #be123c;
+    padding: 6px 18px;
+    border-radius: 30px;
     font-weight: 900;
-    color: #ffffff;
-    background: linear-gradient(135deg, #ff007f, #7928ca, #00dfd8);
-    padding: 10px 28px;
-    border-radius: 50px;
+    font-size: 13px;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    box-shadow: 0 8px 25px rgba(255, 0, 127, 0.4);
-    animation: floatAnimation 3.5s ease-in-out infinite, pulseRainbow 3s infinite;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(244, 63, 94, 0.15);
   }
 
   .hero-title {
-    font-size: 46px;
+    font-size: 40px;
     font-weight: 900;
-    letter-spacing: -1.5px;
+    letter-spacing: -1px;
     color: var(--text-dark);
-    line-height: 1.1;
-    max-width: 950px;
+    line-height: 1.15;
+    max-width: 900px;
   }
 
   .hero-subtitle {
-    font-size: 17px;
+    font-size: 16px;
     color: #334155;
-    max-width: 800px;
-    font-weight: 700;
+    max-width: 750px;
+    font-weight: 600;
     line-height: 1.5;
   }
 
@@ -299,135 +254,137 @@
   }
 
   .btn-hero {
-    font-size: 20px;
-    font-weight: 900;
-    padding: 20px 48px;
-    border-radius: 50px;
-    color: #ffffff;
-    background: linear-gradient(135deg, #ff007f, #7928ca, #00dfd8);
-    background-size: 200% 200%;
-    animation: gradientShift 3s ease infinite, pulseRainbow 2s infinite;
-    border: none;
-    transition: transform var(--transition-fast);
+    font-size: 19px;
+    padding: 20px 42px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+    animation: pulseGlow 2.5s infinite alternate;
   }
 
-  .btn-hero:hover {
-    transform: scale(1.1) rotate(-1deg);
+  @keyframes pulseGlow {
+    0% { transform: scale(1); box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4); }
+    100% { transform: scale(1.03); box-shadow: 0 15px 35px rgba(236, 72, 153, 0.5); }
   }
 
-  /* Animated Feature Cards Grid */
+  /* Glazing Showcase Section on Home Screen */
   .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 18px;
+    gap: 16px;
     width: 100%;
     margin-top: 10px;
   }
 
   .feature-card {
-    background: rgba(255, 255, 255, 0.85);
-    border: 3px solid #f472b6;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #e2e8f0;
     border-radius: var(--radius-md);
-    padding: 20px;
+    padding: 18px;
     text-align: left;
     transition: all var(--transition-smooth);
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(10px);
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #f43f5e, #8b5cf6, #06b6d4);
   }
 
   .feature-card:hover {
-    transform: translateY(-8px) scale(1.03) rotate(1deg);
-    border-color: #00dfd8;
-    box-shadow: 0 15px 35px rgba(0, 223, 216, 0.3);
+    transform: translateY(-4px);
+    border-color: var(--secondary);
+    box-shadow: 0 12px 24px rgba(124, 58, 237, 0.15);
   }
 
   .feature-icon {
-    font-size: 36px;
+    font-size: 28px;
     margin-bottom: 8px;
     display: inline-block;
-    animation: bounceIcon 2.5s infinite ease-in-out;
   }
 
   .feature-card h3 {
-    font-size: 18px;
-    font-weight: 900;
+    font-size: 17px;
+    font-weight: 800;
     margin-bottom: 6px;
   }
 
   .feature-card p {
     font-size: 13px;
     color: var(--text-muted);
+    line-height: 1.4;
     font-weight: 600;
   }
 
-  /* 5-Day Weather Widget Component */
+  /* 5-Day Weather Forecast Widget Component */
   .weather-widget {
-    background: linear-gradient(135deg, #e0f2fe, #f0fdf4);
-    border: 3px solid #00dfd8;
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+    border: 2px solid var(--primary);
     border-radius: var(--radius-md);
-    padding: 14px 18px;
+    padding: 12px 16px;
     margin-bottom: 20px;
-    box-shadow: 0 8px 20px rgba(6, 182, 212, 0.15);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
     flex-shrink: 0;
   }
 
   .forecast-title {
     font-size: 14px;
-    font-weight: 900;
-    margin-bottom: 10px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.5px;
   }
 
   .forecast-grid {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
     overflow-x: auto;
   }
 
   .forecast-day {
     flex: 1;
-    min-width: 95px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid #cbd5e1;
-    border-radius: 12px;
-    padding: 10px;
+    min-width: 90px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 8px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: transform var(--transition-fast);
-  }
-
-  .forecast-day:hover {
-    transform: translateY(-4px) scale(1.05);
-    border-color: var(--primary);
   }
 
   .forecast-date {
     font-size: 12px;
     font-weight: 800;
+    color: var(--text-dark);
   }
 
   .forecast-icon {
-    width: 40px;
-    height: 40px;
-    animation: bounceIcon 3s infinite;
+    width: 36px;
+    height: 36px;
   }
 
   .forecast-temp {
     font-size: 13px;
-    font-weight: 900;
+    font-weight: 800;
     color: var(--primary);
   }
 
   .forecast-desc {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--text-muted);
     text-transform: capitalize;
+    margin-top: 2px;
   }
 
   /* Main Viewport Container */
@@ -450,16 +407,14 @@
   /* Unified Panel Layout */
   .panel {
     background: var(--panel-bg);
-    border: 3px solid #f472b6;
+    border: 2px solid var(--panel-border);
     border-radius: var(--radius-lg);
     padding: 28px;
-    box-shadow: 0 15px 40px rgba(236, 72, 153, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     height: 100%;
     max-height: 100%;
-    backdrop-filter: blur(16px);
-    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .panel-header {
@@ -490,23 +445,55 @@
   }
 
   select, input[type="number"], input[type="text"], input[type="date"], input[type="email"] {
-    background: #ffffff;
-    border: 3px solid #cbd5e1;
+    background: #f8fafc;
+    border: 2px solid var(--panel-border);
     color: var(--text-dark);
     padding: 14px 18px;
     border-radius: var(--radius-md);
     font-family: var(--font-main);
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 600;
     outline: none;
     width: 100%;
-    transition: all var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   }
 
   select:focus, input:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 4px var(--primary-glow);
-    transform: scale(1.01);
+    background: #ffffff;
+  }
+
+  select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #e2e8f0;
+  }
+
+  /* Attraction Callout Display Box */
+  .attraction-display {
+    margin-top: 10px;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+    border: 2px dashed var(--primary);
+    text-align: center;
+    display: none;
+  }
+
+  .attraction-display h4 {
+    margin: 0 0 4px 0;
+    color: var(--primary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .attraction-display p {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text-dark);
   }
 
   /* Filter Toolbar */
@@ -519,36 +506,34 @@
   }
 
   .filter-btn {
-    background: #ffffff;
-    border: 2px solid #cbd5e1;
+    background: #f1f5f9;
+    border: 2px solid var(--panel-border);
     color: var(--text-muted);
     padding: 10px 18px;
-    border-radius: 30px;
+    border-radius: 24px;
     font-size: 14px;
     font-weight: 800;
-    transition: all var(--transition-fast);
+    transition: all var(--transition-smooth);
   }
 
   .filter-btn.active, .filter-btn:hover {
-    border-color: transparent;
+    border-color: var(--primary);
     color: #ffffff;
-    background: linear-gradient(135deg, #ff007f, #7928ca);
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 6px 15px rgba(255, 0, 127, 0.3);
+    background: var(--primary);
   }
 
-  /* Scrollable Content Container */
+  /* Dynamic Scrollable Content Container */
   .scroll-container {
     overflow-y: auto;
     padding-right: 8px;
     flex: 1;
   }
 
-  .scroll-container::-webkit-scrollbar { width: 10px; }
+  .scroll-container::-webkit-scrollbar { width: 8px; }
   .scroll-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-  .scroll-container::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #ff007f, #00dfd8); border-radius: 10px; }
+  .scroll-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-  /* Dynamic Animated Grid Layout for Cards */
+  /* Grid Layout for Cards */
   .grid-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -557,32 +542,31 @@
 
   .card {
     background: #ffffff;
-    border: 3px solid #e2e8f0;
+    border: 2px solid var(--panel-border);
     border-radius: var(--radius-lg);
-    padding: 22px;
+    padding: 20px;
     transition: all var(--transition-smooth);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
-    animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   }
 
   .card:hover {
-    border-color: #ff007f;
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(255, 0, 127, 0.2);
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(2, 132, 199, 0.15);
   }
 
   .card.selected {
-    border-color: #00dfd8;
-    background: #f0fdf4;
-    box-shadow: 0 0 0 3px #00dfd8, 0 10px 25px rgba(0, 223, 216, 0.25);
+    border-color: var(--primary);
+    background: #f0f9ff;
+    box-shadow: 0 0 0 2px var(--primary);
   }
 
   .card h3 {
-    font-size: 19px;
-    font-weight: 900;
+    font-size: 18px;
+    font-weight: 800;
     color: var(--text-dark);
     margin-bottom: 8px;
   }
@@ -592,13 +576,13 @@
     color: var(--text-muted);
     margin-bottom: 12px;
     line-height: 1.5;
-    font-weight: 600;
+    font-weight: 500;
   }
 
   .hotel-links-box {
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 2px dashed #e2e8f0;
+    border-top: 1px dashed var(--panel-border);
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -606,9 +590,10 @@
 
   .hotel-links-title {
     font-size: 12px;
-    font-weight: 900;
+    font-weight: 800;
     color: var(--accent-amber);
     text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   .booking-buttons-group {
@@ -622,21 +607,20 @@
     align-items: center;
     gap: 4px;
     font-size: 12px;
-    font-weight: 800;
-    padding: 6px 12px;
-    border-radius: 10px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 8px;
     text-decoration: none;
     background: #f8fafc;
-    color: var(--secondary);
-    border: 2px solid #cbd5e1;
+    color: var(--primary);
+    border: 1px solid var(--panel-border);
     transition: all var(--transition-fast);
   }
 
   .hotel-booking-btn:hover {
-    background: var(--secondary);
+    background: var(--primary);
     color: #ffffff;
-    border-color: var(--secondary);
-    transform: scale(1.05);
+    border-color: var(--primary);
   }
 
   .card-footer {
@@ -645,26 +629,26 @@
     align-items: flex-end;
     margin-top: 16px;
     padding-top: 12px;
-    border-top: 2px solid #f1f5f9;
+    border-top: 1px solid #f1f5f9;
   }
 
-  /* Vibrant Category Badges */
+  /* Vibrant Category Tags */
   .badge-category {
     display: inline-block;
     font-size: 11px;
-    font-weight: 900;
+    font-weight: 800;
     text-transform: uppercase;
-    padding: 6px 12px;
-    border-radius: 20px;
+    padding: 4px 10px;
+    border-radius: 12px;
     letter-spacing: 0.6px;
   }
 
-  .cat-Hotel { background: #fef3c7; color: #b45309; border: 2px solid #f59e0b; }
-  .cat-Sight { background: #e0f2fe; color: #0369a1; border: 2px solid #0284c7; }
-  .cat-Activity { background: #f3e8ff; color: #6b21a8; border: 2px solid #a855f7; }
-  .cat-Dining { background: #dcfce7; color: #15803d; border: 2px solid #22c55e; }
-  .cat-Nightlife { background: #ffe4e6; color: #be123c; border: 2px solid #f43f5e; }
-  .cat-Shopping { background: #ffedd5; color: #c2410c; border: 2px solid #f97316; }
+  .cat-Hotel { background: #fef3c7; color: #b45309; }
+  .cat-Sight { background: #e0f2fe; color: #0369a1; }
+  .cat-Activity { background: #f3e8ff; color: #6b21a8; }
+  .cat-Dining { background: #dcfce7; color: #15803d; }
+  .cat-Nightlife { background: #ffe4e6; color: #be123c; }
+  .cat-Shopping { background: #ffedd5; color: #c2410c; }
 
   .badge-cost-wrapper {
     display: flex;
@@ -674,62 +658,50 @@
 
   .badge-cost {
     display: inline-block;
-    background: #f0fdf4;
-    color: var(--accent-emerald);
+    background: #e0f2fe;
+    color: var(--primary);
     font-weight: 900;
-    font-size: 16px;
-    padding: 4px 12px;
-    border-radius: 10px;
-    border: 2px solid var(--accent-emerald);
+    font-size: 15px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--primary);
   }
 
   .badge-currency-local {
     font-size: 12px;
-    font-weight: 800;
-    color: var(--text-muted);
+    font-weight: 700;
+    color: var(--accent-emerald);
   }
 
   /* Buttons */
   .btn-card-add {
-    background: linear-gradient(135deg, #ff007f, #7928ca);
+    background: var(--primary);
     color: white;
     border: none;
-    padding: 10px 18px;
-    border-radius: 12px;
-    font-weight: 900;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 800;
     font-size: 13px;
-    transition: all var(--transition-fast);
+    transition: background var(--transition-fast);
   }
 
-  .btn-card-add:hover { 
-    transform: scale(1.08); 
-    box-shadow: 0 6px 15px rgba(255, 0, 127, 0.4);
-  }
-  .btn-card-add.added { 
-    background: var(--success); 
-    color: #000;
-  }
+  .btn-card-add:hover { background: #0369a1; }
+  .btn-card-add.added { background: var(--success); }
 
   .item-row {
-    background: #ffffff;
-    border: 3px solid #e2e8f0;
-    border-radius: 18px;
-    padding: 20px;
+    background: #f8fafc;
+    border: 2px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 18px 20px;
     margin-bottom: 14px;
-    transition: all var(--transition-fast);
-  }
-
-  .item-row:hover {
-    border-color: #00dfd8;
-    transform: scale(1.01);
   }
 
   .item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 18px;
-    font-weight: 900;
+    font-size: 17px;
+    font-weight: 800;
     color: var(--text-dark);
     margin-bottom: 6px;
   }
@@ -737,7 +709,7 @@
   .item-desc {
     font-size: 14px;
     color: var(--text-muted);
-    font-weight: 600;
+    font-weight: 500;
   }
 
   .slider-row {
@@ -746,7 +718,7 @@
     gap: 14px;
     margin-top: 14px;
     padding-top: 12px;
-    border-top: 2px solid #f1f5f9;
+    border-top: 1px solid var(--panel-border);
   }
 
   .slider-row label {
@@ -757,83 +729,69 @@
 
   .slider-row input[type="range"] {
     flex: 1;
-    accent-color: #ff007f;
-    height: 8px;
+    accent-color: var(--primary);
+    height: 6px;
   }
 
   .val-badge {
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 900;
     color: var(--primary);
   }
 
   .btn {
-    background: linear-gradient(135deg, #ff007f, #7928ca);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: #ffffff;
     border: none;
-    padding: 14px 30px;
+    padding: 14px 28px;
     border-radius: var(--radius-md);
     font-size: 15px;
-    font-weight: 900;
+    font-weight: 800;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: all var(--transition-fast);
-    box-shadow: 0 8px 20px rgba(255, 0, 127, 0.3);
-  }
-
-  .btn:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 12px 25px rgba(255, 0, 127, 0.4);
+    transition: all var(--transition-smooth);
+    box-shadow: 0 4px 16px var(--primary-glow);
   }
 
   .btn-secondary {
-    background: #ffffff;
+    background: #e2e8f0;
     color: var(--text-dark);
-    border: 3px solid #cbd5e1;
+    border: 2px solid var(--panel-border);
     box-shadow: none;
   }
 
-  .btn-secondary:hover {
-    border-color: var(--primary);
-    background: #f8fafc;
-  }
-
   .btn-phone {
-    background: linear-gradient(135deg, #00e676, #00b0ff);
-    color: #000000;
-    box-shadow: 0 8px 20px rgba(0, 230, 118, 0.3);
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
   }
 
   .btn-home {
-    background: #f0fdf4;
-    color: var(--accent-emerald);
-    border: 2px solid var(--accent-emerald);
-    padding: 8px 18px;
-    border-radius: 12px;
+    background: #e0f2fe;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    padding: 8px 16px;
+    border-radius: 10px;
     font-size: 13px;
-    font-weight: 900;
+    font-weight: 800;
     transition: all var(--transition-fast);
   }
 
-  .btn-home:hover {
-    background: var(--accent-emerald);
-    color: #ffffff;
-    transform: scale(1.05);
+  .btn:hover, .btn-home:hover {
+    opacity: 0.95;
+    transform: translateY(-2px);
   }
 
   .btn-danger {
     background: var(--danger);
     color: #ffffff;
-    padding: 6px 14px;
+    padding: 6px 12px;
     font-size: 13px;
-    font-weight: 900;
-    border-radius: 10px;
+    font-weight: 800;
+    border-radius: 8px;
     border: none;
-    transition: transform var(--transition-fast);
   }
-
-  .btn-danger:hover { transform: scale(1.1); }
 
   .add-form-grid {
     display: grid;
@@ -846,36 +804,35 @@
 
   /* Budget Summary & Progress Bar */
   .budget-summary-card {
-    background: #ffffff;
-    border-radius: 18px;
-    border: 3px solid #f472b6;
-    padding: 20px 26px;
+    background: #f1f5f9;
+    border-radius: 14px;
+    border: 2px solid var(--panel-border);
+    padding: 18px 24px;
     margin-bottom: 20px;
     flex-shrink: 0;
-    box-shadow: 0 8px 20px rgba(244, 114, 182, 0.15);
   }
 
   .budget-summary-text {
     display: flex;
     justify-content: space-between;
-    font-size: 17px;
-    font-weight: 800;
-    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
   }
 
   .budget-bar-wrapper {
     width: 100%;
-    height: 14px;
+    height: 10px;
     background: #e2e8f0;
-    border-radius: 10px;
+    border-radius: 6px;
     overflow: hidden;
   }
 
   .budget-bar-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #00dfd8, #ff007f);
-    transition: width var(--transition-smooth);
+    background: var(--primary);
+    transition: width var(--transition-smooth), background-color var(--transition-smooth);
   }
 
   /* Summary Table */
@@ -887,7 +844,7 @@
   .summary-table th, .summary-table td {
     padding: 16px;
     text-align: left;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid var(--panel-border);
     font-size: 15px;
   }
 
@@ -896,7 +853,7 @@
     text-transform: uppercase;
     font-size: 13px;
     letter-spacing: 0.8px;
-    font-weight: 900;
+    font-weight: 800;
   }
 
   .action-bar {
@@ -950,39 +907,39 @@
     <!-- HOME SCREEN WELCOME / LANDING PAGE -->
     <section id="page-home" class="page active">
       <div class="panel hero-panel">
-        <div class="slogan-banner">✨ WANDER WILD, PLAN SMART: YOUR ULTIMATE ADVENTURE LAUNCHPAD! ✨</div>
+        <div class="hero-badge-pill">✨ Explore Without Boundaries ✨</div>
         <h1 class="hero-title">
-          Explore 20+ Global Wonders with <span class="gradient-text-rainbow">Hyper-Vibrant Intelligence</span>
+          Your Gateway to <span class="gradient-text-rainbow">Iconic Destinations</span> & Precision Planning
         </h1>
         <p class="hero-subtitle">
-          WayPoint Advisor supercharges your journey! Explore 20 world-famous destinations, auto-convert multi-currency budgets, check 5-day live weather, and craft incredible itineraries in seconds.
+          WayPoint Advisor revolutionizes travel planning! Effortlessly browse iconic world landmarks, track multi-currency budgets in real-time, get live 5-day weather updates, and organize your dream vacation with smooth perfection.
         </p>
         
         <div class="hero-actions">
-          <button class="btn btn-hero" data-navigate="step1">🚀 START YOUR ADVENTURE NOW 🚀</button>
+          <button class="btn btn-hero" data-navigate="step1">✨ Start Planning Preferences ✨</button>
         </div>
 
         <!-- Glazing Showcase Feature Grid -->
         <div class="features-grid">
           <div class="feature-card">
-            <span class="feature-icon">🌏</span>
-            <h3 class="gradient-text-ocean">20 Global Hubs</h3>
-            <p>From Tokyo to Santorini, discover top hotels, sights, and local experiences.</p>
+            <span class="feature-icon">🗺️</span>
+            <h3 class="gradient-text-ocean">Global Landmark Explorer</h3>
+            <p>Curated premier attractions, hot spots, and luxury stays across iconic world destinations.</p>
           </div>
           <div class="feature-card">
             <span class="feature-icon">💸</span>
-            <h3 class="gradient-text-sunfire">Crazy Budget Engine</h3>
-            <p>Real-time visual progress bar with instant local currency conversion.</p>
+            <h3 class="gradient-text-sunfire">Smart Budget Allocator</h3>
+            <p>Dynamic visual progress bars with auto-converting real-time local currency calculations.</p>
           </div>
           <div class="feature-card">
             <span class="feature-icon">🌤️</span>
             <h3 class="gradient-text-rainbow">Live 5-Day Weather</h3>
-            <p>Integrated OpenWeather API forecasting to keep you ready for any adventure.</p>
+            <p>Integrated OpenWeather API forecasting to keep your daily itinerary prepped for any climate.</p>
           </div>
           <div class="feature-card">
             <span class="feature-icon">📲</span>
-            <h3 class="gradient-text-ocean">Instant Mobile Sync</h3>
-            <p>Export pixel-perfect PDF itineraries or send instant SMS passes directly to your phone.</p>
+            <h3 class="gradient-text-ocean">Instant Mobile Sync & PDF</h3>
+            <p>Export pixel-perfect PDF itineraries or dispatch instant SMS trip passes straight to your phone.</p>
           </div>
         </div>
       </div>
@@ -990,25 +947,51 @@
 
     <!-- SCREEN 1: PREFERENCES & DESTINATION -->
     <section id="page-step1" class="page">
-      <div class="panel">
+      <div class="panel scroll-container">
         <div class="panel-header">
           <span class="gradient-text-rainbow">Step 1: Set Your Travel Preferences</span>
           <button class="btn-home" data-navigate="home">🏠 Home</button>
         </div>
         <div class="form-group">
           <label for="input-budget">Total Budget Goal ($USD):</label>
-          <input type="number" id="input-budget" value="2000" min="0" step="50">
-          <span id="home-budget-display" style="font-size: 15px; font-weight: 800; color: var(--primary); margin-top: 4px;"></span>
+          <input type="number" id="input-budget" value="1500" min="0" step="50">
+          <span id="home-budget-display" style="font-size: 14px; font-weight: 700; color: var(--primary); margin-top: 4px;"></span>
         </div>
+
+        <!-- Hierarchical Location & Attraction Selector -->
         <div class="form-group">
-          <label for="location-select">Select Destination (20 World Wonders & Cities):</label>
-          <select id="location-select"></select>
+          <label for="country-select">Country:</label>
+          <select id="country-select" onchange="updateLocations()">
+            <option value="">Select Country</option>
+            <option value="usa">United States</option>
+            <option value="global">Global Destinations</option>
+          </select>
         </div>
+
         <div class="form-group">
+          <label for="location-select">Location / Region:</label>
+          <select id="location-select" onchange="updateAttractions()" disabled>
+            <option value="">Select Location</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="attraction-select">Key Attractions:</label>
+          <select id="attraction-select" onchange="triggerOverkillFX()" disabled>
+            <option value="">Select Attraction</option>
+          </select>
+        </div>
+
+        <div class="attraction-display" id="displayBox">
+          <h4>Featured Attraction Highlight</h4>
+          <p id="attractionTitle">-</p>
+        </div>
+
+        <div class="form-group" style="margin-top: 12px;">
           <label for="trip-date">Trip Date:</label>
           <input type="date" id="trip-date" value="2026-10-15">
         </div>
-        <div style="text-align: right; margin-top: auto;">
+        <div style="text-align: right; margin-top: auto; padding-top: 16px;">
           <button class="btn" data-navigate="step2">Explore Attractions & Hotels →</button>
         </div>
       </div>
@@ -1063,7 +1046,7 @@
         <div class="add-form-grid">
           <div>
             <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 6px; font-weight: 800;">Spot / Hotel Name</label>
-            <input type="text" id="custom-name" placeholder="e.g. Helicopter Tour or Boutique Hotel">
+            <input type="text" id="custom-name" placeholder="e.g. VIP Tour or Hotel Stay">
           </div>
           <div>
             <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 6px; font-weight: 800;">Category</label>
@@ -1141,7 +1124,7 @@
 
         <div class="form-group" style="margin-top: 18px;">
           <label for="email-address">Email Briefing To:</label>
-          <input type="email" id="email-address" placeholder="e.g. explorer@waypoint.com">
+          <input type="email" id="email-address" placeholder="e.g. traveler@waypoint.com">
         </div>
 
         <div class="action-bar">
@@ -1182,132 +1165,150 @@ function setGlobeEmojiCursor() {
 }
 
 /**
- * Application Database Store - 20 Expanded Locations
+ * Hierarchical Dropdown Data Store
+ */
+const HIERARCHY_DATA = {
+  usa: {
+    "Blue Ridge Parkway (NC/VA)": {
+      dbId: "blue-ridge-parkway",
+      attractions: [
+        "Linn Cove Viaduct",
+        "Linville Falls",
+        "Craggy Gardens",
+        "Grandfather Mountain"
+      ]
+    },
+    "Outer Banks (NC)": {
+      dbId: "outer-banks",
+      attractions: [
+        "Cape Hatteras Lighthouse",
+        "Wright Brothers National Memorial",
+        "Jockey's Ridge State Park"
+      ]
+    },
+    "Shenandoah Valley (VA)": {
+      dbId: "shenandoah-valley",
+      attractions: [
+        "Skyline Drive",
+        "Luray Caverns",
+        "Old Rag Mountain"
+      ]
+    },
+    "Statue of Liberty & Manhattan (New York)": {
+      dbId: "statue-liberty",
+      attractions: [
+        "Statue of Liberty & Ellis Island",
+        "SUMMIT One Vanderbilt",
+        "Broadway Theatre District",
+        "Central Park"
+      ]
+    }
+  },
+  global: {
+    "Taj Mahal (Agra, India)": {
+      dbId: "taj-mahal",
+      attractions: ["Taj Mahal Sunrise", "Agra Fort", "Mehtab Bagh"]
+    },
+    "The Colosseum (Rome, Italy)": {
+      dbId: "colosseum",
+      attractions: ["Colosseum Arena Floor", "Roman Forum", "Vatican Museums"]
+    },
+    "Machu Picchu (Peru)": {
+      dbId: "machu-picchu",
+      attractions: ["Machu Picchu Citadel", "Huayna Picchu Peak", "Inca Trail"]
+    },
+    "Chichen Itza (Yucatan, Mexico)": {
+      dbId: "chichen-itza",
+      attractions: ["El Castillo Pyramid", "Cenote Ik Kil", "Mayan Woodcarving Market"]
+    },
+    "Petra Ancient City (Jordan)": {
+      dbId: "petra",
+      attractions: ["The Treasury (Al-Khazneh)", "The Monastery (Ad Deir)", "Petra Night Candlelit Show"]
+    },
+    "Christ the Redeemer (Rio, Brazil)": {
+      dbId: "christ-redeemer",
+      attractions: ["Corcovado Cog Train", "Sugarloaf Mountain Cable Car", "Copacabana Beach"]
+    },
+    "The Great Wall (Beijing, China)": {
+      dbId: "great-wall",
+      attractions: ["Mutianyu Great Wall", "Forbidden City Imperial Palace", "Sanlitun Bar Street"]
+    },
+    "Eiffel Tower (Paris, France)": {
+      dbId: "eiffel-tower",
+      attractions: ["Eiffel Tower Summit", "Louvre Museum", "Seine River Dinner Cruise"]
+    },
+    "Pyramids of Giza (Cairo, Egypt)": {
+      dbId: "pyramids-giza",
+      attractions: ["Great Pyramid & Sphinx", "Grand Egyptian Museum", "Nile River Lounge"]
+    }
+  }
+};
+
+/**
+ * Application Database Store
  */
 const CITY_DATABASE = [
   {
-    id: 'tokyo',
-    name: 'Tokyo (Japan)',
-    queryCity: 'Tokyo',
-    lat: 35.6762,
-    lon: 139.6503,
-    country: 'Japan',
-    currencySymbol: '¥',
-    currencyCode: 'JPY',
-    rateToUSD: 155.0,
+    id: 'blue-ridge-parkway',
+    name: 'Blue Ridge Parkway (NC/VA)',
+    queryCity: 'Asheville',
+    lat: 35.5951,
+    lon: -82.5515,
+    country: 'United States',
+    currencySymbol: '$',
+    currencyCode: 'USD',
+    rateToUSD: 1.0,
     hotels: [
-      { id: 'h_tk1', name: 'Aman Tokyo', desc: 'Sanctuary above Otemachi with sweeping skyline views.', cost: 950, category: 'Hotel', bookingQuery: 'Aman Tokyo' },
-      { id: 'h_tk2', name: 'Park Hyatt Tokyo', desc: 'Iconic Shinjuku skyscraper stay featured in Lost in Translation.', cost: 620, category: 'Hotel', bookingQuery: 'Park Hyatt Tokyo' },
-      { id: 'h_tk3', name: 'Trunk Hotel Shibuya', desc: 'Trendy boutique hotel with vibrant social lounge.', cost: 280, category: 'Hotel', bookingQuery: 'Trunk Hotel Shibuya' }
+      { id: 'h_brp1', name: 'The Omni Grove Park Inn', desc: 'Historic mountain resort with legendary spa views over the Blue Ridge.', cost: 380, category: 'Hotel', bookingQuery: 'The Omni Grove Park Inn Asheville' },
+      { id: 'h_brp2', name: 'Grand Bohemian Hotel Asheville', desc: 'Tudor-style boutique hotel steps from the Biltmore Estate.', cost: 290, category: 'Hotel', bookingQuery: 'Grand Bohemian Hotel Asheville' },
+      { id: 'h_brp3', name: 'Pisgah Inn', desc: 'Peak-of-the-parkway hotel perched right along the scenic route.', cost: 180, category: 'Hotel', bookingQuery: 'Pisgah Inn Blue Ridge Parkway' }
     ],
     places: [
-      { id: 'tk1', name: 'Akihabara Real-Life Kart Racing', desc: 'Zip through city streets in custom kart costumes.', cost: 90, category: 'Activity' },
-      { id: 'tk2', name: 'teamLab Planets Immersive Art', desc: 'Walk through body-immersive digital artwork and water.', cost: 38, category: 'Sight' },
-      { id: 'tk3', name: 'Tsukiji Outer Market Food Tour', desc: 'Sample fresh sushi, wagyu skewers, and tamagoyaki.', cost: 75, category: 'Dining' },
-      { id: 'tk4', name: 'Shibuya Sky Observatory', desc: '360-degree open-air rooftop view over Shibuya Crossing.', cost: 22, category: 'Sight' },
-      { id: 'tk5', name: 'Golden Gai Bar Crawl in Shinjuku', desc: 'Explore historic micro-bars in cozy narrow alleyways.', cost: 65, category: 'Nightlife' }
+      { id: 'brp1', name: 'Linn Cove Viaduct', desc: 'Engineering marvel curving around Grandfather Mountain.', cost: 0, category: 'Sight' },
+      { id: 'brp2', name: 'Linville Falls & Gorge Hike', desc: 'Breathtaking waterfall trail surrounded by mountain cliffs.', cost: 15, category: 'Activity' },
+      { id: 'brp3', name: 'Craggy Gardens Pinnacle Trail', desc: 'High-elevation mountain ridge trail with rhododendron blooms.', cost: 10, category: 'Activity' },
+      { id: 'brp4', name: 'Grandfather Mountain Mile High Swinging Bridge', desc: 'Panoramas across Western NC mountain ranges.', cost: 24, category: 'Sight' },
+      { id: 'brp5', name: 'Biltmore Estate House & Gardens Tour', desc: 'America’s largest private home located right near the Parkway.', cost: 85, category: 'Sight' }
     ]
   },
   {
-    id: 'santorini',
-    name: 'Santorini (Greece)',
-    queryCity: 'Santorini',
-    lat: 36.3932,
-    lon: 25.4615,
-    country: 'Greece',
-    currencySymbol: '€',
-    currencyCode: 'EUR',
-    rateToUSD: 0.92,
+    id: 'outer-banks',
+    name: 'Outer Banks (NC)',
+    queryCity: 'Nags Head',
+    lat: 35.9574,
+    lon: -75.6241,
+    country: 'United States',
+    currencySymbol: '$',
+    currencyCode: 'USD',
+    rateToUSD: 1.0,
     hotels: [
-      { id: 'h_sn1', name: 'Grace Hotel Santorini', desc: 'Cliffside luxury in Imerovigli with infinity pool.', cost: 850, category: 'Hotel', bookingQuery: 'Grace Hotel Santorini' },
-      { id: 'h_sn2', name: 'Canaves Oia Suites', desc: 'Whitewashed cave suites hanging over the Aegean Sea.', cost: 720, category: 'Hotel', bookingQuery: 'Canaves Oia Suites' }
+      { id: 'h_obx1', name: 'Sanderling Resort', desc: 'Premier oceanfront resort in Duck, NC.', cost: 340, category: 'Hotel', bookingQuery: 'Sanderling Resort Duck NC' },
+      { id: 'h_obx2', name: 'TownePlace Suites Outer Banks', desc: 'Oceanfront hotel in Kill Devil Hills.', cost: 190, category: 'Hotel', bookingQuery: 'TownePlace Suites Outer Banks' }
     ],
     places: [
-      { id: 'sn1', name: 'Oia Sunset Catamaran Cruise', desc: 'Sail around caldera, volcanic hot springs, and red beach.', cost: 140, category: 'Activity' },
-      { id: 'sn2', name: 'Santo Wines Wine Tasting', desc: 'Sip volcanic Assyrtiko wines overlooking sunset cliffs.', cost: 60, category: 'Dining' },
-      { id: 'sn3', name: 'Akrotiri Prehistoric Ruins Tour', desc: 'Walk through preserved Minoan Bronze Age city.', cost: 25, category: 'Sight' },
-      { id: 'sn4', name: 'Fira Nightlife Cocktail Lounge Crawl', desc: 'Dance and drink with cliffside views in vibrant Fira.', cost: 55, category: 'Nightlife' }
+      { id: 'obx1', name: 'Cape Hatteras Lighthouse', desc: 'Historic black-and-white striped spiral lighthouse.', cost: 10, category: 'Sight' },
+      { id: 'obx2', name: 'Wright Brothers National Memorial', desc: 'Site of the world’s first powered flight in Kitty Hawk.', cost: 15, category: 'Sight' },
+      { id: 'obx3', name: 'Jockey\'s Ridge State Park', desc: 'Climb the highest living sand dune system on the Atlantic coast.', cost: 0, category: 'Activity' }
     ]
   },
   {
-    id: 'sydney',
-    name: 'Sydney (Australia)',
-    queryCity: 'Sydney',
-    lat: -33.8688,
-    lon: 151.2093,
-    country: 'Australia',
-    currencySymbol: 'A$',
-    currencyCode: 'AUD',
-    rateToUSD: 1.52,
+    id: 'shenandoah-valley',
+    name: 'Shenandoah Valley (VA)',
+    queryCity: 'Harrisonburg',
+    lat: 38.4496,
+    lon: -78.8689,
+    country: 'United States',
+    currencySymbol: '$',
+    currencyCode: 'USD',
+    rateToUSD: 1.0,
     hotels: [
-      { id: 'h_sy1', name: 'Crown Towers Sydney', desc: 'Ultra-luxury waterfront resort in Barangaroo.', cost: 580, category: 'Hotel', bookingQuery: 'Crown Towers Sydney' },
-      { id: 'h_sy2', name: 'Park Hyatt Sydney', desc: 'Unrivaled views of Sydney Harbour Bridge and Opera House.', cost: 820, category: 'Hotel', bookingQuery: 'Park Hyatt Sydney' }
+      { id: 'h_sv1', name: 'Skyland Lodge (Shenandoah National Park)', desc: 'Rustic mountain lodge right on Skyline Drive.', cost: 175, category: 'Hotel', bookingQuery: 'Skyland Lodge Shenandoah' },
+      { id: 'h_sv2', name: 'Hotel Madison & Shenandoah Conference Center', desc: 'Upscale stay near downtown Harrisonburg.', cost: 150, category: 'Hotel', bookingQuery: 'Hotel Madison Harrisonburg' }
     ],
     places: [
-      { id: 'sy1', name: 'Sydney Harbour BridgeClimb', desc: 'Scale the iconic steel arch for panoramic harbour views.', cost: 220, category: 'Activity' },
-      { id: 'sy2', name: 'Sydney Opera House Backstage Tour', desc: 'Exclusive access to performance halls and stage secrets.', cost: 70, category: 'Sight' },
-      { id: 'sy3', name: 'Bondi to Coogee Coastal Walk & Surf', desc: 'Breathtaking ocean views, cliff walks, and surfing lessons.', cost: 45, category: 'Activity' },
-      { id: 'sy4', name: 'Darling Harbour Waterfront Dining', desc: 'Fresh Australian seafood and craft beers.', cost: 85, category: 'Dining' }
-    ]
-  },
-  {
-    id: 'banff',
-    name: 'Banff National Park (Canada)',
-    queryCity: 'Banff',
-    lat: 51.1784,
-    lon: -115.5708,
-    country: 'Canada',
-    currencySymbol: 'CA$',
-    currencyCode: 'CAD',
-    rateToUSD: 1.36,
-    hotels: [
-      { id: 'h_bf1', name: 'Fairmont Banff Springs', desc: 'The historic Castle in the Rockies in alpine paradise.', cost: 550, category: 'Hotel', bookingQuery: 'Fairmont Banff Springs' },
-      { id: 'h_bf2', name: 'Fairmont Chateau Lake Louise', desc: 'Lakeside luxury facing turquoise glacial waters.', cost: 680, category: 'Hotel', bookingQuery: 'Fairmont Chateau Lake Louise' }
-    ],
-    places: [
-      { id: 'bf1', name: 'Lake Louise & Moraine Lake Canoe Tour', desc: 'Paddle turquoise glacial waters surrounded by peaks.', cost: 95, category: 'Activity' },
-      { id: 'bf2', name: 'Banff Gondola Summit Experience', desc: 'Ride to Sulphur Mountain boardwalk summit.', cost: 62, category: 'Sight' },
-      { id: 'bf3', name: 'Upper Hot Springs Soak', desc: 'Relaxing outdoor mineral hot spring baths.', cost: 20, category: 'Activity' },
-      { id: 'bf4', name: 'Alpine Steakhouse Dinner', desc: 'Alberta prime beef and campfire cocktails.', cost: 90, category: 'Dining' }
-    ]
-  },
-  {
-    id: 'dubrovnik',
-    name: 'Dubrovnik (Croatia)',
-    queryCity: 'Dubrovnik',
-    lat: 42.6507,
-    lon: 18.0944,
-    country: 'Croatia',
-    currencySymbol: '€',
-    currencyCode: 'EUR',
-    rateToUSD: 0.92,
-    hotels: [
-      { id: 'h_db1', name: 'Hotel Excelsior Dubrovnik', desc: '5-star cliffside hotel with panoramic views of Old Town.', cost: 420, category: 'Hotel', bookingQuery: 'Hotel Excelsior Dubrovnik' }
-    ],
-    places: [
-      { id: 'db1', name: 'Ancient City Walls Walk', desc: 'Stroll medieval stone ramparts overlooking the Adriatic.', cost: 35, category: 'Sight' },
-      { id: 'db2', name: 'Game of Thrones Filming Tour', desc: 'Discover Kings Landing locations and Blackwater Bay.', cost: 45, category: 'Sight' },
-      { id: 'db3', name: 'Buža Cliff Bar Drinks & Cliff Jump', desc: 'Cocktails on rocks outside medieval wall holes.', cost: 30, category: 'Nightlife' }
-    ]
-  },
-  {
-    id: 'london',
-    name: 'London (United Kingdom)',
-    queryCity: 'London',
-    lat: 51.5074,
-    lon: -0.1278,
-    country: 'United Kingdom',
-    currencySymbol: '£',
-    currencyCode: 'GBP',
-    rateToUSD: 0.79,
-    hotels: [
-      { id: 'h_ld1', name: 'The Ritz London', desc: 'Iconic neoclassical elegance in Piccadilly.', cost: 890, category: 'Hotel', bookingQuery: 'The Ritz London' },
-      { id: 'h_ld2', name: 'The Ned', desc: 'Grand historic bank building turned luxury hotel and dining hub.', cost: 380, category: 'Hotel', bookingQuery: 'The Ned London' }
-    ],
-    places: [
-      { id: 'ld1', name: 'Tower of London & Crown Jewels', desc: 'Explore historic fortress, armor, and royal jewels.', cost: 40, category: 'Sight' },
-      { id: 'ld2', name: 'West End Theater Show Ticket', desc: 'Top tier tickets for musicals in London theater district.', cost: 110, category: 'Nightlife' },
-      { id: 'ld3', name: 'Borough Market Food Experience', desc: 'Artisanal pies, international street food, and cheeses.', cost: 45, category: 'Dining' }
+      { id: 'sv1', name: 'Skyline Drive Mountain Scenic Pass', desc: '105-mile scenic drive along the crest of the Blue Ridge Mountains.', cost: 30, category: 'Sight' },
+      { id: 'sv2', name: 'Luray Caverns Tour', desc: 'Massive underground caverns with stalactites and cathedral rooms.', cost: 32, category: 'Sight' },
+      { id: 'sv3', name: 'Old Rag Mountain Summit Hike', desc: 'Challenging rock scramble with rewarding 360-degree views.', cost: 15, category: 'Activity' }
     ]
   },
   {
@@ -1322,12 +1323,14 @@ const CITY_DATABASE = [
     rateToUSD: 83.5,
     hotels: [
       { id: 'h_tm1', name: 'The Oberoi Amarvilas Agra', desc: 'Uninterrupted views of the Taj Mahal from every room.', cost: 450, category: 'Hotel', bookingQuery: 'The Oberoi Amarvilas Agra' },
-      { id: 'h_tm2', name: 'ITC Mughal Resort & Spa', desc: '5-star Mughal architecture hotel set in lush gardens.', cost: 160, category: 'Hotel', bookingQuery: 'ITC Mughal Agra' }
+      { id: 'h_tm2', name: 'ITC Mughal Resort & Spa', desc: '5-star Mughal architecture hotel set in lush gardens.', cost: 160, category: 'Hotel', bookingQuery: 'ITC Mughal Agra' },
+      { id: 'h_tm3', name: 'Taj Hotel & Convention Centre', desc: 'Modern luxury with an infinity rooftop pool overlooking the Taj.', cost: 120, category: 'Hotel', bookingQuery: 'Taj Hotel Convention Centre Agra' }
     ],
     places: [
       { id: 'tm1', name: 'Taj Mahal Sunrise Ticket', desc: 'Iconic white marble mausoleum at dawn.', cost: 35, category: 'Sight' },
       { id: 'tm2', name: 'Agra Fort Guided Walk', desc: 'Red sandstone royal Mughal palace complex.', cost: 25, category: 'Sight' },
-      { id: 'tm3', name: 'Mughlai Culinary Experience', desc: 'Rich biryanis, curries, and naan breads.', cost: 40, category: 'Dining' }
+      { id: 'tm3', name: 'Mehtab Bagh Sunset Gardens', desc: 'Riverside view of the Taj opposite water.', cost: 15, category: 'Sight' },
+      { id: 'tm4', name: 'Mughlai Culinary Experience', desc: 'Rich biryanis, curries, and naan breads.', cost: 40, category: 'Dining' }
     ]
   },
   {
@@ -1346,7 +1349,8 @@ const CITY_DATABASE = [
     ],
     places: [
       { id: 'c1', name: 'Colosseum Arena Floor & Underground', desc: 'Exclusive access to gladiator chambers.', cost: 75, category: 'Sight' },
-      { id: 'c2', name: 'Trastevere Food & Wine Tour', desc: 'Fresh pasta, truffles, and fine Italian wine.', cost: 95, category: 'Dining' }
+      { id: 'c2', name: 'Roman Forum & Palatine Hill', desc: 'Walk the heart of ancient imperial Rome.', cost: 35, category: 'Sight' },
+      { id: 'c3', name: 'Trastevere Food & Wine Tour', desc: 'Fresh pasta, truffles, and fine Italian wine.', cost: 95, category: 'Dining' }
     ]
   },
   {
@@ -1360,16 +1364,17 @@ const CITY_DATABASE = [
     currencyCode: 'PEN',
     rateToUSD: 3.75,
     hotels: [
-      { id: 'h_mp1', name: 'Belmond Sanctuary Lodge', desc: 'Luxury hotel located directly adjacent to Machu Picchu entrance.', cost: 950, category: 'Hotel', bookingQuery: 'Belmond Sanctuary Lodge Machu Picchu' }
+      { id: 'h_mp1', name: 'Belmond Sanctuary Lodge', desc: 'Luxury hotel located directly adjacent to entrance of Machu Picchu.', cost: 950, category: 'Hotel', bookingQuery: 'Belmond Sanctuary Lodge Machu Picchu' },
+      { id: 'h_mp2', name: 'Sumaq Machu Picchu Hotel', desc: '5-star luxury at foot of Machu Picchu along Urubamba River.', cost: 380, category: 'Hotel', bookingQuery: 'Sumaq Machu Picchu Hotel' }
     ],
     places: [
       { id: 'mp1', name: 'Machu Picchu Citadel Pass', desc: 'Main historic access to the ancient Inca ruins.', cost: 150, category: 'Sight' },
-      { id: 'mp2', name: 'Huayna Picchu Peak Trek', desc: 'Steep stairs to the iconic overlook summit.', cost: 75, category: 'Activity' }
+      { id: 'mp2', name: 'Huayna Picchu Peak Trek', desc: 'Steep stairs to iconic overlook summit.', cost: 75, category: 'Activity' }
     ]
   },
   {
     id: 'chichen-itza',
-    name: 'Chichen Itza (Mexico)',
+    name: 'Chichen Itza (Yucatan, Mexico)',
     queryCity: 'Valladolid',
     lat: 20.6843,
     lon: -88.5678,
@@ -1378,7 +1383,7 @@ const CITY_DATABASE = [
     currencyCode: 'MXN',
     rateToUSD: 18.0,
     hotels: [
-      { id: 'h_ci1', name: 'Hacienda Chichen Resort', desc: 'Historic eco-resort with private entrance to ruins.', cost: 220, category: 'Hotel', bookingQuery: 'Hacienda Chichen Resort' }
+      { id: 'h_ci1', name: 'Hacienda Chichen Resort', desc: 'Historic jungle eco-resort with private entrance to ruins.', cost: 220, category: 'Hotel', bookingQuery: 'Hacienda Chichen Resort' }
     ],
     places: [
       { id: 'ci1', name: 'El Castillo Pyramid Tour', desc: 'Central astronomical Mayan pyramid temple.', cost: 45, category: 'Sight' },
@@ -1396,11 +1401,10 @@ const CITY_DATABASE = [
     currencyCode: 'JOD',
     rateToUSD: 0.71,
     hotels: [
-      { id: 'h_p1', name: 'Mövenpick Resort Petra', desc: 'Located right at entrance to ancient city of Petra.', cost: 210, category: 'Hotel', bookingQuery: 'Movenpick Resort Petra' }
+      { id: 'h_p1', name: 'Mövenpick Resort Petra', desc: 'Located right at entrance to the ancient city of Petra.', cost: 210, category: 'Hotel', bookingQuery: 'Movenpick Resort Petra' }
     ],
     places: [
-      { id: 'p1', name: 'The Treasury (Al-Khazneh) Walkthrough', desc: 'Ancient carved rock-cut facade entrance.', cost: 70, category: 'Sight' },
-      { id: 'p2', name: 'Petra Night Candlelit Show', desc: '1,500 candles lighting Siq and Treasury.', cost: 25, category: 'Nightlife' }
+      { id: 'p1', name: 'The Treasury (Al-Khazneh) Walkthrough', desc: 'Ancient carved rock-cut facade entrance.', cost: 70, category: 'Sight' }
     ]
   },
   {
@@ -1414,11 +1418,10 @@ const CITY_DATABASE = [
     currencyCode: 'BRL',
     rateToUSD: 5.2,
     hotels: [
-      { id: 'h_cr1', name: 'Belmond Copacabana Palace', desc: 'Iconic 1920s beachfront palace hotel in Rio.', cost: 480, category: 'Hotel', bookingQuery: 'Belmond Copacabana Palace Rio' }
+      { id: 'h_cr1', name: 'Belmond Copacabana Palace', desc: 'Iconic 1920s beachfront palace hotel in Rio de Janeiro.', cost: 480, category: 'Hotel', bookingQuery: 'Belmond Copacabana Palace Rio' }
     ],
     places: [
-      { id: 'cr1', name: 'Corcovado Mountain Train & Statue', desc: 'Panoramic views under Christ statue.', cost: 35, category: 'Sight' },
-      { id: 'cr2', name: 'Rio Scenarium Lapa Samba Club', desc: 'Multi-level samba hall with live bands.', cost: 50, category: 'Nightlife' }
+      { id: 'cr1', name: 'Corcovado Mountain Cog Train & Statue', desc: 'Panoramic views under Christ statue.', cost: 35, category: 'Sight' }
     ]
   },
   {
@@ -1432,11 +1435,10 @@ const CITY_DATABASE = [
     currencyCode: 'CNY',
     rateToUSD: 7.23,
     hotels: [
-      { id: 'h_gw1', name: 'The Peninsula Beijing', desc: '5-star ultra-luxury hotel in central Beijing.', cost: 380, category: 'Hotel', bookingQuery: 'The Peninsula Beijing' }
+      { id: 'h_gw1', name: 'The Peninsula Beijing', desc: '5-star ultra-luxury hotel in central Beijing close to Forbidden City.', cost: 380, category: 'Hotel', bookingQuery: 'The Peninsula Beijing' }
     ],
     places: [
-      { id: 'gw1', name: 'Mutianyu Great Wall Cable Car & Toboggan', desc: 'Scenic mountain wall ride.', cost: 45, category: 'Sight' },
-      { id: 'gw2', name: 'Authentic Peking Duck Banquet', desc: 'Crispy roasted duck carved with pancakes.', cost: 55, category: 'Dining' }
+      { id: 'gw1', name: 'Mutianyu Great Wall Cable Car & Toboggan', desc: 'Scenic mountain wall ride.', cost: 45, category: 'Sight' }
     ]
   },
   {
@@ -1453,8 +1455,7 @@ const CITY_DATABASE = [
       { id: 'h_et1', name: 'Pullman Paris Tour Eiffel', desc: 'Direct views of Eiffel Tower from private balcony.', cost: 380, category: 'Hotel', bookingQuery: 'Pullman Paris Tour Eiffel' }
     ],
     places: [
-      { id: 'et1', name: 'Eiffel Tower Summit Elevator Pass', desc: 'Top floor glass elevator panoramic view.', cost: 42, category: 'Sight' },
-      { id: 'et2', name: 'Seine River Evening Dinner Cruise', desc: 'Gourmet meal floating past lit monuments.', cost: 110, category: 'Dining' }
+      { id: 'et1', name: 'Eiffel Tower Summit Elevator Pass', desc: 'Top floor glass elevator panoramic view.', cost: 42, category: 'Sight' }
     ]
   },
   {
@@ -1468,16 +1469,15 @@ const CITY_DATABASE = [
     currencyCode: 'EGP',
     rateToUSD: 48.0,
     hotels: [
-      { id: 'h_pg1', name: 'Marriott Mena House Cairo', desc: 'Historic 5-star hotel with direct views of Pyramids.', cost: 320, category: 'Hotel', bookingQuery: 'Marriott Mena House Cairo' }
+      { id: 'h_pg1', name: 'Marriott Mena House Cairo', desc: 'Historic 5-star hotel with direct views of Great Pyramids.', cost: 320, category: 'Hotel', bookingQuery: 'Marriott Mena House Cairo' }
     ],
     places: [
-      { id: 'pg1', name: 'Great Pyramid Entry & Sphinx Walk', desc: 'Stand before ancient Wonders of the World.', cost: 30, category: 'Sight' },
-      { id: 'pg2', name: 'Sunset Camel Trek across Giza Dunes', desc: 'Ride camels as sun sets behind pyramids.', cost: 35, category: 'Activity' }
+      { id: 'pg1', name: 'Great Pyramid Entry & Great Sphinx Walk', desc: 'Stand before ancient Wonders of the World.', cost: 30, category: 'Sight' }
     ]
   },
   {
     id: 'statue-liberty',
-    name: 'Statue of Liberty & NYC (USA)',
+    name: 'Statue of Liberty & Manhattan (New York, USA)',
     queryCity: 'New York',
     lat: 40.6892,
     lon: -74.0445,
@@ -1486,83 +1486,10 @@ const CITY_DATABASE = [
     currencyCode: 'USD',
     rateToUSD: 1.0,
     hotels: [
-      { id: 'h_ny1', name: 'The Plaza Hotel NYC', desc: 'World famous luxury flagship hotel at Fifth Avenue.', cost: 750, category: 'Hotel', bookingQuery: 'The Plaza Hotel New York' }
+      { id: 'h_ny1', name: 'The Plaza Hotel NYC', desc: 'World famous luxury flagship hotel at Fifth Avenue & Central Park.', cost: 750, category: 'Hotel', bookingQuery: 'The Plaza Hotel New York' }
     ],
     places: [
-      { id: 'ny1', name: 'Statue of Liberty Ferry Pass', desc: 'Ferry ride and pedestal access pass.', cost: 32, category: 'Sight' },
-      { id: 'ny2', name: 'Broadway Musical Evening Ticket', desc: 'Prime seating at top-rated show.', cost: 165, category: 'Nightlife' }
-    ]
-  },
-  {
-    id: 'dubai',
-    name: 'Burj Khalifa & Dubai (UAE)',
-    queryCity: 'Dubai',
-    lat: 25.2048,
-    lon: 55.2708,
-    country: 'United Arab Emirates',
-    currencySymbol: 'AED',
-    currencyCode: 'AED',
-    rateToUSD: 3.67,
-    hotels: [
-      { id: 'h_dx1', name: 'Burj Al Arab Jumeirah', desc: 'Iconic 7-star luxury sail-shaped hotel.', cost: 1200, category: 'Hotel', bookingQuery: 'Burj Al Arab Dubai' }
-    ],
-    places: [
-      { id: 'dx1', name: 'Burj Khalifa At The Top Sky Observatory', desc: 'Access 148th floor view of skyline and desert.', cost: 110, category: 'Sight' },
-      { id: 'dx2', name: 'Desert Safari & Dune Bashing with BBQ', desc: '4x4 thrill ride, camel rides, and belly dance show.', cost: 85, category: 'Activity' }
-    ]
-  },
-  {
-    id: 'bali',
-    name: 'Ubud & Bali Beaches (Indonesia)',
-    queryCity: 'Denpasar',
-    lat: -8.4095,
-    lon: 115.1889,
-    country: 'Indonesia',
-    currencySymbol: 'Rp',
-    currencyCode: 'IDR',
-    rateToUSD: 16200,
-    hotels: [
-      { id: 'h_ba1', name: 'Four Seasons Resort Bali at Sayan', desc: 'Floating luxury resort in lush Ayung River valley.', cost: 750, category: 'Hotel', bookingQuery: 'Four Seasons Sayan Bali' }
-    ],
-    places: [
-      { id: 'ba1', name: 'Tegallalang Rice Terrace Swing Experience', desc: 'Fly high above tropical green valleys.', cost: 25, category: 'Activity' },
-      { id: 'ba2', name: 'Uluwatu Temple Kecak Fire Dance', desc: 'Sunset cliffside cultural dance performance.', cost: 20, category: 'Sight' }
-    ]
-  },
-  {
-    id: 'iceland',
-    name: 'Reykjavik & Golden Circle (Iceland)',
-    queryCity: 'Reykjavik',
-    lat: 64.1466,
-    lon: -21.9426,
-    country: 'Iceland',
-    currencySymbol: 'kr',
-    currencyCode: 'ISK',
-    rateToUSD: 138.0,
-    hotels: [
-      { id: 'h_ic1', name: 'The Retreat at Blue Lagoon', desc: 'Luxury hotel built around private geothermal waters.', cost: 980, category: 'Hotel', bookingQuery: 'The Retreat Blue Lagoon Iceland' }
-    ],
-    places: [
-      { id: 'ic1', name: 'Blue Lagoon Geothermal Spa Day', desc: 'Soak in silica-rich mineral waters.', cost: 90, category: 'Activity' },
-      { id: 'ic2', name: 'Northern Lights (Aurora) Night Tour', desc: 'Guided hunt for green aurora borealis lights.', cost: 85, category: 'Nightlife' }
-    ]
-  },
-  {
-    id: 'cape-town',
-    name: 'Table Mountain (Cape Town, South Africa)',
-    queryCity: 'Cape Town',
-    lat: -33.9249,
-    lon: 18.4241,
-    country: 'South Africa',
-    currencySymbol: 'R',
-    currencyCode: 'ZAR',
-    rateToUSD: 18.5,
-    hotels: [
-      { id: 'h_ct1', name: 'Belmond Mount Nelson Hotel', desc: 'Iconic pink hotel set at foot of Table Mountain.', cost: 410, category: 'Hotel', bookingQuery: 'Belmond Mount Nelson Cape Town' }
-    ],
-    places: [
-      { id: 'ct1', name: 'Table Mountain Cableway Ticket', desc: '360 degree rotating cable car to summit.', cost: 25, category: 'Sight' },
-      { id: 'ct2', name: 'Boulders Beach Penguin Colony Visit', desc: 'Walk alongside African wild penguins on beach.', cost: 15, category: 'Activity' }
+      { id: 'ny1', name: 'Statue of Liberty Crown & Ellis Island Ferry', desc: 'Ferry ride and pedestal access pass.', cost: 32, category: 'Sight' }
     ]
   }
 ];
@@ -1571,18 +1498,24 @@ const CITY_DATABASE = [
  * Global State Store
  */
 const AppState = {
-  budget: 2000,
+  budget: 1500,
   tripDate: '2026-10-15',
-  selectedCityId: 'tokyo',
+  selectedCityId: 'blue-ridge-parkway',
   activeCategory: 'All',
   selectedItems: [],
   weatherApiKey: 'c1635656553fbe989993f75eb197e00a'
 };
 
+/**
+ * Helper function to convert Celsius to Fahrenheit
+ */
 function cToF(celsius) {
   return Math.round((celsius * 9 / 5) + 32);
 }
 
+/**
+ * OpenWeather 5-Day Forecast Fetcher
+ */
 async function fetchWeatherData(city) {
   const gridEl = document.getElementById('forecast-grid');
   gridEl.innerHTML = `<div style="font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 6px;">Loading weather forecast...</div>`;
@@ -1619,6 +1552,107 @@ async function fetchWeatherData(city) {
   }
 }
 
+/**
+ * Dynamic Hierarchical Dropdown Controllers with GSAP Animations
+ */
+function updateLocations() {
+  const country = document.getElementById("country-select").value;
+  const locationSelect = document.getElementById("location-select");
+  const attractionSelect = document.getElementById("attraction-select");
+
+  locationSelect.innerHTML = '<option value="">Select Location</option>';
+  attractionSelect.innerHTML = '<option value="">Select Attraction</option>';
+  attractionSelect.disabled = true;
+  hideDisplayBox();
+
+  if (country && HIERARCHY_DATA[country]) {
+    locationSelect.disabled = false;
+    Object.keys(HIERARCHY_DATA[country]).forEach(loc => {
+      const opt = document.createElement("option");
+      opt.value = loc;
+      opt.textContent = loc;
+      locationSelect.appendChild(opt);
+    });
+
+    gsap.fromTo(locationSelect, 
+      { scale: 0.96, borderColor: "#0284c7" }, 
+      { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.4)" }
+    );
+  } else {
+    locationSelect.disabled = true;
+  }
+}
+
+function updateAttractions() {
+  const country = document.getElementById("country-select").value;
+  const locationName = document.getElementById("location-select").value;
+  const attractionSelect = document.getElementById("attraction-select");
+
+  attractionSelect.innerHTML = '<option value="">Select Attraction</option>';
+  hideDisplayBox();
+
+  if (country && locationName && HIERARCHY_DATA[country][locationName]) {
+    const locObj = HIERARCHY_DATA[country][locationName];
+    AppState.selectedCityId = locObj.dbId; // Update global database selection
+    AppState.selectedItems = [];
+
+    attractionSelect.disabled = false;
+    locObj.attractions.forEach(attr => {
+      const opt = document.createElement("option");
+      opt.value = attr;
+      opt.textContent = attr;
+      attractionSelect.appendChild(opt);
+    });
+
+    gsap.fromTo(attractionSelect, 
+      { scale: 0.96, borderColor: "#0284c7" }, 
+      { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.4)" }
+    );
+  } else {
+    attractionSelect.disabled = true;
+  }
+}
+
+function triggerOverkillFX() {
+  const selectedAttr = document.getElementById("attraction-select").value;
+  const displayBox = document.getElementById("displayBox");
+  const attractionTitle = document.getElementById("attractionTitle");
+
+  if (!selectedAttr) {
+    hideDisplayBox();
+    return;
+  }
+
+  attractionTitle.textContent = selectedAttr;
+  displayBox.style.display = "block";
+
+  gsap.fromTo("#displayBox", 
+    { scale: 0.2, opacity: 0, rotation: -10 },
+    { scale: 1, opacity: 1, rotation: 0, duration: 0.5, ease: "back.out(2)" }
+  );
+
+  confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: { y: 0.6 }
+  });
+}
+
+function hideDisplayBox() {
+  const displayBox = document.getElementById("displayBox");
+  if (displayBox.style.display !== "none") {
+    gsap.to("#displayBox", {
+      scale: 0,
+      opacity: 0,
+      duration: 0.2,
+      onComplete: () => { displayBox.style.display = "none"; }
+    });
+  }
+}
+
+/**
+ * Booking URL Generator Helper
+ */
 function getBookingUrls(query) {
   const enc = encodeURIComponent(query);
   return {
@@ -1628,6 +1662,9 @@ function getBookingUrls(query) {
   };
 }
 
+/**
+ * Currency Formatting Helpers
+ */
 function getCity() {
   return CITY_DATABASE.find(c => c.id === AppState.selectedCityId) || CITY_DATABASE[0];
 }
@@ -1641,12 +1678,9 @@ function formatLocal(amountUSD, city) {
   return `${city.currencySymbol} ${Math.round(localVal).toLocaleString()}`;
 }
 
-function renderDestinationSelect() {
-  const selectEl = document.getElementById('location-select');
-  selectEl.innerHTML = CITY_DATABASE.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-  selectEl.value = AppState.selectedCityId;
-}
-
+/**
+ * Render Functions
+ */
 function renderCards() {
   const grid = document.getElementById('recommendations-grid');
   const city = getCity();
@@ -1704,7 +1738,7 @@ function renderPlanner() {
   let totalSpent = 0;
 
   if (AppState.selectedItems.length === 0) {
-    container.innerHTML = `<p style="text-align:center; color: var(--text-muted); padding: 40px; font-weight: 800;">No spots or hotels selected yet. Go back to Step 2 to add items!</p>`;
+    container.innerHTML = `<p style="text-align:center; color: var(--text-muted); padding: 40px; font-weight: 700;">No spots or hotels selected yet. Go back to Step 2 to add items!</p>`;
   } else {
     container.innerHTML = AppState.selectedItems.map(item => {
       totalSpent += item.cost;
@@ -1720,9 +1754,9 @@ function renderPlanner() {
           <div class="item-desc">${item.desc || 'Custom itinerary entry'}</div>
           <div class="slider-row">
             <label>Allocated Budget ($USD):</label>
-            <input type="range" min="0" max="1500" step="10" value="${item.cost}" oninput="updateItemCost('${item.id}', this.value)">
+            <input type="range" min="0" max="1000" step="10" value="${item.cost}" oninput="updateItemCost('${item.id}', this.value)">
             <span class="val-badge">${formatUSD(item.cost)}</span>
-            <span style="font-size: 13px; font-weight: 800; color: var(--accent-emerald);">(${formatLocal(item.cost, city)})</span>
+            <span style="font-size: 13px; font-weight: 700; color: var(--accent-emerald);">(${formatLocal(item.cost, city)})</span>
           </div>
         </div>
       `;
@@ -1731,14 +1765,15 @@ function renderPlanner() {
 
   document.getElementById('allocated-budget').textContent = formatUSD(totalSpent);
 
+  // Update Budget Bar
   const pct = AppState.budget > 0 ? Math.min((totalSpent / AppState.budget) * 100, 100) : 0;
   const bar = document.getElementById('budget-progress-bar');
   bar.style.width = `${pct}%`;
   
   if (totalSpent > AppState.budget) {
-    bar.style.background = 'linear-gradient(90deg, #ff0055, #ff007f)';
+    bar.style.backgroundColor = 'var(--danger)';
   } else {
-    bar.style.background = 'linear-gradient(90deg, #00dfd8, #7928ca, #ff007f)';
+    bar.style.backgroundColor = 'var(--primary)';
   }
 }
 
@@ -1755,8 +1790,8 @@ function renderSummary() {
       <tr>
         <td style="font-weight: 800;">${item.name}</td>
         <td><span class="badge-category cat-${item.category}">${item.category}</span></td>
-        <td style="font-weight: 900; color: var(--primary);">${formatUSD(item.cost)}</td>
-        <td style="font-weight: 800; color: var(--accent-emerald);">${formatLocal(item.cost, city)}</td>
+        <td style="font-weight: 800; color: var(--primary);">${formatUSD(item.cost)}</td>
+        <td style="font-weight: 700; color: var(--accent-emerald);">${formatLocal(item.cost, city)}</td>
       </tr>
     `;
   }).join('');
@@ -1764,6 +1799,9 @@ function renderSummary() {
   document.getElementById('sum-total-display').textContent = formatUSD(total);
 }
 
+/**
+ * Controller Actions
+ */
 function toggleItem(id) {
   const city = getCity();
   const all = [...city.hotels, ...city.places];
@@ -1809,10 +1847,13 @@ function switchPage(pageId) {
   if (pageId === 'step4') renderSummary();
 }
 
+/**
+ * Event Listeners & Setup
+ */
 document.addEventListener('DOMContentLoaded', () => {
   setGlobeEmojiCursor();
-  renderDestinationSelect();
 
+  // Inputs binding
   const inputBudget = document.getElementById('input-budget');
   const budgetDisp = document.getElementById('home-budget-display');
   
@@ -1823,15 +1864,11 @@ document.addEventListener('DOMContentLoaded', () => {
   inputBudget.addEventListener('input', syncBudget);
   syncBudget();
 
-  document.getElementById('location-select').addEventListener('change', (e) => {
-    AppState.selectedCityId = e.target.value;
-    AppState.selectedItems = [];
-  });
-
   document.getElementById('trip-date').addEventListener('change', (e) => {
     AppState.tripDate = e.target.value;
   });
 
+  // Navigation Click Handling
   document.querySelectorAll('[data-navigate]').forEach(el => {
     el.addEventListener('click', () => switchPage(el.dataset.navigate));
   });
@@ -1842,6 +1879,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('app-logo').addEventListener('click', () => switchPage('home'));
 
+  // Category Filtering
   document.getElementById('category-filter-bar').addEventListener('click', (e) => {
     if (e.target.classList.contains('filter-btn')) {
       document.querySelectorAll('#category-filter-bar .filter-btn').forEach(b => b.classList.remove('active'));
@@ -1851,6 +1889,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Custom Item Creation
   document.getElementById('btn-add-custom').addEventListener('click', () => {
     const name = document.getElementById('custom-name').value.trim();
     const category = document.getElementById('custom-category').value;
@@ -1874,6 +1913,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPlanner();
   });
 
+  // Export Actions
   document.getElementById('btn-print-pdf').addEventListener('click', () => {
     const city = getCity();
     document.getElementById('p-title').textContent = `WAY POINT ADVISOR Briefing — ${city.name}`;
