@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAY POINT ADVISOR — Pro Edition</title>
+<title>WAY POINT ADVISOR — Pro Ultra Edition</title>
 
 <!-- GSAP Core & Confetti for Overkill Animations -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -19,7 +19,7 @@
     font-family: Arial, sans-serif; 
     padding: 20px; 
   }
-  .no-print, nav, button, select, input, .add-form-grid, .budget-bar-wrapper { 
+  .no-print, nav, button, select, input, .add-form-grid, .budget-bar-wrapper, #particles-canvas { 
     display: none !important; 
   }
   .print-only { 
@@ -75,14 +75,12 @@
     --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Reset & Box Sizing */
   *, *::before, *::after { 
     box-sizing: border-box; 
     margin: 0; 
     padding: 0; 
   }
 
-  /* Force Full Viewport Layout without Body Scrolling */
   html, body {
     height: 100%;
     width: 100%;
@@ -92,7 +90,6 @@
     color: var(--text-dark);
   }
 
-  /* Interactive elements pointer override */
   button, select, input, a, .card, .logo {
     cursor: pointer;
   }
@@ -102,9 +99,20 @@
     background-attachment: fixed;
     display: flex;
     flex-direction: column;
+    position: relative;
   }
 
-  /* App Shell Container */
+  /* Animated Ambient Canvas */
+  #particles-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   .app-container {
     width: 100%;
     max-width: 1440px;
@@ -113,9 +121,11 @@
     padding: 0 24px;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 1;
   }
 
-  /* Navigation Header */
+  /* Header */
   header {
     border-bottom: 2px solid var(--panel-border);
     padding: 14px 0;
@@ -172,6 +182,8 @@
     font-size: 15px;
     font-weight: 800;
     transition: all var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
   }
 
   nav button:hover { color: var(--text-dark); }
@@ -182,7 +194,6 @@
     box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
   }
 
-  /* Colorful Typography Classes for Glazing */
   .gradient-text-rainbow {
     background: linear-gradient(135deg, #f43f5e, #8b5cf6, #06b6d4, #10b981);
     -webkit-background-clip: text;
@@ -204,7 +215,7 @@
     font-family: var(--font-display);
   }
 
-  /* Hero Home Screen Styling */
+  /* Hero Home */
   .hero-panel {
     display: flex;
     flex-direction: column;
@@ -264,10 +275,9 @@
 
   @keyframes pulseGlow {
     0% { transform: scale(1); box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4); }
-    100% { transform: scale(1.03); box-shadow: 0 15px 35px rgba(236, 72, 153, 0.5); }
+    100% { transform: scale(1.04); box-shadow: 0 15px 35px rgba(236, 72, 153, 0.5); }
   }
 
-  /* Glazing Showcase Section on Home Screen */
   .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -290,15 +300,12 @@
   .feature-card::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
+    top: 0; left: 0; width: 100%; height: 5px;
     background: linear-gradient(90deg, #f43f5e, #8b5cf6, #06b6d4);
   }
 
   .feature-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-4px) scale(1.02);
     border-color: var(--secondary);
     box-shadow: 0 12px 24px rgba(124, 58, 237, 0.15);
   }
@@ -322,7 +329,7 @@
     font-weight: 600;
   }
 
-  /* 5-Day Weather Forecast Widget Component */
+  /* Weather Widget */
   .weather-widget {
     background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
     border: 2px solid var(--primary);
@@ -360,6 +367,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    transition: transform var(--transition-fast);
+  }
+
+  .forecast-day:hover {
+    transform: scale(1.05);
   }
 
   .forecast-date {
@@ -387,7 +399,7 @@
     margin-top: 2px;
   }
 
-  /* Main Viewport Container */
+  /* Viewport & Pages */
   .page-viewport {
     flex: 1;
     overflow: hidden;
@@ -404,7 +416,6 @@
     display: flex;
   }
 
-  /* Unified Panel Layout */
   .panel {
     background: var(--panel-bg);
     border: 2px solid var(--panel-border);
@@ -455,13 +466,14 @@
     font-weight: 600;
     outline: none;
     width: 100%;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
   }
 
   select:focus, input:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 4px var(--primary-glow);
     background: #ffffff;
+    transform: translateY(-1px);
   }
 
   select:disabled {
@@ -470,7 +482,6 @@
     background: #e2e8f0;
   }
 
-  /* Attraction Callout Display Box */
   .attraction-display {
     margin-top: 10px;
     padding: 16px;
@@ -496,7 +507,7 @@
     color: var(--text-dark);
   }
 
-  /* Filter Toolbar */
+  /* Filters */
   .filter-bar {
     display: flex;
     gap: 10px;
@@ -520,20 +531,22 @@
     border-color: var(--primary);
     color: #ffffff;
     background: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--primary-glow);
   }
 
-  /* Dynamic Scrollable Content Container */
   .scroll-container {
     overflow-y: auto;
     padding-right: 8px;
     flex: 1;
+    perspective: 1000px;
   }
 
   .scroll-container::-webkit-scrollbar { width: 8px; }
   .scroll-container::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
   .scroll-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-  /* Grid Layout for Cards */
+  /* Grid & Dynamic Cards */
   .grid-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -545,23 +558,23 @@
     border: 2px solid var(--panel-border);
     border-radius: var(--radius-lg);
     padding: 20px;
-    transition: all var(--transition-smooth);
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transform-style: preserve-3d;
   }
 
   .card:hover {
     border-color: var(--primary);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 24px rgba(2, 132, 199, 0.15);
+    box-shadow: 0 16px 32px rgba(2, 132, 199, 0.2);
   }
 
   .card.selected {
     border-color: var(--primary);
     background: #f0f9ff;
-    box-shadow: 0 0 0 2px var(--primary);
+    box-shadow: 0 0 0 2px var(--primary), 0 8px 20px rgba(2, 132, 199, 0.15);
   }
 
   .card h3 {
@@ -621,6 +634,7 @@
     background: var(--primary);
     color: #ffffff;
     border-color: var(--primary);
+    transform: translateY(-1px);
   }
 
   .card-footer {
@@ -632,7 +646,6 @@
     border-top: 1px solid #f1f5f9;
   }
 
-  /* Vibrant Category Tags */
   .badge-category {
     display: inline-block;
     font-size: 11px;
@@ -673,7 +686,6 @@
     color: var(--accent-emerald);
   }
 
-  /* Buttons */
   .btn-card-add {
     background: var(--primary);
     color: white;
@@ -682,10 +694,10 @@
     border-radius: 8px;
     font-weight: 800;
     font-size: 13px;
-    transition: background var(--transition-fast);
+    transition: all var(--transition-fast);
   }
 
-  .btn-card-add:hover { background: #0369a1; }
+  .btn-card-add:hover { background: #0369a1; transform: scale(1.05); }
   .btn-card-add.added { background: var(--success); }
 
   .item-row {
@@ -694,6 +706,12 @@
     border-radius: 14px;
     padding: 18px 20px;
     margin-bottom: 14px;
+    transition: all var(--transition-smooth);
+  }
+
+  .item-row:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.1);
   }
 
   .item-header {
@@ -752,6 +770,8 @@
     gap: 8px;
     transition: all var(--transition-smooth);
     box-shadow: 0 4px 16px var(--primary-glow);
+    position: relative;
+    overflow: hidden;
   }
 
   .btn-secondary {
@@ -791,6 +811,11 @@
     font-weight: 800;
     border-radius: 8px;
     border: none;
+    transition: transform var(--transition-fast);
+  }
+
+  .btn-danger:hover {
+    transform: scale(1.05);
   }
 
   .add-form-grid {
@@ -802,7 +827,6 @@
     flex-shrink: 0;
   }
 
-  /* Budget Summary & Progress Bar */
   .budget-summary-card {
     background: #f1f5f9;
     border-radius: 14px;
@@ -835,7 +859,6 @@
     transition: width var(--transition-smooth), background-color var(--transition-smooth);
   }
 
-  /* Summary Table */
   .summary-table {
     width: 100%;
     border-collapse: collapse;
@@ -872,10 +895,32 @@
     flex-wrap: wrap;
   }
 
+  /* Animated Toast Notifications */
+  .toast-notification {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    transform: translateY(100px);
+    opacity: 0;
+  }
+
   .print-only { display: none; }
 </style>
 </head>
 <body>
+
+<canvas id="particles-canvas"></canvas>
 
 <!-- Printable Document Target -->
 <div class="print-only">
@@ -919,7 +964,6 @@
           <button class="btn btn-hero" data-navigate="step1">✨ Start Planning Preferences ✨</button>
         </div>
 
-        <!-- Glazing Showcase Feature Grid -->
         <div class="features-grid">
           <div class="feature-card">
             <span class="feature-icon">🗺️</span>
@@ -954,16 +998,18 @@
         </div>
         <div class="form-group">
           <label for="input-budget">Total Budget Goal ($USD):</label>
-          <input type="number" id="input-budget" value="1500" min="0" step="50">
+          <input type="number" id="input-budget" value="2500" min="0" step="50">
           <span id="home-budget-display" style="font-size: 14px; font-weight: 700; color: var(--primary); margin-top: 4px;"></span>
         </div>
 
-        <!-- Hierarchical Location & Attraction Selector -->
         <div class="form-group">
           <label for="country-select">Country:</label>
           <select id="country-select" onchange="updateLocations()">
             <option value="">Select Country</option>
             <option value="usa">United States</option>
+            <option value="japan">Japan</option>
+            <option value="uk">United Kingdom</option>
+            <option value="australia">Australia</option>
             <option value="global">Global Destinations</option>
           </select>
         </div>
@@ -1005,7 +1051,6 @@
           <button class="btn-home" data-navigate="home">🏠 Home Screen</button>
         </div>
         
-        <!-- Live 5-Day Weather Widget Container -->
         <div id="weather-widget" class="weather-widget">
           <div class="forecast-title gradient-text-ocean">5-Day Live Weather Forecast</div>
           <div id="forecast-grid" class="forecast-grid">
@@ -1042,7 +1087,6 @@
           <button class="btn-home" data-navigate="home">🏠 Home</button>
         </div>
 
-        <!-- Custom Spot Form -->
         <div class="add-form-grid">
           <div>
             <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 6px; font-weight: 800;">Spot / Hotel Name</label>
@@ -1068,7 +1112,6 @@
           </div>
         </div>
 
-        <!-- Dynamic Budget Status Bar -->
         <div class="budget-summary-card">
           <div class="budget-summary-text">
             <div>Total Allocated: <span id="allocated-budget" class="gradient-text-sunfire" style="font-weight:900;">$0</span></div>
@@ -1141,12 +1184,68 @@
   </div>
 </div>
 
+<!-- Dynamic Toast Banner -->
+<div id="toast" class="toast-notification"></div>
+
 <!-- ========================================== -->
 <!-- 3. APPLICATION JAVASCRIPT LOGIC            -->
 <!-- ========================================== -->
 <script>
 /**
- * Dynamic Globe Emoji Cursor Generator
+ * Dynamic Ambient Particle Background
+ */
+function initParticles() {
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+
+  const particles = Array.from({ length: 35 }, () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    radius: Math.random() * 4 + 1,
+    color: ['rgba(2,132,199,0.2)', 'rgba(124,58,237,0.2)', 'rgba(236,72,153,0.2)'][Math.floor(Math.random() * 3)],
+    vx: (Math.random() - 0.5) * 0.8,
+    vy: (Math.random() - 0.5) * 0.8
+  }));
+
+  function render() {
+    ctx.clearRect(0, 0, width, height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > width) p.vx *= -1;
+      if (p.y < 0 || p.y > height) p.vy *= -1;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+    });
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+/**
+ * Toast Popups
+ */
+function showToast(message, icon = '✨') {
+  const toast = document.getElementById('toast');
+  toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+  gsap.killTweensOf(toast);
+  gsap.timeline()
+    .to(toast, { y: 0, opacity: 1, duration: 0.4, ease: "back.out(1.7)" })
+    .to(toast, { y: 100, opacity: 0, duration: 0.3, ease: "power2.in", delay: 2.5 });
+}
+
+/**
+ * Cursor Emoji
  */
 function setGlobeEmojiCursor() {
   const canvas = document.createElement('canvas');
@@ -1171,37 +1270,37 @@ const HIERARCHY_DATA = {
   usa: {
     "Blue Ridge Parkway (NC/VA)": {
       dbId: "blue-ridge-parkway",
-      attractions: [
-        "Linn Cove Viaduct",
-        "Linville Falls",
-        "Craggy Gardens",
-        "Grandfather Mountain"
-      ]
+      attractions: ["Linn Cove Viaduct", "Linville Falls", "Craggy Gardens", "Grandfather Mountain"]
     },
     "Outer Banks (NC)": {
       dbId: "outer-banks",
-      attractions: [
-        "Cape Hatteras Lighthouse",
-        "Wright Brothers National Memorial",
-        "Jockey's Ridge State Park"
-      ]
+      attractions: ["Cape Hatteras Lighthouse", "Wright Brothers National Memorial", "Jockey's Ridge State Park"]
     },
     "Shenandoah Valley (VA)": {
       dbId: "shenandoah-valley",
-      attractions: [
-        "Skyline Drive",
-        "Luray Caverns",
-        "Old Rag Mountain"
-      ]
+      attractions: ["Skyline Drive", "Luray Caverns", "Old Rag Mountain"]
     },
     "Statue of Liberty & Manhattan (New York)": {
       dbId: "statue-liberty",
-      attractions: [
-        "Statue of Liberty & Ellis Island",
-        "SUMMIT One Vanderbilt",
-        "Broadway Theatre District",
-        "Central Park"
-      ]
+      attractions: ["Statue of Liberty & Ellis Island", "SUMMIT One Vanderbilt", "Broadway Theatre District", "Central Park"]
+    }
+  },
+  japan: {
+    "Tokyo Metropolis": {
+      dbId: "tokyo-japan",
+      attractions: ["Shinjuku Gyoen National Garden", "Senso-ji Temple", "Tokyo Skytree", "Shibuya Crossing Pass"]
+    }
+  },
+  uk: {
+    "London & Westminster": {
+      dbId: "london-uk",
+      attractions: ["Tower of London", "London Eye", "British Museum", "Westminster Abbey"]
+    }
+  },
+  australia: {
+    "Sydney Harbour & Coast": {
+      dbId: "sydney-australia",
+      attractions: ["Sydney Opera House", "Sydney Harbour Bridge", "Bondi Beach Coastal Walk"]
     }
   },
   global: {
@@ -1245,7 +1344,7 @@ const HIERARCHY_DATA = {
 };
 
 /**
- * Application Database Store
+ * Application Database Store - EVERY Location has 10+ items across categories!
  */
 const CITY_DATABASE = [
   {
@@ -1267,8 +1366,89 @@ const CITY_DATABASE = [
       { id: 'brp1', name: 'Linn Cove Viaduct', desc: 'Engineering marvel curving around Grandfather Mountain.', cost: 0, category: 'Sight' },
       { id: 'brp2', name: 'Linville Falls & Gorge Hike', desc: 'Breathtaking waterfall trail surrounded by mountain cliffs.', cost: 15, category: 'Activity' },
       { id: 'brp3', name: 'Craggy Gardens Pinnacle Trail', desc: 'High-elevation mountain ridge trail with rhododendron blooms.', cost: 10, category: 'Activity' },
-      { id: 'brp4', name: 'Grandfather Mountain Mile High Swinging Bridge', desc: 'Panoramas across Western NC mountain ranges.', cost: 24, category: 'Sight' },
-      { id: 'brp5', name: 'Biltmore Estate House & Gardens Tour', desc: 'America’s largest private home located right near the Parkway.', cost: 85, category: 'Sight' }
+      { id: 'brp4', name: 'Grandfather Mountain Mile High Bridge', desc: 'Panoramas across Western NC mountain ranges.', cost: 24, category: 'Sight' },
+      { id: 'brp5', name: 'Biltmore Estate House & Gardens Tour', desc: 'America’s largest private home located right near the Parkway.', cost: 85, category: 'Sight' },
+      { id: 'brp6', name: 'The Admiral Asheville Dining', desc: 'High-end innovative Southern cuisine in an intimate setting.', cost: 65, category: 'Dining' },
+      { id: 'brp7', name: 'Asheville Craft Beer Crawl', desc: 'Guided nightlife tour of legendary downtown microbreweries.', cost: 50, category: 'Nightlife' },
+      { id: 'brp8', name: 'Grove Arcade Artisan Market', desc: 'Historic shopping arcade filled with local arts and crafts.', cost: 35, category: 'Shopping' }
+    ]
+  },
+  {
+    id: 'tokyo-japan',
+    name: 'Tokyo Metropolis (Japan)',
+    queryCity: 'Tokyo',
+    lat: 35.6762,
+    lon: 139.6503,
+    country: 'Japan',
+    currencySymbol: '¥',
+    currencyCode: 'JPY',
+    rateToUSD: 155.0,
+    hotels: [
+      { id: 'h_tyo1', name: 'Aman Tokyo', desc: 'Ultra-luxury sanctuary with breathtaking skyline views in Otemachi.', cost: 950, category: 'Hotel', bookingQuery: 'Aman Tokyo Hotel' },
+      { id: 'h_tyo2', name: 'Park Hyatt Tokyo', desc: 'Iconic luxury high-rise hotel featured in classic cinema.', cost: 550, category: 'Hotel', bookingQuery: 'Park Hyatt Tokyo' },
+      { id: 'h_tyo3', name: 'Hotel Gracery Shinjuku', desc: 'Famous modern hotel featuring the life-size Godzilla head rooftop.', cost: 160, category: 'Hotel', bookingQuery: 'Hotel Gracery Shinjuku' }
+    ],
+    places: [
+      { id: 'tyo1', name: 'Senso-ji Ancient Temple', desc: 'Tokyo\'s oldest iconic Buddhist temple in historic Asakusa.', cost: 0, category: 'Sight' },
+      { id: 'tyo2', name: 'Tokyo Skytree Observation Deck', desc: 'Panoramic observation vistas from Japan\'s tallest tower.', cost: 28, category: 'Sight' },
+      { id: 'tyo3', name: 'Shibuya Crossing & Hachiko Statue', desc: 'Experience the world\'s busiest pedestrian intersection.', cost: 0, category: 'Sight' },
+      { id: 'tyo4', name: 'teamLab Planets Digital Art Museum', desc: 'Immersive body-on digital art experience with water features.', cost: 34, category: 'Activity' },
+      { id: 'tyo5', name: 'Tsukiji Outer Market Food Tour', desc: 'Sample fresh sushi, wagyu skewers, and matcha treats.', cost: 60, category: 'Dining' },
+      { id: 'tyo6', name: 'Michelin Ramen Tasting at Nakiryu', desc: 'World-famous savory dandan noodles and delicate ramen.', cost: 20, category: 'Dining' },
+      { id: 'tyo7', name: 'Golden Gai Bar Hopping', desc: 'Explore 200 tiny thematic bars packed into narrow Shinjuku alleys.', cost: 45, category: 'Nightlife' },
+      { id: 'tyo8', name: 'Ginza Six Luxury Shopping', desc: 'Premier fashion, design, and artisan shopping district.', cost: 100, category: 'Shopping' }
+    ]
+  },
+  {
+    id: 'london-uk',
+    name: 'London & Westminster (UK)',
+    queryCity: 'London',
+    lat: 51.5074,
+    lon: -0.1278,
+    country: 'United Kingdom',
+    currencySymbol: '£',
+    currencyCode: 'GBP',
+    rateToUSD: 0.79,
+    hotels: [
+      { id: 'h_lon1', name: 'The Ritz London', desc: 'World-renowned neoclassical luxury in Mayfair.', cost: 720, category: 'Hotel', bookingQuery: 'The Ritz London' },
+      { id: 'h_lon2', name: 'The Savoy', desc: 'Historic 5-star iconic hotel right on the River Thames.', cost: 580, category: 'Hotel', bookingQuery: 'The Savoy London' },
+      { id: 'h_lon3', name: 'CitizenM Tower of London', desc: 'Stylish modern boutique hotel overlooking the Tower.', cost: 190, category: 'Hotel', bookingQuery: 'CitizenM Tower of London' }
+    ],
+    places: [
+      { id: 'lon1', name: 'Tower of London & Crown Jewels', desc: 'Explore royal history and historic medieval battlements.', cost: 38, category: 'Sight' },
+      { id: 'lon2', name: 'The London Eye Flight', desc: 'Giant Ferris wheel offering spectacular 360 views.', cost: 42, category: 'Sight' },
+      { id: 'lon3', name: 'British Museum World Tour', desc: 'Vast collection of world art and historic antiquities.', cost: 0, category: 'Sight' },
+      { id: 'lon4', name: 'Thames Speedboat Adventure', desc: 'High-speed thrilling tour along the River Thames.', cost: 55, category: 'Activity' },
+      { id: 'lon5', name: 'Traditional Afternoon Tea at The Savoy', desc: 'Classic British scones, finger sandwiches, and tea.', cost: 85, category: 'Dining' },
+      { id: 'lon6', name: 'Borough Market Street Food Tour', desc: 'Artisanal cheeses, pastries, and savory British pies.', cost: 40, category: 'Dining' },
+      { id: 'lon7', name: 'West End Musical Theatre Ticket', desc: 'World-class drama and musical productions in Soho.', cost: 90, category: 'Nightlife' },
+      { id: 'lon8', name: 'Harrods & Oxford Street Shopping', desc: 'Iconic flagship department stores and fashion boutiques.', cost: 75, category: 'Shopping' }
+    ]
+  },
+  {
+    id: 'sydney-australia',
+    name: 'Sydney Harbour & Coast (Australia)',
+    queryCity: 'Sydney',
+    lat: -33.8688,
+    lon: 151.2093,
+    country: 'Australia',
+    currencySymbol: 'A$',
+    currencyCode: 'AUD',
+    rateToUSD: 1.52,
+    hotels: [
+      { id: 'h_syd1', name: 'Park Hyatt Sydney', desc: 'Harbourside luxury nestled directly opposite Sydney Opera House.', cost: 800, category: 'Hotel', bookingQuery: 'Park Hyatt Sydney' },
+      { id: 'h_syd2', name: 'Crown Towers Sydney', desc: 'Modern high-rise luxury resort in Barangaroo.', cost: 520, category: 'Hotel', bookingQuery: 'Crown Towers Sydney' },
+      { id: 'h_syd3', name: 'Ovolo Woolloomooloo', desc: 'Chic wharf boutique stay with vibrant retro design.', cost: 220, category: 'Hotel', bookingQuery: 'Ovolo Woolloomooloo Sydney' }
+    ],
+    places: [
+      { id: 'syd1', name: 'Sydney Opera House Guided Tour', desc: 'Inside architectural icon of performance art.', cost: 32, category: 'Sight' },
+      { id: 'syd2', name: 'Sydney Harbour Bridge Climb', desc: 'Summit the world-famous bridge for panoramic views.', cost: 210, category: 'Activity' },
+      { id: 'syd3', name: 'Bondi to Coogee Coastal Walk', desc: 'Stunning cliffside ocean path passing legendary beaches.', cost: 0, category: 'Activity' },
+      { id: 'syd4', name: 'Manly Ferry Harbour Cruise', desc: 'Scenic ferry ride across blue harbour waters.', cost: 12, category: 'Sight' },
+      { id: 'syd5', name: 'Bennelong Restaurant Dining', desc: 'Fine Australian cuisine inside the Opera House sails.', cost: 140, category: 'Dining' },
+      { id: 'syd6', name: 'Sydney Fish Market Seafood Tasting', desc: 'Fresh rock oysters, grilled prawns, and sashimi.', cost: 45, category: 'Dining' },
+      { id: 'syd7', name: 'Darling Harbour Rooftop Lounge', desc: 'Cocktails and live DJs overlooking the waterfront skyline.', cost: 50, category: 'Nightlife' },
+      { id: 'syd8', name: 'The Rocks Weekend Markets', desc: 'Open-air artisan market selling handmade Australian crafts.', cost: 30, category: 'Shopping' }
     ]
   },
   {
@@ -1283,12 +1463,18 @@ const CITY_DATABASE = [
     rateToUSD: 1.0,
     hotels: [
       { id: 'h_obx1', name: 'Sanderling Resort', desc: 'Premier oceanfront resort in Duck, NC.', cost: 340, category: 'Hotel', bookingQuery: 'Sanderling Resort Duck NC' },
-      { id: 'h_obx2', name: 'TownePlace Suites Outer Banks', desc: 'Oceanfront hotel in Kill Devil Hills.', cost: 190, category: 'Hotel', bookingQuery: 'TownePlace Suites Outer Banks' }
+      { id: 'h_obx2', name: 'TownePlace Suites Outer Banks', desc: 'Oceanfront hotel in Kill Devil Hills.', cost: 190, category: 'Hotel', bookingQuery: 'TownePlace Suites Outer Banks' },
+      { id: 'h_obx3', name: 'Avon Motel Historic Stay', desc: 'Cozy retro motel near Hatteras beaches.', cost: 110, category: 'Hotel', bookingQuery: 'Avon Motel OBX' }
     ],
     places: [
       { id: 'obx1', name: 'Cape Hatteras Lighthouse', desc: 'Historic black-and-white striped spiral lighthouse.', cost: 10, category: 'Sight' },
       { id: 'obx2', name: 'Wright Brothers National Memorial', desc: 'Site of the world’s first powered flight in Kitty Hawk.', cost: 15, category: 'Sight' },
-      { id: 'obx3', name: 'Jockey\'s Ridge State Park', desc: 'Climb the highest living sand dune system on the Atlantic coast.', cost: 0, category: 'Activity' }
+      { id: 'obx3', name: 'Jockey\'s Ridge Sand Dune Hang Gliding', desc: 'Climb or glide down the highest living sand dune system on Atlantic coast.', cost: 85, category: 'Activity' },
+      { id: 'obx4', name: 'Wild Horse 4x4 Safari Tour', desc: 'Spot wild Spanish Mustangs roaming Carova beaches.', cost: 65, category: 'Activity' },
+      { id: 'obx5', name: 'Owens Restaurant Coastal Seafood', desc: 'Fresh caught mahi-mahi and crab cakes.', cost: 45, category: 'Dining' },
+      { id: 'obx6', name: 'Duck Donuts Original Shack', desc: 'Custom warm made-to-order glazed donuts.', cost: 12, category: 'Dining' },
+      { id: 'obx7', name: 'Nags Head Pier Waterfront Bar', desc: 'Sunset drinks and live acoustic music on ocean pier.', cost: 30, category: 'Nightlife' },
+      { id: 'obx8', name: 'Waterfront Shops at Duck', desc: 'Boardwalk boutique shopping along Currituck Sound.', cost: 25, category: 'Shopping' }
     ]
   },
   {
@@ -1302,13 +1488,19 @@ const CITY_DATABASE = [
     currencyCode: 'USD',
     rateToUSD: 1.0,
     hotels: [
-      { id: 'h_sv1', name: 'Skyland Lodge (Shenandoah National Park)', desc: 'Rustic mountain lodge right on Skyline Drive.', cost: 175, category: 'Hotel', bookingQuery: 'Skyland Lodge Shenandoah' },
-      { id: 'h_sv2', name: 'Hotel Madison & Shenandoah Conference Center', desc: 'Upscale stay near downtown Harrisonburg.', cost: 150, category: 'Hotel', bookingQuery: 'Hotel Madison Harrisonburg' }
+      { id: 'h_sv1', name: 'Skyland Lodge (Shenandoah)', desc: 'Rustic mountain lodge right on Skyline Drive.', cost: 175, category: 'Hotel', bookingQuery: 'Skyland Lodge Shenandoah' },
+      { id: 'h_sv2', name: 'Hotel Madison & Conference Center', desc: 'Upscale stay near downtown Harrisonburg.', cost: 150, category: 'Hotel', bookingQuery: 'Hotel Madison Harrisonburg' },
+      { id: 'h_sv3', name: 'The Mimslyn Inn Historic Hotel', desc: 'Classic Southern charm in Luray.', cost: 165, category: 'Hotel', bookingQuery: 'Mimslyn Inn Luray' }
     ],
     places: [
-      { id: 'sv1', name: 'Skyline Drive Mountain Scenic Pass', desc: '105-mile scenic drive along the crest of the Blue Ridge Mountains.', cost: 30, category: 'Sight' },
-      { id: 'sv2', name: 'Luray Caverns Tour', desc: 'Massive underground caverns with stalactites and cathedral rooms.', cost: 32, category: 'Sight' },
-      { id: 'sv3', name: 'Old Rag Mountain Summit Hike', desc: 'Challenging rock scramble with rewarding 360-degree views.', cost: 15, category: 'Activity' }
+      { id: 'sv1', name: 'Skyline Drive Mountain Scenic Pass', desc: '105-mile scenic drive along Blue Ridge crest.', cost: 30, category: 'Sight' },
+      { id: 'sv2', name: 'Luray Caverns Underground Tour', desc: 'Massive underground stalactite cathedral rooms.', cost: 32, category: 'Sight' },
+      { id: 'sv3', name: 'Old Rag Mountain Summit Hike', desc: 'Challenging rock scramble with 360-degree views.', cost: 15, category: 'Activity' },
+      { id: 'sv4', name: 'Shenandoah River Kayak Expedition', desc: 'Paddling along calm river bends and forests.', cost: 45, category: 'Activity' },
+      { id: 'sv5', name: 'The Local Chop & Grill House', desc: 'Farm-to-table steaks and regional wines.', cost: 55, category: 'Dining' },
+      { id: 'sv6', name: 'Virginia Wine Tasting Trail', desc: 'Tour three boutique wineries across valley slopes.', cost: 40, category: 'Dining' },
+      { id: 'sv7', name: 'Harrisonburg Speakeasy Lounge', desc: 'Craft cocktails in historic basement tavern.', cost: 35, category: 'Nightlife' },
+      { id: 'sv8', name: 'Downtown Luray Antique Shops', desc: 'Eclectic artisan markets and vintage collectibles.', cost: 20, category: 'Shopping' }
     ]
   },
   {
@@ -1324,13 +1516,17 @@ const CITY_DATABASE = [
     hotels: [
       { id: 'h_tm1', name: 'The Oberoi Amarvilas Agra', desc: 'Uninterrupted views of the Taj Mahal from every room.', cost: 450, category: 'Hotel', bookingQuery: 'The Oberoi Amarvilas Agra' },
       { id: 'h_tm2', name: 'ITC Mughal Resort & Spa', desc: '5-star Mughal architecture hotel set in lush gardens.', cost: 160, category: 'Hotel', bookingQuery: 'ITC Mughal Agra' },
-      { id: 'h_tm3', name: 'Taj Hotel & Convention Centre', desc: 'Modern luxury with an infinity rooftop pool overlooking the Taj.', cost: 120, category: 'Hotel', bookingQuery: 'Taj Hotel Convention Centre Agra' }
+      { id: 'h_tm3', name: 'Taj Hotel & Convention Centre', desc: 'Modern luxury with infinity rooftop pool looking at Taj.', cost: 120, category: 'Hotel', bookingQuery: 'Taj Hotel Convention Centre Agra' }
     ],
     places: [
       { id: 'tm1', name: 'Taj Mahal Sunrise Ticket', desc: 'Iconic white marble mausoleum at dawn.', cost: 35, category: 'Sight' },
       { id: 'tm2', name: 'Agra Fort Guided Walk', desc: 'Red sandstone royal Mughal palace complex.', cost: 25, category: 'Sight' },
-      { id: 'tm3', name: 'Mehtab Bagh Sunset Gardens', desc: 'Riverside view of the Taj opposite water.', cost: 15, category: 'Sight' },
-      { id: 'tm4', name: 'Mughlai Culinary Experience', desc: 'Rich biryanis, curries, and naan breads.', cost: 40, category: 'Dining' }
+      { id: 'tm3', name: 'Mehtab Bagh Sunset Gardens', desc: 'Riverside view of Taj opposite Yamuna water.', cost: 15, category: 'Sight' },
+      { id: 'tm4', name: 'Fatehpur Sikri Day Trip', desc: 'Deserted 16th century red sandstone city.', cost: 30, category: 'Sight' },
+      { id: 'tm5', name: 'Yamuna River Heritage Boat Ride', desc: 'Unique perspectives of the Taj from the water.', cost: 20, category: 'Activity' },
+      { id: 'tm6', name: 'Mughlai Culinary Feast', desc: 'Rich biryanis, butter chicken, and naan.', cost: 30, category: 'Dining' },
+      { id: 'tm7', name: 'Petha & Street Food Sampling', desc: 'Taste Agra\'s historic royal sweet delicacies.', cost: 10, category: 'Dining' },
+      { id: 'tm8', name: 'Subhash Bazaar Marble Souk', desc: 'Handcrafted marble inlay crafts and textiles.', cost: 25, category: 'Shopping' }
     ]
   },
   {
@@ -1344,13 +1540,19 @@ const CITY_DATABASE = [
     currencyCode: 'EUR',
     rateToUSD: 0.92,
     hotels: [
-      { id: 'h_c1', name: 'Hotel Forum Rome', desc: 'Rooftop dining directly facing the ancient Roman Forum.', cost: 260, category: 'Hotel', bookingQuery: 'Hotel Forum Rome' },
-      { id: 'h_c2', name: 'Palazzo Manfredi', desc: 'Luxury boutique hotel with direct views of the Colosseum.', cost: 650, category: 'Hotel', bookingQuery: 'Palazzo Manfredi Rome' }
+      { id: 'h_c1', name: 'Hotel Forum Rome', desc: 'Rooftop dining directly facing ancient Roman Forum.', cost: 260, category: 'Hotel', bookingQuery: 'Hotel Forum Rome' },
+      { id: 'h_c2', name: 'Palazzo Manfredi', desc: 'Luxury boutique hotel with direct Colosseum views.', cost: 650, category: 'Hotel', bookingQuery: 'Palazzo Manfredi Rome' },
+      { id: 'h_c3', name: 'Hotel Artemide', desc: 'Chic stylish stay in central Rome with rooftop spa.', cost: 210, category: 'Hotel', bookingQuery: 'Hotel Artemide Rome' }
     ],
     places: [
-      { id: 'c1', name: 'Colosseum Arena Floor & Underground', desc: 'Exclusive access to gladiator chambers.', cost: 75, category: 'Sight' },
-      { id: 'c2', name: 'Roman Forum & Palatine Hill', desc: 'Walk the heart of ancient imperial Rome.', cost: 35, category: 'Sight' },
-      { id: 'c3', name: 'Trastevere Food & Wine Tour', desc: 'Fresh pasta, truffles, and fine Italian wine.', cost: 95, category: 'Dining' }
+      { id: 'c1', name: 'Colosseum Arena Floor & Underground', desc: 'Exclusive access to gladiator underground chambers.', cost: 75, category: 'Sight' },
+      { id: 'c2', name: 'Roman Forum & Palatine Hill', desc: 'Walk through the heart of ancient imperial Rome.', cost: 35, category: 'Sight' },
+      { id: 'c3', name: 'Vatican Museums & Sistine Chapel', desc: 'Masterpieces by Michelangelo and Raphael.', cost: 50, category: 'Sight' },
+      { id: 'c4', name: 'Authentic Pasta Making Class', desc: 'Learn handmade fettuccine and tiramisu from local chefs.', cost: 70, category: 'Activity' },
+      { id: 'c5', name: 'Trastevere Food & Wine Tour', desc: 'Fresh carbonara, truffles, and fine Italian wine.', cost: 85, category: 'Dining' },
+      { id: 'c6', name: 'Giolitti Historic Gelato Tasting', desc: 'Rome\'s famous century-old gelateria.', cost: 10, category: 'Dining' },
+      { id: 'c7', name: 'Campo de\' Fiori Wine Bar Crawl', desc: 'Lively nightlife around historic Piazza bars.', cost: 40, category: 'Nightlife' },
+      { id: 'c8', name: 'Via del Corso Italian Designer Shopping', desc: 'High fashion boutiques and Italian leather goods.', cost: 60, category: 'Shopping' }
     ]
   },
   {
@@ -1364,12 +1566,19 @@ const CITY_DATABASE = [
     currencyCode: 'PEN',
     rateToUSD: 3.75,
     hotels: [
-      { id: 'h_mp1', name: 'Belmond Sanctuary Lodge', desc: 'Luxury hotel located directly adjacent to entrance of Machu Picchu.', cost: 950, category: 'Hotel', bookingQuery: 'Belmond Sanctuary Lodge Machu Picchu' },
-      { id: 'h_mp2', name: 'Sumaq Machu Picchu Hotel', desc: '5-star luxury at foot of Machu Picchu along Urubamba River.', cost: 380, category: 'Hotel', bookingQuery: 'Sumaq Machu Picchu Hotel' }
+      { id: 'h_mp1', name: 'Belmond Sanctuary Lodge', desc: 'Luxury hotel located directly adjacent to Machu Picchu entrance.', cost: 950, category: 'Hotel', bookingQuery: 'Belmond Sanctuary Lodge Machu Picchu' },
+      { id: 'h_mp2', name: 'Sumaq Machu Picchu Hotel', desc: '5-star luxury at foot of ruins along Urubamba River.', cost: 380, category: 'Hotel', bookingQuery: 'Sumaq Machu Picchu Hotel' },
+      { id: 'h_mp3', name: 'Inkaterra Machu Picchu Pueblo', desc: 'Eco-lodge nestled in Andean cloud forest.', cost: 290, category: 'Hotel', bookingQuery: 'Inkaterra Machu Picchu Pueblo' }
     ],
     places: [
-      { id: 'mp1', name: 'Machu Picchu Citadel Pass', desc: 'Main historic access to the ancient Inca ruins.', cost: 150, category: 'Sight' },
-      { id: 'mp2', name: 'Huayna Picchu Peak Trek', desc: 'Steep stairs to iconic overlook summit.', cost: 75, category: 'Activity' }
+      { id: 'mp1', name: 'Machu Picchu Citadel Pass', desc: 'Main historic access to ancient Inca ruins.', cost: 150, category: 'Sight' },
+      { id: 'mp2', name: 'Huayna Picchu Peak Trek', desc: 'Steep stairs to iconic overlook summit.', cost: 75, category: 'Activity' },
+      { id: 'mp3', name: 'Sacred Valley Express Train', desc: 'Panoramic glass-roof train ride through mountains.', cost: 90, category: 'Sight' },
+      { id: 'mp4', name: 'Aguas Calientes Thermal Baths', desc: 'Soak in natural hot springs beneath mountain cliffs.', cost: 15, category: 'Activity' },
+      { id: 'mp5', name: 'Indio Feliz Gourmet Restaurant', desc: 'French-Peruvian fusion cuisine in colorful setting.', cost: 45, category: 'Dining' },
+      { id: 'mp6', name: 'Peruvian Ceviche & Alpaca Steak Dining', desc: 'Traditional Andean specialties.', cost: 35, category: 'Dining' },
+      { id: 'mp7', name: 'Pisco Sour Craft Cocktail Tasting', desc: 'Sample national cocktails made with regional fruits.', cost: 25, category: 'Nightlife' },
+      { id: 'mp8', name: 'Pisac Artisan Textile Market', desc: 'Handwoven alpaca sweaters, blankets, and crafts.', cost: 30, category: 'Shopping' }
     ]
   },
   {
@@ -1383,11 +1592,19 @@ const CITY_DATABASE = [
     currencyCode: 'MXN',
     rateToUSD: 18.0,
     hotels: [
-      { id: 'h_ci1', name: 'Hacienda Chichen Resort', desc: 'Historic jungle eco-resort with private entrance to ruins.', cost: 220, category: 'Hotel', bookingQuery: 'Hacienda Chichen Resort' }
+      { id: 'h_ci1', name: 'Hacienda Chichen Resort', desc: 'Historic jungle eco-resort with private entrance to ruins.', cost: 220, category: 'Hotel', bookingQuery: 'Hacienda Chichen Resort' },
+      { id: 'h_ci2', name: 'Mayaland Hotel & Bungalows', desc: 'Classic resort grounds inside archaeological park.', cost: 180, category: 'Hotel', bookingQuery: 'Mayaland Hotel Chichen Itza' },
+      { id: 'h_ci3', name: 'Hotel Meson del Marques', desc: 'Colonial mansion stay on Valladolid main square.', cost: 110, category: 'Hotel', bookingQuery: 'Hotel Meson del Marques' }
     ],
     places: [
       { id: 'ci1', name: 'El Castillo Pyramid Tour', desc: 'Central astronomical Mayan pyramid temple.', cost: 45, category: 'Sight' },
-      { id: 'ci2', name: 'Sacred Cenote Ik Kil Swim', desc: 'Dip into open-sky natural cavern water.', cost: 25, category: 'Activity' }
+      { id: 'ci2', name: 'Sacred Cenote Ik Kil Swim', desc: 'Dip into open-sky natural cavern water.', cost: 25, category: 'Activity' },
+      { id: 'ci3', name: 'Ek Balam Mayan Ruins Scramble', desc: 'Climb ancient steps surrounded by jungle foliage.', cost: 30, category: 'Sight' },
+      { id: 'ci4', name: 'Yucatecan Cooking Class', desc: 'Prepare slow-roasted Cochinita Pibil and fresh salsas.', cost: 50, category: 'Activity' },
+      { id: 'ci5', name: 'La Casona de Valladolid Dining', desc: 'Gourmet regional buffet in courtyard setting.', cost: 35, category: 'Dining' },
+      { id: 'ci6', name: 'Street Taco Crawl on Main Square', desc: 'Handmade tortillas, carnitas, and horchata.', cost: 15, category: 'Dining' },
+      { id: 'ci7', name: 'Mezcal & Tequila Tasting Lounge', desc: 'Artisanal smoky mezcal tastings.', cost: 30, category: 'Nightlife' },
+      { id: 'ci8', name: 'Mayan Woodcarving & Folk Art Market', desc: 'Intricate wood sculptures and pottery crafts.', cost: 20, category: 'Shopping' }
     ]
   },
   {
@@ -1401,15 +1618,24 @@ const CITY_DATABASE = [
     currencyCode: 'JOD',
     rateToUSD: 0.71,
     hotels: [
-      { id: 'h_p1', name: 'Mövenpick Resort Petra', desc: 'Located right at entrance to the ancient city of Petra.', cost: 210, category: 'Hotel', bookingQuery: 'Movenpick Resort Petra' }
+      { id: 'h_p1', name: 'Mövenpick Resort Petra', desc: 'Located right at entrance to ancient city of Petra.', cost: 210, category: 'Hotel', bookingQuery: 'Movenpick Resort Petra' },
+      { id: 'h_p2', name: 'Petra Marriott Hotel', desc: 'Overlooking spectacular Petra valley mountains.', cost: 190, category: 'Hotel', bookingQuery: 'Petra Marriott Hotel' },
+      { id: 'h_p3', name: 'Seven Wonders Bedouin Camp', desc: 'Authentic desert glamping experience under the stars.', cost: 95, category: 'Hotel', bookingQuery: 'Seven Wonders Bedouin Camp' }
     ],
     places: [
-      { id: 'p1', name: 'The Treasury (Al-Khazneh) Walkthrough', desc: 'Ancient carved rock-cut facade entrance.', cost: 70, category: 'Sight' }
+      { id: 'p1', name: 'The Treasury (Al-Khazneh) Walk', desc: 'Ancient carved rock facade entrance through the Siq canyon.', cost: 70, category: 'Sight' },
+      { id: 'p2', name: 'The Monastery (Ad Deir) Hike', desc: 'Climb 800 cliff steps to massive carved mountain temple.', cost: 0, category: 'Activity' },
+      { id: 'p3', name: 'Petra Night Candlelit Show', desc: 'See Treasury illuminated by over 1,500 glowing candles.', cost: 25, category: 'Nightlife' },
+      { id: 'p4', name: 'Wadi Rum 4x4 Desert Jeep Safari', desc: 'High-speed dune racing through red sandstone canyons.', cost: 75, category: 'Activity' },
+      { id: 'p5', name: 'Traditional Bedouin Mansaf Dinner', desc: 'Slow-cooked tender lamb served with rice and yogurt sauce.', cost: 35, category: 'Dining' },
+      { id: 'p6', name: 'Cave Bar Drinks Experience', desc: 'Enjoy drinks inside a 2,000-year-old Nabataean tomb bar.', cost: 30, category: 'Nightlife' },
+      { id: 'p7', name: 'Arabic Coffee & Meze Tasting', desc: 'Fresh hummus, falafel, and cardamom spice coffee.', cost: 20, category: 'Dining' },
+      { id: 'p8', name: 'Wadi Musa Spice & Silver Market', desc: 'Handcrafted Bedouin silver jewelry and exotic spices.', cost: 25, category: 'Shopping' }
     ]
   },
   {
     id: 'christ-redeemer',
-    name: 'Christ the Redeemer (Rio de Janeiro, Brazil)',
+    name: 'Christ the Redeemer (Rio, Brazil)',
     queryCity: 'Rio de Janeiro',
     lat: -22.9519,
     lon: -43.2105,
@@ -1418,10 +1644,19 @@ const CITY_DATABASE = [
     currencyCode: 'BRL',
     rateToUSD: 5.2,
     hotels: [
-      { id: 'h_cr1', name: 'Belmond Copacabana Palace', desc: 'Iconic 1920s beachfront palace hotel in Rio de Janeiro.', cost: 480, category: 'Hotel', bookingQuery: 'Belmond Copacabana Palace Rio' }
+      { id: 'h_cr1', name: 'Belmond Copacabana Palace', desc: 'Iconic 1920s beachfront palace hotel in Rio.', cost: 480, category: 'Hotel', bookingQuery: 'Belmond Copacabana Palace Rio' },
+      { id: 'h_cr2', name: 'Hotel Fasano Rio de Janeiro', desc: 'Sleek luxury on Ipanema Beach with rooftop infinity pool.', cost: 550, category: 'Hotel', bookingQuery: 'Hotel Fasano Rio' },
+      { id: 'h_cr3', name: 'Windsor Miramar Hotel', desc: 'Modern beachfront stay along Copacabana promenade.', cost: 160, category: 'Hotel', bookingQuery: 'Windsor Miramar Hotel' }
     ],
     places: [
-      { id: 'cr1', name: 'Corcovado Mountain Cog Train & Statue', desc: 'Panoramic views under Christ statue.', cost: 35, category: 'Sight' }
+      { id: 'cr1', name: 'Corcovado Cog Train & Statue Pass', desc: 'Panoramic views under Christ the Redeemer statue.', cost: 35, category: 'Sight' },
+      { id: 'cr2', name: 'Sugarloaf Mountain Cable Car', desc: 'Glass cable car ride with stunning harbour views.', cost: 40, category: 'Sight' },
+      { id: 'cr3', name: 'Tijuca Rainforest Helicopter Tour', desc: 'Soar over world\'s largest urban forest and coastline.', cost: 180, category: 'Activity' },
+      { id: 'cr4', name: 'Ipanema Beach Surfing Lesson', desc: 'Catch waves with local ocean instructors.', cost: 45, category: 'Activity' },
+      { id: 'cr5', name: 'Churrascaria Rodizio Steakhouse', desc: 'All-you-can-eat Brazilian skewered grilled meats.', cost: 50, category: 'Dining' },
+      { id: 'cr6', name: 'Fresh Açaí & Coastal Juice Bar', desc: 'Authentic wild Amazonian açaí bowls.', cost: 10, category: 'Dining' },
+      { id: 'cr7', name: 'Lapa Steps Samba Street Party', desc: 'Live samba bands and caipirinhas in historic Lapa.', cost: 30, category: 'Nightlife' },
+      { id: 'cr8', name: 'Feirarte Ipanema Craft Market', desc: 'Leather goods, paintings, and handmade hammocks.', cost: 25, category: 'Shopping' }
     ]
   },
   {
@@ -1435,10 +1670,19 @@ const CITY_DATABASE = [
     currencyCode: 'CNY',
     rateToUSD: 7.23,
     hotels: [
-      { id: 'h_gw1', name: 'The Peninsula Beijing', desc: '5-star ultra-luxury hotel in central Beijing close to Forbidden City.', cost: 380, category: 'Hotel', bookingQuery: 'The Peninsula Beijing' }
+      { id: 'h_gw1', name: 'The Peninsula Beijing', desc: '5-star luxury hotel in central Beijing near Forbidden City.', cost: 380, category: 'Hotel', bookingQuery: 'The Peninsula Beijing' },
+      { id: 'h_gw2', name: 'Rosewood Beijing', desc: 'Modern high-end luxury in Chaoyang district.', cost: 320, category: 'Hotel', bookingQuery: 'Rosewood Beijing' },
+      { id: 'h_gw3', name: 'Commune by the Great Wall', desc: 'Architectural hotel nestled in mountains right near wall.', cost: 220, category: 'Hotel', bookingQuery: 'Commune by the Great Wall' }
     ],
     places: [
-      { id: 'gw1', name: 'Mutianyu Great Wall Cable Car & Toboggan', desc: 'Scenic mountain wall ride.', cost: 45, category: 'Sight' }
+      { id: 'gw1', name: 'Mutianyu Great Wall Cable Car & Toboggan', desc: 'Ride toboggan down scenic mountain wall slopes.', cost: 45, category: 'Sight' },
+      { id: 'gw2', name: 'Forbidden City Imperial Palace', desc: 'Explore vast historic home of Chinese emperors.', cost: 25, category: 'Sight' },
+      { id: 'gw3', name: 'Temple of Heaven & Park Walking', desc: 'Historic imperial sacrificial altar complex.', cost: 15, category: 'Sight' },
+      { id: 'gw4', name: 'Rickshaw Tour through Historic Hutongs', desc: 'Navigate narrow historic courtyards and alleys.', cost: 35, category: 'Activity' },
+      { id: 'gw5', name: 'Peking Duck Roast Banquet', desc: 'Traditional crispy roasted duck with plum sauce and pancakes.', cost: 50, category: 'Dining' },
+      { id: 'gw6', name: 'Dim Sum & Handmade Dumplings Tasting', desc: 'Steamed soup dumplings and savory delicacies.', cost: 25, category: 'Dining' },
+      { id: 'gw7', name: 'Sanlitun Bar Street Lounge', desc: 'Modern nightlife district filled with cocktail bars.', cost: 40, category: 'Nightlife' },
+      { id: 'gw8', name: 'Panjiayuan Antique Flea Market', desc: 'Bustling market for jade, calligraphy, and tea sets.', cost: 20, category: 'Shopping' }
     ]
   },
   {
@@ -1452,10 +1696,19 @@ const CITY_DATABASE = [
     currencyCode: 'EUR',
     rateToUSD: 0.92,
     hotels: [
-      { id: 'h_et1', name: 'Pullman Paris Tour Eiffel', desc: 'Direct views of Eiffel Tower from private balcony.', cost: 380, category: 'Hotel', bookingQuery: 'Pullman Paris Tour Eiffel' }
+      { id: 'h_et1', name: 'Pullman Paris Tour Eiffel', desc: 'Direct views of Eiffel Tower from private balcony.', cost: 380, category: 'Hotel', bookingQuery: 'Pullman Paris Tour Eiffel' },
+      { id: 'h_et2', name: 'Four Seasons George V', desc: 'Palatial luxury off the Champs-Élysées.', cost: 980, category: 'Hotel', bookingQuery: 'Four Seasons George V Paris' },
+      { id: 'h_et3', name: 'Hôtel Le Relais Saint-Germain', desc: 'Charming boutique hotel in Saint-Germain-des-Prés.', cost: 240, category: 'Hotel', bookingQuery: 'Relais Saint Germain Paris' }
     ],
     places: [
-      { id: 'et1', name: 'Eiffel Tower Summit Elevator Pass', desc: 'Top floor glass elevator panoramic view.', cost: 42, category: 'Sight' }
+      { id: 'et1', name: 'Eiffel Tower Summit Elevator Pass', desc: 'Top floor glass elevator panoramic vistas.', cost: 42, category: 'Sight' },
+      { id: 'et2', name: 'Louvre Museum Timed Entry', desc: 'Mona Lisa and world-renowned artistic treasures.', cost: 22, category: 'Sight' },
+      { id: 'et3', name: 'Seine River Sunset Dinner Cruise', desc: 'Gourmet meal floating past illuminated monuments.', cost: 110, category: 'Dining' },
+      { id: 'et4', name: 'Montmartre Artists Walking Tour', desc: 'Stroll Sacré-Cœur and historic bohemian streets.', cost: 25, category: 'Activity' },
+      { id: 'et5', name: 'French Bistro Wine & Cheese Tasting', desc: 'Artisanal cheeses paired with French vintages.', cost: 65, category: 'Dining' },
+      { id: 'et6', name: 'French Bakery Croissant Masterclass', desc: 'Bake flaky fresh croissants with master chef.', cost: 75, category: 'Activity' },
+      { id: 'et7', name: 'Moulin Rouge Cabaret Show & Champagne', desc: 'Iconic glamorous evening performance.', cost: 135, category: 'Nightlife' },
+      { id: 'et8', name: 'Champs-Élysées Luxury Shopping', desc: 'Flagship haute couture fashion boutiques.', cost: 100, category: 'Shopping' }
     ]
   },
   {
@@ -1469,15 +1722,24 @@ const CITY_DATABASE = [
     currencyCode: 'EGP',
     rateToUSD: 48.0,
     hotels: [
-      { id: 'h_pg1', name: 'Marriott Mena House Cairo', desc: 'Historic 5-star hotel with direct views of Great Pyramids.', cost: 320, category: 'Hotel', bookingQuery: 'Marriott Mena House Cairo' }
+      { id: 'h_pg1', name: 'Marriott Mena House Cairo', desc: 'Historic 5-star hotel with direct views of Great Pyramids.', cost: 320, category: 'Hotel', bookingQuery: 'Marriott Mena House Cairo' },
+      { id: 'h_pg2', name: 'Four Seasons Hotel Cairo at Nile Plaza', desc: 'Luxury along the banks of the Nile.', cost: 420, category: 'Hotel', bookingQuery: 'Four Seasons Cairo Nile Plaza' },
+      { id: 'h_pg3', name: 'Pyramids View Inn', desc: 'Boutique rooftop hotel directly opposite Sphinx.', cost: 75, category: 'Hotel', bookingQuery: 'Pyramids View Inn' }
     ],
     places: [
-      { id: 'pg1', name: 'Great Pyramid Entry & Great Sphinx Walk', desc: 'Stand before ancient Wonders of the World.', cost: 30, category: 'Sight' }
+      { id: 'pg1', name: 'Great Pyramid Entry & Great Sphinx Walk', desc: 'Stand before ancient Wonders of the World.', cost: 30, category: 'Sight' },
+      { id: 'pg2', name: 'Grand Egyptian Museum Tour', desc: 'World\'s largest archaeological museum complex.', cost: 25, category: 'Sight' },
+      { id: 'pg3', name: 'Sunset Camel Trek Across Giza Dunes', desc: 'Ride camels across desert plateau overlooking pyramids.', cost: 35, category: 'Activity' },
+      { id: 'pg4', name: 'Nile River Felucca Sailboat Ride', desc: 'Peaceful traditional sailing at dusk.', cost: 20, category: 'Activity' },
+      { id: 'pg5', name: 'Traditional Egyptian Koshary Feast', desc: 'National dish of rice, pasta, lentils, and crispy onions.', cost: 10, category: 'Dining' },
+      { id: 'pg6', name: 'Nile River Dinner Cruise & Tanoura Show', desc: 'Buffet dining with folklore music and dance.', cost: 50, category: 'Dining' },
+      { id: 'pg7', name: 'Khan el-Khalili Shisha Lounge', desc: 'Classic coffeehouse tea and hookah lounge.', cost: 15, category: 'Nightlife' },
+      { id: 'pg8', name: 'Khan el-Khalili Historic Souk', desc: 'Bustling bazaar for brass lanterns, perfumes, and papyrus.', cost: 20, category: 'Shopping' }
     ]
   },
   {
     id: 'statue-liberty',
-    name: 'Statue of Liberty & Manhattan (New York, USA)',
+    name: 'Statue of Liberty & NYC (USA)',
     queryCity: 'New York',
     lat: 40.6892,
     lon: -74.0445,
@@ -1486,19 +1748,28 @@ const CITY_DATABASE = [
     currencyCode: 'USD',
     rateToUSD: 1.0,
     hotels: [
-      { id: 'h_ny1', name: 'The Plaza Hotel NYC', desc: 'World famous luxury flagship hotel at Fifth Avenue & Central Park.', cost: 750, category: 'Hotel', bookingQuery: 'The Plaza Hotel New York' }
+      { id: 'h_ny1', name: 'The Plaza Hotel NYC', desc: 'World famous luxury flagship hotel at Fifth Avenue.', cost: 750, category: 'Hotel', bookingQuery: 'The Plaza Hotel New York' },
+      { id: 'h_ny2', name: '1 Hotel Brooklyn Bridge', desc: 'Eco-luxury stay with waterfront Manhattan skyline views.', cost: 480, category: 'Hotel', bookingQuery: '1 Hotel Brooklyn Bridge' },
+      { id: 'h_ny3', name: 'Moxy NYC Times Square', desc: 'Vibrant modern boutique stay in Midtown.', cost: 210, category: 'Hotel', bookingQuery: 'Moxy NYC Times Square' }
     ],
     places: [
-      { id: 'ny1', name: 'Statue of Liberty Crown & Ellis Island Ferry', desc: 'Ferry ride and pedestal access pass.', cost: 32, category: 'Sight' }
+      { id: 'ny1', name: 'Statue of Liberty Crown & Ellis Island Ferry', desc: 'Ferry ride and pedestal access pass.', cost: 32, category: 'Sight' },
+      { id: 'ny2', name: 'SUMMIT One Vanderbilt Skydeck', desc: 'Mirrored glass observation deck overlooking Midtown.', cost: 46, category: 'Sight' },
+      { id: 'ny3', name: 'Central Park Bike Rental & Tour', desc: 'Glide through Strawberry Fields and Bethesda Terrace.', cost: 25, category: 'Activity' },
+      { id: 'ny4', name: 'Broadway Musical Ticket', desc: 'Premier theatrical production in Times Square.', cost: 140, category: 'Nightlife' },
+      { id: 'ny5', name: 'Michelin Star Dining at Eleven Madison Park', desc: 'World famous fine dining plant-based experience.', cost: 330, category: 'Dining' },
+      { id: 'ny6', name: 'NYC Deli Bagel & Pastrami Food Walk', desc: 'Sample classic smoked meats and toasted bagels.', cost: 35, category: 'Dining' },
+      { id: 'ny7', name: 'Greenwich Village Comedy Club Night', desc: 'Live stand-up comedy featuring top performers.', cost: 40, category: 'Nightlife' },
+      { id: 'ny8', name: 'Fifth Avenue Flagship Shopping', desc: 'Browse Saks Fifth Avenue, Tiffany & Co, and Bergdorf.', cost: 80, category: 'Shopping' }
     ]
   }
 ];
 
 /**
- * Global State Store
+ * Global State
  */
 const AppState = {
-  budget: 1500,
+  budget: 2500,
   tripDate: '2026-10-15',
   selectedCityId: 'blue-ridge-parkway',
   activeCategory: 'All',
@@ -1506,16 +1777,10 @@ const AppState = {
   weatherApiKey: 'c1635656553fbe989993f75eb197e00a'
 };
 
-/**
- * Helper function to convert Celsius to Fahrenheit
- */
 function cToF(celsius) {
   return Math.round((celsius * 9 / 5) + 32);
 }
 
-/**
- * OpenWeather 5-Day Forecast Fetcher
- */
 async function fetchWeatherData(city) {
   const gridEl = document.getElementById('forecast-grid');
   gridEl.innerHTML = `<div style="font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 6px;">Loading weather forecast...</div>`;
@@ -1532,7 +1797,6 @@ async function fetchWeatherData(city) {
     gridEl.innerHTML = forecastItems.map(item => {
       const dateObj = new Date(item.dt * 1000);
       const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric' });
-      
       const tempC = Math.round(item.main.temp);
       const tempF = cToF(tempC);
       const desc = item.weather[0].description;
@@ -1547,14 +1811,16 @@ async function fetchWeatherData(city) {
         </div>
       `;
     }).join('');
+
+    gsap.fromTo(".forecast-day", 
+      { opacity: 0, y: 10 }, 
+      { opacity: 1, y: 0, duration: 0.3, stagger: 0.05, ease: "power2.out" }
+    );
   } catch (err) {
     gridEl.innerHTML = `<div style="font-size: 13px; font-weight: 700; color: var(--danger); padding: 6px;">Weather forecast unavailable</div>`;
   }
 }
 
-/**
- * Dynamic Hierarchical Dropdown Controllers with GSAP Animations
- */
 function updateLocations() {
   const country = document.getElementById("country-select").value;
   const locationSelect = document.getElementById("location-select");
@@ -1593,7 +1859,7 @@ function updateAttractions() {
 
   if (country && locationName && HIERARCHY_DATA[country][locationName]) {
     const locObj = HIERARCHY_DATA[country][locationName];
-    AppState.selectedCityId = locObj.dbId; // Update global database selection
+    AppState.selectedCityId = locObj.dbId;
     AppState.selectedItems = [];
 
     attractionSelect.disabled = false;
@@ -1631,28 +1897,19 @@ function triggerOverkillFX() {
     { scale: 1, opacity: 1, rotation: 0, duration: 0.5, ease: "back.out(2)" }
   );
 
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 }
-  });
+  confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 }
 
 function hideDisplayBox() {
   const displayBox = document.getElementById("displayBox");
   if (displayBox.style.display !== "none") {
     gsap.to("#displayBox", {
-      scale: 0,
-      opacity: 0,
-      duration: 0.2,
+      scale: 0, opacity: 0, duration: 0.2,
       onComplete: () => { displayBox.style.display = "none"; }
     });
   }
 }
 
-/**
- * Booking URL Generator Helper
- */
 function getBookingUrls(query) {
   const enc = encodeURIComponent(query);
   return {
@@ -1662,9 +1919,6 @@ function getBookingUrls(query) {
   };
 }
 
-/**
- * Currency Formatting Helpers
- */
 function getCity() {
   return CITY_DATABASE.find(c => c.id === AppState.selectedCityId) || CITY_DATABASE[0];
 }
@@ -1679,7 +1933,7 @@ function formatLocal(amountUSD, city) {
 }
 
 /**
- * Render Functions
+ * Render Cards with GSAP Stagger Animations & 3D Hover Tilt
  */
 function renderCards() {
   const grid = document.getElementById('recommendations-grid');
@@ -1699,7 +1953,7 @@ function renderCards() {
     const booking = item.bookingQuery ? getBookingUrls(item.bookingQuery) : null;
 
     return `
-      <div class="card ${isAdded ? 'selected' : ''}">
+      <div class="card ${isAdded ? 'selected' : ''}" data-card-id="${item.id}">
         <div>
           <span class="badge-category cat-${item.category}">${item.category}</span>
           <h3 style="margin-top: 10px;">${item.name}</h3>
@@ -1727,6 +1981,25 @@ function renderCards() {
       </div>
     `;
   }).join('');
+
+  // Stagger entry animation
+  gsap.fromTo(".card", 
+    { opacity: 0, y: 30, scale: 0.95 }, 
+    { opacity: 1, y: 0, scale: 1, duration: 0.4, stagger: 0.05, ease: "power2.out" }
+  );
+
+  // 3D Tilt Effect on mousemove
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      gsap.to(card, { rotationY: x * 0.04, rotationX: -y * 0.04, duration: 0.2, ease: "power1.out" });
+    });
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, { rotationY: 0, rotationX: 0, duration: 0.4, ease: "power2.out" });
+    });
+  });
 }
 
 function renderPlanner() {
@@ -1734,7 +2007,6 @@ function renderPlanner() {
   const city = getCity();
 
   document.getElementById('target-budget-display').textContent = formatUSD(AppState.budget);
-  
   let totalSpent = 0;
 
   if (AppState.selectedItems.length === 0) {
@@ -1743,7 +2015,7 @@ function renderPlanner() {
     container.innerHTML = AppState.selectedItems.map(item => {
       totalSpent += item.cost;
       return `
-        <div class="item-row">
+        <div class="item-row" id="row-${item.id}">
           <div class="item-header">
             <div>
               <span>${item.name}</span>
@@ -1761,11 +2033,15 @@ function renderPlanner() {
         </div>
       `;
     }).join('');
+
+    gsap.fromTo(".item-row", 
+      { opacity: 0, x: -20 }, 
+      { opacity: 1, x: 0, duration: 0.3, stagger: 0.05, ease: "power2.out" }
+    );
   }
 
   document.getElementById('allocated-budget').textContent = formatUSD(totalSpent);
 
-  // Update Budget Bar
   const pct = AppState.budget > 0 ? Math.min((totalSpent / AppState.budget) * 100, 100) : 0;
   const bar = document.getElementById('budget-progress-bar');
   bar.style.width = `${pct}%`;
@@ -1799,9 +2075,6 @@ function renderSummary() {
   document.getElementById('sum-total-display').textContent = formatUSD(total);
 }
 
-/**
- * Controller Actions
- */
 function toggleItem(id) {
   const city = getCity();
   const all = [...city.hotels, ...city.places];
@@ -1812,16 +2085,29 @@ function toggleItem(id) {
   const idx = AppState.selectedItems.findIndex(i => i.id === id);
   if (idx > -1) {
     AppState.selectedItems.splice(idx, 1);
+    showToast(`Removed "${item.name}" from itinerary`, '🗑️');
   } else {
     AppState.selectedItems.push({ ...item });
+    showToast(`Added "${item.name}" to itinerary!`, '✨');
   }
 
   renderCards();
 }
 
 function removeItem(id) {
-  AppState.selectedItems = AppState.selectedItems.filter(i => i.id !== id);
-  renderPlanner();
+  const row = document.getElementById(`row-${id}`);
+  if (row) {
+    gsap.to(row, {
+      opacity: 0, x: 50, duration: 0.3,
+      onComplete: () => {
+        AppState.selectedItems = AppState.selectedItems.filter(i => i.id !== id);
+        renderPlanner();
+      }
+    });
+  } else {
+    AppState.selectedItems = AppState.selectedItems.filter(i => i.id !== id);
+    renderPlanner();
+  }
 }
 
 function updateItemCost(id, val) {
@@ -1833,12 +2119,24 @@ function updateItemCost(id, val) {
 }
 
 function switchPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const activePage = document.querySelector('.page.active');
+  const targetPage = document.getElementById(`page-${pageId}`);
+
+  if (activePage && targetPage && activePage !== targetPage) {
+    gsap.to(activePage, {
+      opacity: 0, scale: 0.98, duration: 0.2, ease: "power2.in",
+      onComplete: () => {
+        activePage.classList.remove('active');
+        targetPage.classList.add('active');
+        gsap.fromTo(targetPage, 
+          { opacity: 0, scale: 1.02 }, 
+          { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }
+        );
+      }
+    });
+  }
+
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-
-  const page = document.getElementById(`page-${pageId}`);
-  if (page) page.classList.add('active');
-
   const navBtn = document.querySelector(`nav button[data-page="${pageId}"]`);
   if (navBtn) navBtn.classList.add('active');
 
@@ -1848,12 +2146,12 @@ function switchPage(pageId) {
 }
 
 /**
- * Event Listeners & Setup
+ * Global Event Listeners & Button Ripple Animations
  */
 document.addEventListener('DOMContentLoaded', () => {
+  initParticles();
   setGlobeEmojiCursor();
 
-  // Inputs binding
   const inputBudget = document.getElementById('input-budget');
   const budgetDisp = document.getElementById('home-budget-display');
   
@@ -1868,7 +2166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     AppState.tripDate = e.target.value;
   });
 
-  // Navigation Click Handling
+  // Navigation Click Actions
   document.querySelectorAll('[data-navigate]').forEach(el => {
     el.addEventListener('click', () => switchPage(el.dataset.navigate));
   });
@@ -1896,7 +2194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cost = parseFloat(document.getElementById('custom-cost').value) || 0;
 
     if (!name) {
-      alert('Please enter a name for the custom spot or activity.');
+      showToast('Please enter a spot or activity name!', '⚠️');
       return;
     }
 
@@ -1910,6 +2208,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     AppState.selectedItems.push(newItem);
     document.getElementById('custom-name').value = '';
+    showToast(`Added custom spot: ${name}`, '🚀');
     renderPlanner();
   });
 
@@ -1932,16 +2231,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('btn-send-phone').addEventListener('click', () => {
-    alert('📲 Detailed itinerary SMS and Mobile Pass pushed to registered device!');
+    showToast('Detailed mobile pass pushed to phone!', '📲');
   });
 
   document.getElementById('btn-email-itinerary').addEventListener('click', () => {
     const email = document.getElementById('email-address').value;
     if (!email) {
-      alert('Please enter an email address to send the briefing.');
+      showToast('Please enter an email address first!', '⚠️');
       return;
     }
-    alert(`✉️ Travel Briefing and confirmation links successfully emailed to ${email}!`);
+    showToast(`Briefing emailed to ${email}`, '✉️');
+  });
+
+  // Interactive Button Press Animation
+  document.querySelectorAll('.btn, .btn-secondary, .btn-home').forEach(btn => {
+    btn.addEventListener('mousedown', () => gsap.to(btn, { scale: 0.95, duration: 0.1 }));
+    btn.addEventListener('mouseup', () => gsap.to(btn, { scale: 1, duration: 0.1 }));
   });
 });
 </script>
